@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AgroLab
-build_property.ProjectDir = C:\Users\Rodion\source\repos\AgroLab\AgroLab\
+build_property.ProjectDir = C:\Users\sento\RiderProjects\AgroLab\AgroLab\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
