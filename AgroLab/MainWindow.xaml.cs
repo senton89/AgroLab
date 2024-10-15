@@ -16,6 +16,9 @@ namespace AgroLab
         public MainWindow()
         {
             InitializeComponent();
+            UserControl2 userControl = new UserControl2();
+            MainPart.Children.Clear();
+            MainPart.Children.Add(userControl);
         }
     }
 }

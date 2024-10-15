@@ -14,23 +14,20 @@ using System.Windows.Shapes;
 
 namespace AgroLab
 {
-    /// <summary>
-    /// Логика взаимодействия для AuthorizationWindow.xaml
-    /// </summary>
-    public partial class AuthorizationWindow : Window
+    public partial class RegistrationWindow : Window
     {
-        public AuthorizationWindow()
+        public RegistrationWindow()
         {
             InitializeComponent();
         }
-
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        
+        private void RegButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
 
-            AgroLabContext.Authenticate(username, password);
-            MessageBox.Show("Login successful");
+            AgroLabContext.AddNewUser(username,password,Roles.Administrator);
+            MessageBox.Show("Registration successful");
         }
     }
 }
