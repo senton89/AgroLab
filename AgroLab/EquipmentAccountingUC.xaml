@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="AgroLab.EquipmentAccountingUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AgroLab"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="1600">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel>
+                <Label>Дата учета:</Label>
+                <DatePicker x:Name="dpDateAccounting"/>
+            
+                <Label>Наименование оборудования:</Label>
+                <TextBox x:Name="txtEquipmentName"/>
+            
+                <Label>Категория оборудования:</Label>
+                <ComboBox x:Name="cmbCategory" 
+                          ItemsSource="{Binding Categories}">
+                    <ComboBoxItem Content="СИ"/>
+                    <ComboBoxItem Content="ИО"/>
+                    <ComboBoxItem Content="ВО"/>
+                </ComboBox>
+            
+                <Label>Наименование изготовителя:</Label>
+                <TextBox x:Name="txtManufacturer"/>
+            
+                <Label>Заводской номер:</Label>
+                <TextBox x:Name="txtSerialNumber"/>
+            
+                <Label>Дата получения:</Label>
+                <DatePicker x:Name="dpReceivedDate"/>
+            
+                <Label>Состояние на момент получения:</Label>
+                <TextBox x:Name="txtCondition"/>
+            
+                <Label>Данные о поверке:</Label>
+                <TextBox x:Name="txtVerificationData"/>
+            
+                <Label>Дата следующей поверки:</Label>
+                <DatePicker x:Name="dpNextVerificationDate"/>
+
+                <Button Content="Добавить" Click="AddButton_Click"/>
+                <Button Content="Удалить" Click="DeleteButton_Click"/>
+                <Button Content="Редактировать" Click="EditButton_Click"/>
+            </StackPanel>
+
+            <ListView x:Name="lvEquipmentList" Grid.Row="1" SelectionChanged="LvEquipmentList_SelectionChanged"/>
+        </Grid>
+</UserControl>
