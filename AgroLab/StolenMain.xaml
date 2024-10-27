@@ -1,0 +1,184 @@
+﻿<Window x:Class="AgroLab.StolenMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:AgroLab"
+        mc:Ignorable="d"
+        Title= "Main" Height="800" Width="1200">
+    
+
+    <Grid Background="#F7FAFC">
+
+        <Grid.ColumnDefinitions>
+
+            <ColumnDefinition Width="250"/>
+
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+
+        <Border Background="White" Margin="16" CornerRadius="10">
+        <StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+
+                <TextBlock FontSize="24" Foreground="#267AFC" Text="🧪" />
+
+                <TextBlock FontSize="24" Margin="8,0,0,0" Text="AgroLab" />
+
+            </StackPanel>
+                <ItemsControl>
+                    <ItemsControl.ItemsSource>
+                        <x:Array Type="{x:Type MenuItem}">
+                            <MenuItem Header="Модели" Icon="⚙️">
+                                <MenuItem Header="Ресурсы" Icon="📊"/>
+                                <MenuItem Header="ОПИ" Icon="📈"/>
+                                <MenuItem Header="Процессы" Icon="📊"/>
+                                <MenuItem Header="Процессы 2.0" Icon="📊"/>
+                                <MenuItem Header="Операции" Icon="📝"/>
+                                <MenuItem Header="Работы" Icon="💼"/>
+                            </MenuItem>
+                            <MenuItem Header="Типизация" Icon="🏷">
+                                <MenuItem Header="Единицы измерения" Icon="📏"/>
+                                <MenuItem Header="Шаблоны свойств" Icon="📄"/>
+                                <MenuItem Header="Классы объектов" Icon="📦"/>
+                                <MenuItem Header="Классы объектов 2.0" Icon="📦"/>
+                                <MenuItem Header="Прототипы моделей" Icon="✏️"/>
+                                <MenuItem Header="Спецификации" Icon="📄"/>
+                            </MenuItem>
+                            <MenuItem Header="Система" Icon="⚙️">
+                                <MenuItem Header="Подключения" Icon="🔌"/>
+                            </MenuItem>
+                            <MenuItem Header="Обмен данными" Icon="🔄">
+                                <MenuItem Header="Шаблоны экспорта" Icon="📤"/>
+                                <MenuItem Header="Задания на экспорт" Icon="📝"/>
+                                <MenuItem Header="Журналы экспорта" Icon="📄"/>
+                            </MenuItem>
+                        </x:Array>
+                    </ItemsControl.ItemsSource>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Button Background="Transparent" Foreground="Black" Padding="8" Margin="0,0,0,8" Click="MenuItem_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Icon}" Margin="0,0,8,0"/>
+                                        <TextBlock Text="{Binding Header}"/>
+                                    </StackPanel>
+                                </Button>
+                                <ItemsControl x:Name="SubMenu" Visibility="Collapsed" ItemsSource="{Binding SubItems}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Background="Transparent" Foreground="Black" Padding="8" Margin="0,0,0,4">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Icon}" Margin="0,0,8,0"/>
+                                                    <TextBlock Text="{Binding Header}"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+        
+
+        <!-- Main Content -->
+
+        <Grid Grid.Column="1" Margin="16">
+
+            <StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+
+                    <TextBlock FontSize="20" FontWeight="Bold" Text="Модели"/>
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <!-- Left Panel -->
+
+                    <StackPanel MaxWidth="500" Margin="0,0,8,0">
+
+                        <Border Background="White" CornerRadius="8" Padding="16" Margin="0,8,0,0" 
+
+                                BorderBrush="#E2E8F0" BorderThickness="1">
+
+                            <StackPanel>
+
+                                <CheckBox Content="Редактор ресурсных объектов" Margin="0,0,0,8"/>
+
+                                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False">
+
+                                    <DataGrid.Columns>
+
+                                        <DataGridTextColumn Header="Наименование" Binding="{Binding Name}"/>
+
+                                        <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>
+
+                                        <DataGridTextColumn Header="Область применения иерархия" Binding="{Binding Hierarchy}"/>
+
+                                    </DataGrid.Columns>
+
+                                    <DataGrid.ItemsSource>
+
+                                        <x:Array Type="{x:Type local:ModelItem}">
+
+                                            <local:ModelItem Name="DatalumpModel" Description="Модель ручного ввода" Hierarchy="ZQL Quality Control"/>
+
+                                            <local:ModelItem Name="DocumentExplorerModel" Description="DocumentExplorerModel" Hierarchy="RTDE-SPC"/>
+
+                                        </x:Array>
+
+                                    </DataGrid.ItemsSource>
+
+                                </DataGrid>
+
+                            </StackPanel>
+
+                        </Border>
+
+                    </StackPanel>
+
+                    <!-- Right Panel -->
+
+                    <StackPanel MaxWidth="500">
+
+                        <Border Background="White" CornerRadius="8" Padding="16" Margin="0,8,0,0" 
+
+                                BorderBrush="#E2E8F0" BorderThickness="1">
+
+                            <StackPanel>
+
+                                <TextBlock FontSize="16" FontWeight="Bold" Text="Тип объекта &quot;Лаборатория&quot;"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+
+                                    <TextBlock Text="Наименование:"/>
+
+                                    <TextBox Width="200" Margin="8,0,0,0" Text="Лаборатория"/>
+
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+
+                                    <TextBlock Text="Описание:"/>
+
+                                    <TextBox Width="200" Margin="8,0,0,0" Text="Цех"/>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

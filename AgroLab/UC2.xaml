@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="AgroLab.UC2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AgroLab"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="1600">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Background="White" Padding="16">
+            <StackPanel>
+                <ItemsControl>
+                    <ItemsControl.ItemsSource>
+                        <x:Array Type="{x:Type MenuItem}">
+                            <MenuItem Header="Все" Icon="📁"/>
+                            <MenuItem Header="Инструкции ЛИМС" Icon="📁"/>
+                            <MenuItem Header="Проектная документация ЛИМС" Icon="📁"/>
+                            <MenuItem Header="Спецификации" Icon="📁"/>
+                            <MenuItem Header="Должностные инструкции" Icon="📁"/>
+                            <MenuItem Header="Положения, регламенты предприятия" Icon="📁"/>
+                            <MenuItem Header="Методики отбора" Icon="📁"/>
+                            <MenuItem Header="Методики испытаний" Icon="📁"/>
+                        </x:Array>
+                    </ItemsControl.ItemsSource>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Background="Transparent" Foreground="White" Padding="8" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Icon}" Margin="0,0,8,0"/>
+                                    <TextBlock Text="{Binding Header}" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Column="1">
+            <!-- Header -->
+            <Border Background="#1A202C" Padding="16">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <TextBlock Text="Цифровой портал" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Width="200" Margin="0,0,8,0" Padding="8" Background="#4A5568" Foreground="White" Text="Поиск"/>
+                        <TextBlock Text="&#xf002;" FontFamily="FontAwesome" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Table -->
+            <ScrollViewer Margin="16">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Обозначение" Binding="{Binding Designation}"/>
+                            <DataGridTextColumn Header="Наименование" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Официальное наименование" Binding="{Binding OfficialName}"/>
+                            <DataGridTextColumn Header="Состояние" Binding="{Binding Status}"/>
+                            <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>
+                            <DataGridTextColumn Header="Дата начала" Binding="{Binding StartDate}"/>
+                            <DataGridTextColumn Header="Дата окончания" Binding="{Binding EndDate}"/>
+                            <DataGridTextColumn Header="Ссылка на НД" Binding="{Binding Reference }"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button Grid.Row="1" Margin="0,16,0,0" Width="100" Height="30" Background="#3498DB" Foreground="White" HorizontalAlignment="Right" Content="Редактировать"/>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

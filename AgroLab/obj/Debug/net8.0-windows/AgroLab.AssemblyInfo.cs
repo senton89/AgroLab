@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AgroLab")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+269d928d8bd22804f5185a28cb9818eb60b426fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0bd87734bb0ad35f96624d983e78e8389da5e368")]
 [assembly: System.Reflection.AssemblyProductAttribute("AgroLab")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AgroLab")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

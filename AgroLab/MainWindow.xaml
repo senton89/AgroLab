@@ -41,12 +41,12 @@
 
             <Expander Margin="10 0 0 10">
                 <Expander.Header>
-                    <TextBlock Text="Оплата" Foreground="#267AFC"/>
+                    <TextBlock Text="Редактирование нормативного документа" Foreground="#267AFC"/>
                 </Expander.Header>
                 <StackPanel>
-                    <TextBlock Text="Квитанции" Margin="30 5 0 5" Foreground="DimGray"/>
-                    <TextBlock Text="Статистика" Margin="30 5 0 5" Foreground="DimGray"/>
-                    <TextBlock Text="Загрузка файла с квитанциями" Margin="30 5 0 5" Foreground="DimGray" TextWrapping="Wrap"/>
+                    <TextBlock Text="Общие" Margin="30 5 0 5" Foreground="DimGray"/>
+                    <TextBlock Text="Содержание" Margin="30 5 0 5" Foreground="DimGray"/>
+                    <TextBlock Text="Положения нормативного документа" Margin="30 5 0 5" Foreground="DimGray" TextWrapping="Wrap"/>
                 </StackPanel>
             </Expander>
 

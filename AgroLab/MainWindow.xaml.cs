@@ -16,9 +16,12 @@ namespace AgroLab
         public MainWindow()
         {
             InitializeComponent();
-            UserControl2 userControl = new UserControl2();
-            MainPart.Children.Clear();
-            MainPart.Children.Add(userControl);
+            // EqAccUc2 userControl = new();
+            // MainPart.Children.Clear();
+            // MainPart.Children.Add(userControl);
+            StolenMain stolenMain = new StolenMain();
+            stolenMain.Show();
+            Close();
         }
     }
 }
