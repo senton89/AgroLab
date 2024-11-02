@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <div class="w-64 bg-white shadow-md p-4 rounded-lg h-screen">
+    <div class="flex items-center mb-6">
+      <span class="text-xl font-semibold">AgroLab</span>
+    </div>
+    <ul>
+      <li class="mb-2">
+        <a href="FileEditing/CommonSettings.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2">📁</span> Все
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-file-alt"></i></span> Инструкция ЛИМС
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-file-alt"></i></span> Проектная документация ЛИМС
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-file-alt"></i></span> Спецификации
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-file-alt"></i></span> Должностные инструкции
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-file-alt"></i></span> Положения, регламенты предприяти...
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-file-alt"></i></span> Методики отбора
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-file-alt"></i></span> Методики испытаний
+        </a>
+      </li>
+      <li class="mb-2">
+        <a href="../FilesMetodicsMenu.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded">
+          <span class="mr-2"><i class="fas fa-arrow-left"></i></span> В главное меню
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col">
+    <!-- Header -->
+    <div class="bg-blue-500 text-white p-4 flex justify-between items-center rounded-lg">
+      <div>
+        <h1 class="text-sm">Нормативные документы</h1>
+      </div>
+    </div>
+    <!-- Table -->
+    <div class="p-4 overflow-auto">
+      <table class="min-w-full bg-white">
+        <thead>
+        <tr class="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Обозначение</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Наименование</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Официальное наименов...</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Состояние</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Описание</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата начала</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата окончания</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Ссылка на НД</th>
+        </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+        <tr class="border-b border-gray-200 hover:bg-gray-100">
+          <td class="bg-white divide-y divide-gray-200 whitespace-nowrap">Demo</td>
+          <td class="bg-white divide-y divide-gray-200">Нормативный документ</td>
+          <td class="bg-white divide-y divide-gray-200">-</td>
+          <td class="bg-white divide-y divide-gray-200 text-green-500">Действует</td>
+          <td class="bg-white divide-y divide-gray-200">-</td>
+          <td class="bg-white divide-y divide-gray-200">01.10.2023</td>
+          <td class="bg-white divide-y divide-gray-200">-</td>
+          <td class="bg-white divide-y divide-gray-200">0</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Редактирование документа</title>
-  <script src="fileEditScript.js"></script>
+  <title>Редактирование документов</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 </head>
 <body class="bg-gray-100">
 <div class="flex">
@@ -13,34 +15,57 @@
   <div class="w-64 bg-white shadow-md p-4 rounded-lg h-screen">
     <h1 class="text-xl font-semibold mb-4">Редактирование нормативного документа</h1>
     <ul class="space-y-2">
-      <li><a href="CommonSettings.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span class="mr-2">📁</span>Общее</a></li>
-      <li><a href="DocumentContent.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span class="mr-2">📁</span>Содержание</a></li>
-      <li><a href="DocumentComponents.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span class="mr-2">📁</span>Положения нормативного документа</a></li>
-      <li><a href="DocumentEdit.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span class="mr-2">📁</span>Структура</a></li>
+      <li><a href="CommonSettings.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded"><span class="mr-2">📁</span>Общее</a></li>
+      <li><a href="DocumentContent.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded"><span class="mr-2">📁</span>Содержание</a></li>
+      <li><a href="DocumentComponents.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded"><span class="mr-2">📁</span>Положения нормативного документа</a></li>
+      <li><a href="DocumentEdit.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded"><span class="mr-2">📁</span>Структура</a></li>
+      <li><a href="../FilesMetodicsMenu.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-100 rounded"><span class="mr-2"><i class="fas fa-arrow-left"></i></span>В главное меню</a></li>
     </ul>
   </div>
+  <!-- Main Content -->
   <div class="flex-1 p-4">
-    <div class="grid grid-cols-5 grid-rows-[1fr_auto] gap-4">
-      <!-- Left Panel -->
-      <div class="col-span-2 bg-white rounded-lg p-4 shadow">
-        <h2 class="text-lg font-semibold mb-2">Наименование</h2>
-        <input type="text" placeholder="Наименование" class="w-full p-2 border border-gray-300 rounded mb-4"/>
-        <h2 class="text-lg font-semibold mb-2">Вложение</h2>
+    <div class="flex-1 flex">
+      <!-- List Section -->
+      <div class="bg-white w-1/2 p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold mb-4">Список разделов</h3>
         <div class="flex items-center mb-4">
-          <input type="text" id="fileNameDisplay" placeholder="Файл" class="w-3/4 p-2 border border-gray-300 rounded mr-2" readonly/>
-          <input type="file" id="fileInput" accept=".pdf,.txt,.doc,.docx" class="hidden" onchange="displayFileName()"/>
-          <button type="button" onclick="triggerFileInput()" class="bg-gray-300 border border-gray-300 rounded p-2"><span>Выберите файл</span></button>
+          <input type="text" class="border p-2 flex-1 rounded" placeholder="Наименование">
+          <button class="ml-2 p-2 bg-gray-300 rounded"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="border p-2 rounded">
+          <input type="checkbox" id="doc1" class="mr-2">
+          <label for="doc1">Нормативный документ N201</label>
         </div>
       </div>
-      <!-- Right Panel -->
-      <div class="col-span-3 bg-white rounded-lg p-4 shadow">
-        <h2 class="text-lg font-semibold mb-2">Содержание</h2>
-        <textarea id="contentArea" placeholder="Содержимое файла" class="w-full h-64 p-2 border border-gray-300 rounded"></textarea>
-      </div>
-      <!-- Footer Buttons -->
-      <div class="col-span-5 flex justify-end mt-4">
-        <button class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded mr-2">Отменить</button>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Сохранить</button>
+      <!-- Properties Section -->
+      <div class="bg-white w-1/2 p-6 rounded-lg shadow-md ml-2">
+        <h3 class="text-lg font-semibold mb-4">Свойства раздела</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-1 text-gray-700">Наименование *</label>
+            <input type="text" class="border p-2 w-full rounded">
+          </div>
+          <div>
+            <label class="block mb-1 text-gray-700">Расположение</label>
+            <input type="text" class="border p-2 w-full rounded">
+          </div>
+          <div>
+            <label class="block mb-1 text-gray-700">Официальное наименование *</label>
+            <input type="text" class="border p-2 w-full rounded">
+          </div>
+          <div>
+            <label class="block mb-1 text-gray-700">Обозначение *</label>
+            <input type="text" class="border p-2 w-full rounded">
+          </div>
+          <div class="col-span-2">
+            <label class="block mb-1 text-gray-700">Описание</label>
+            <textarea class="border p-2 w-full rounded h-24"></textarea>
+          </div>
+        </div>
+        <div class="flex justify-end mt-3">
+          <button class="bg-white hover:bg-blue-100 text-gray-700 font-bold py-2 px-4 rounded mr-2">Отменить</button>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Сохранить</button>
+        </div>
       </div>
     </div>
   </div>
