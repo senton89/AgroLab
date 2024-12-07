@@ -2,19 +2,25 @@
 import React, { useState } from 'react';
 import EquipmentTable from './EquipmentTable';
 import AddEquipmentForm from './AddEquipmentForm';
+import useEquipmentRepository from '../../Repository/EquipmentRepository';
+import MockEquipmentService from "../Mockups/MockEquipmentService";
 
 const EquipmentManagement = () => {
-    const [equipmentList, setEquipmentList] = useState([]);
-    const [isFormVisible, setIsFormVisible] = useState(false); // Состояние для управления видимостью формы
+    const { equipmentList, loading, error, addEquipment } = useEquipmentRepository(MockEquipmentService); // Pass the mock service
+    // const { equipmentList, loading, error, addEquipment } = useEquipmentRepository();
+    const [isFormVisible, setIsFormVisible] = useState(false);
 
     const handleAddEquipment = (newEquipment) => {
-        setEquipmentList([...equipmentList, newEquipment]);
-        setIsFormVisible(false); // Закрыть форму после добавления оборудования
+        addEquipment(newEquipment);
+        setIsFormVisible(false);
     };
 
     const toggleFormVisibility = () => {
-        setIsFormVisible(!isFormVisible); // Переключить видимость формы
+        setIsFormVisible(!isFormVisible);
     };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div className="container mx-auto p-1">
@@ -25,8 +31,8 @@ const EquipmentManagement = () => {
             >
                 {isFormVisible ? 'Скрыть форму' : 'Добавить новое оборудование'}
             </button>
-            {isFormVisible && <AddEquipmentForm onAdd={handleAddEquipment}/>}
-            <EquipmentTable equipmentList={equipmentList}/>
+            {isFormVisible && <AddEquipmentForm onAdd={handleAddEquipment} />}
+            <EquipmentTable equipmentList={equipmentList} />
         </div>
     );
 };

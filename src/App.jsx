@@ -2,13 +2,14 @@ import React from 'react';
 import {BrowserRouter, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LabelPage from './pages/LabelPage';
-import LabelPreview from "./components/LabelPreview";
+import LabelPreview from "./components/Label/LabelPreview";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
-import DocumentForm from "./components/DocumentForm";
-import ReagentManagement from "./components/ReagentManagement";
-import CultureManagement from "./components/CultureManagement";
-import EquipmentManagement from "./components/EquipmentManagement";
+import DocumentForm from "./components/Document/DocumentForm";
+import ReagentManagement from "./components/Reagent/ReagentManagement";
+import CultureManagement from "./components/Culture/CultureManagement";
+import EquipmentManagement from "./components/Equipment/EquipmentManagement";
+import CustomerManagement from "./components/Customer/CustomerManagement";
 
 const App = () => {
     return (
@@ -54,6 +55,14 @@ const App = () => {
                         <Sidebar/>
                         <div className="flex-1 p-4">
                             <EquipmentManagement/>
+                        </div>
+                    </div>
+                }/>
+                <Route path="/customers" element={
+                    <div className="flex">
+                        <Sidebar/>
+                        <div className="flex-1 p-4">
+                            <CustomerManagement/>
                         </div>
                     </div>
                 }/>

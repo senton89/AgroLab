@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import '../styles/LabelPreview.css'
+import '../../styles/LabelPreview.css'
 
 const LabelPreview = () => {
     const location = useLocation();

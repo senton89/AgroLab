@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import apiService from '../services/apiService';
+import apiService from '../../services/apiService';
 import { useNavigate } from "react-router-dom"; // Corrected import
 
 const LabelForm = () => {

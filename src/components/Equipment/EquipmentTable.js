@@ -1,6 +1,17 @@
 // EquipmentTable.jsx
 import React from 'react';
 
+const getValidUntilColor = (validUntilDate) => {
+    if (!validUntilDate) return 'bg-gray-300'; // Default color if no date is set
+    const validUntilDateObj = new Date(validUntilDate);
+    const today = new Date();
+    const diffInDays = Math.round((validUntilDateObj - today) / (1000 * 60 * 60 * 24));
+    if (diffInDays <= 7) return 'bg-red-500'; // Red if less than or equal to 1 week
+    if (diffInDays <= 14) return 'bg-orange-500'; // Orange if less than or equal to 2 weeks
+    if (diffInDays <= 30) return 'bg-yellow-500'; // Yellow if less than or equal to 1 month
+    return 'bg-green-500'; // Green if more than 1 month
+};
+
 const EquipmentTable = ({ equipmentList }) => {
     return (
         <div className="overflow-x-auto max-w-6xl">
@@ -48,7 +59,7 @@ const EquipmentTable = ({ equipmentList }) => {
                         <td className="px-6 py-4">{equipment.dateOfCommissioning}</td>
                         <td className="px-6 py-4">{equipment.certificateNumber}</td>
                         <td className="px-6 py-4">{equipment.inspectionDate}</td>
-                        <td className="px-6 py-4">{equipment.validUntilDate}</td>
+                        <td className={`px-6 py-4 ${getValidUntilColor(equipment.validUntilDate)}`}>{equipment.validUntilDate}</td>
                         <td className="px-6 py-4">{equipment.width}</td>
                         <td className="px-6 py-4">{equipment.length}</td>
                         <td className="px-6 py-4">{equipment.height}</td>

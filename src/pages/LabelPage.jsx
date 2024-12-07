@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import LabelForm from '../components/LabelForm';
-import LabelPreview from '../components/LabelPreview';
+import LabelForm from '../components/Label/LabelForm';
+import LabelPreview from '../components/Label/LabelPreview';
 
 const LabelPage = () => {
     const [formData, setFormData] = useState(null);

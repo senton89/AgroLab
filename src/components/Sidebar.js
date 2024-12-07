@@ -9,6 +9,8 @@ import {useNavigate} from "react-router-dom";
 // учет оборудования со списком
 // регистрация испытаний таблица испытаний,
 // добавление заказчика
+
+//на основе данных тебе выше файлов и созданных тобой сервисов и репозиториев создай формы и сервисы с репозиториями к испытаниям(
 const Sidebar = () => {
     const navigate = useNavigate();
     const handleMainContent = () =>{
@@ -21,13 +23,16 @@ const Sidebar = () => {
         navigate(`/document-content`);
     }
     const handleReagentClick = () => {
-        navigate(`/reagent-table`)
+        navigate(`/reagent-table`);
     }
     const handleCultureClick = () => {
-        navigate(`/culture-table`)
+        navigate(`/culture-table`);
     }
     const handleEquipmentClick = () => {
-        navigate(`/equipment-table`)
+        navigate(`/equipment-table`);
+    }
+    const handleCustomerClick = () => {
+        navigate(`/customers`);
     }
     return (
         <div className="flex">
@@ -58,6 +63,9 @@ const Sidebar = () => {
                 <li><a onClick={handleEquipmentClick}
                        className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
                     className="mr-2">📁</span>Оборудование</a></li>
+                <li><a onClick={handleCustomerClick}
+                       className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
+                    className="mr-2">📁</span>Заказчики</a></li>
             </ul>
         </div>
         </div>
