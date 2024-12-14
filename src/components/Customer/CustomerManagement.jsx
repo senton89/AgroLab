@@ -33,7 +33,6 @@ const CustomerManagement = () => {
                 <table className="min-w-full text-gray-700">
                     <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">ID</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Имя</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Email</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Адрес</th>
@@ -43,7 +42,6 @@ const CustomerManagement = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                     {customerList.map((customer, index) => (
                         <tr key={index}>
-                            <td className="px-6 py-4">{customer.id}</td>
                             <td className="px-6 py-4">{customer.name}</td>
                             <td className="px-6 py-4">{customer.email}</td>
                             <td className="px-6 py-4">{customer.address}</td>

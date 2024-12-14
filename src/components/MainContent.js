@@ -1,5 +1,8 @@
+//на основе этого стиля создай компоненты регистрации и авторизации(поля в базе name, surname,login,password,role(Admin/User), объект пользователя должен сохраняться в системе, а регистрации сотрудников доступна только пользователю с ролю Admin
 // src/components/MainContent.js
 import React from 'react';
+import RegistrayionForm from './Auth/RegistrationForm';
+import LoginForm from './Auth/LoginForm';
 // import './../styles/MainContent.css';
 
 const MainContent = () => {

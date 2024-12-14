@@ -1,0 +1,51 @@
+const API_URL = 'http://localhost:5005/api/samples'; // Убедитесь, что этот URL соответствует вашему API
+
+const SampleService = {
+    async addSample(sample) {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(sample),
+        });
+        if (!response.ok) {
+            throw new Error('Не удалось добавить образец');
+        }
+        return await response.json();
+    },
+
+    async fetchSamples() {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error('Не удалось получить образцы');
+        }
+        return await response.json();
+    },
+
+    async updateSample(id, updatedSample) {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedSample),
+        });
+        if (!response.ok) {
+            throw new Error('Не удалось обновить образец');
+        }
+        return await response.json();
+    },
+
+    async deleteSample(id) {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error('Не удалось удалить образец');
+        }
+        return await response.json();
+    }
+};
+
+export default SampleService;

@@ -1,15 +1,28 @@
 // ReagentManagement.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReagentTable from './ReagentTable';
 import AddReagentForm from './AddReagentForm';
+import useReagentRepository from '../../Repository/ReagentRepository'
 
 const ReagentManagement = () => {
-    const [reagents, setReagents] = useState([]);
+    const { reagentList, loading, error, addReagent, fetchReagents } = useReagentRepository(); // Используйте хук
     const [isFormVisible, setIsFormVisible] = useState(false); // Состояние для управления видимостью формы
 
-    const handleAddReagent = (newReagent) => {
-        setReagents([...reagents, newReagent]);
-        setIsFormVisible(false); // Скрыть форму после добавления реагента
+    useEffect(() => {
+        const loadReagents = async () => {
+            await fetchReagents();
+        };
+
+        loadReagents();
+    }, [fetchReagents]);
+
+    const handleAddReagent = async (newReagent) => {
+        try {
+            await addReagent(newReagent); // Добавляем реагент
+            await fetchReagents(); // Обновляем список реагентов
+        } catch (err) {
+            alert(err.message);
+        }
     };
 
     return (
@@ -25,7 +38,7 @@ const ReagentManagement = () => {
             </div>
             {isFormVisible && <AddReagentForm onAdd={handleAddReagent}/>}
             <div className="flex-1">
-            <ReagentTable reagents={reagents} />
+            <ReagentTable reagents={reagentList} />
         </div>
         </div>
     );

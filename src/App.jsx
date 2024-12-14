@@ -10,6 +10,8 @@ import ReagentManagement from "./components/Reagent/ReagentManagement";
 import CultureManagement from "./components/Culture/CultureManagement";
 import EquipmentManagement from "./components/Equipment/EquipmentManagement";
 import CustomerManagement from "./components/Customer/CustomerManagement";
+import SampleManagement from "./components/Sample/SampleManagement";
+import OrderManagement from "./components/Orders/OrderManagement";
 
 const App = () => {
     return (
@@ -63,6 +65,22 @@ const App = () => {
                         <Sidebar/>
                         <div className="flex-1 p-4">
                             <CustomerManagement/>
+                        </div>
+                    </div>
+                }/>
+                <Route path="/samples" element={
+                    <div className="flex">
+                        <Sidebar/>
+                        <div className="flex-1 p-4">
+                            <SampleManagement/>
+                        </div>
+                    </div>
+                }/>
+                <Route path="/orders" element={
+                    <div className="flex">
+                        <Sidebar/>
+                        <div className="flex-1 p-4">
+                            <OrderManagement/>
                         </div>
                     </div>
                 }/>
