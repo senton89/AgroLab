@@ -1,9 +1,9 @@
 // OrderManagement.jsx
 import React, { useState } from 'react';
-import useOrderRepository from '../../Repository/OrderRepository'; // Предполагается, что у вас есть репозиторий для образцов
+import useOrderRepository from '../../Repository/OrderRepository';
 import MockOrderService from "../Mockups/MockOrderService";
 import AddOrderForm from "./AddOrderForm";
-import OrderTable from "./OrderTable"; // Предполагается, что у вас есть мок-сервис для образцов
+import OrderTable from "./OrderTable";
 
 const OrderManagement = () => {
     const { orderList, loading, error, addOrder } = useOrderRepository(MockOrderService); // Используем мок-сервис

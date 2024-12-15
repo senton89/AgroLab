@@ -3,10 +3,9 @@ import React, { useState } from 'react';
 import SampleTable from './SampleTable';
 import AddSampleForm from './AddSampleForm';
 import useSampleRepository from '../../Repository/SampleRepository';
-import MockSampleService from "../Mockups/MockSampleService";
 
 const SampleManagement = () => {
-    const { sampleList, loading, error, addSample } = useSampleRepository(MockSampleService); // Pass the mock service
+    const { sampleList, loading, error, addSample} = useSampleRepository();
     // const { sampleList, loading, error, addSample } = useSampleRepository();
     const [isFormVisible, setIsFormVisible] = useState(false);
 
