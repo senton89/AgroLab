@@ -1,6 +1,7 @@
 // src/components/LoginForm.js
 import React, { useState } from 'react';
 import ReagentRepository from '../../Repository/ReagentRepository'
+import AuthRepository from "../../Repository/AuthRepository";
 
 const LoginForm = () => {
     const [credentials, setCredentials] = useState({
@@ -30,10 +31,10 @@ const LoginForm = () => {
     };
     return (
         <div className="flex-1 p-4">
-            <div className="bg-white p-6 rounded-lg shadow-md h-full">
+            <div className="bg-white p-6 rounded-lg shadow-md h-full w-1/3">
                 <h2 className="text-lg font-bold mb-4">Авторизация пользователя</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="grid grid-cols-1 gap-4 mb-4">
                         <div>
                             <label className="block mb-1 text-gray-700">Логин</label>
                             <input type="text" name="login" value={credentials.login} onChange={handleChange}

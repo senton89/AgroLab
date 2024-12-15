@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import apiService from '../../services/apiService';
-import { useNavigate } from "react-router-dom"; // Corrected import
+// LabelForm.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from "react-router-dom"; // Corrected import
 
 const LabelForm = () => {
-    const navigate = useNavigate(); // Corrected usage
+    const navigate = useNavigate();
+    const location = useLocation(); // Get the location object
+    const { sample } = location.state || {}; // Extract order from state
+
     const [formData, setFormData] = useState({
-        culture: '',
-        sortName: '',
-        reproduction: '',
-        harvestYear: '',
-        batchNumber: '',
-        batchWeight: '',
+        culture: sample?.culture || '',
+        sortName: sample?.variety || '',
+        reproduction: sample?.reproduction || '',
+        harvestYear: sample?.harvestYear || '',
+        batchNumber: sample?.batchNumber || '',
+        batchWeight: sample?.batchWeight || '',
         controlUnit: '',
-        analysisType: ''
+        analysisType: sample?.analysisType || ''
     });
 
     const handleChange = (e) => {
@@ -27,7 +30,7 @@ const LabelForm = () => {
     };
 
     const handleCancel = () => {
-        navigate('/main'); // Переход на главную страницу
+        navigate('/samples');
     };
 
     return (
@@ -41,7 +44,7 @@ const LabelForm = () => {
                 </div>
                 <div>
                     <label>Сорт:</label>
-                    <input type="text" name="sortName" value={formData.sort} onChange={handleChange}
+                    <input type="text" name="sort" value={formData.sortName} onChange={handleChange}
                            className="border p-2 w-full"/>
                 </div>
                 <div>
@@ -77,7 +80,7 @@ const LabelForm = () => {
                 <div className="flex justify-between">
                     <button type="submit" className="bg-blue-500 text-white p-2">Отправить</button>
                     <button type="button" onClick={handleCancel} className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded">Отменить
-                </button>
+                    </button>
                 </div>
             </form>
         </div>

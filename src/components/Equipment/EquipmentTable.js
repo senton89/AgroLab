@@ -1,5 +1,5 @@
 // EquipmentTable.jsx
-import React from 'react';
+import React, { useState } from 'react';
 
 const getValidUntilColor = (validUntilDate) => {
     if (!validUntilDate) return 'bg-gray-300'; // Default color if no date is set
@@ -13,43 +13,49 @@ const getValidUntilColor = (validUntilDate) => {
 };
 
 const EquipmentTable = ({ equipmentList }) => {
+    const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
+
+    const sortedEquipment = [...equipmentList].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+            return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+            return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+    });
+
+    const requestSort = (key) => {
+        let direction = 'ascending';
+        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        }
+        setSortConfig({ key, direction });
+    };
+
     return (
         <div className="overflow-x-auto max-w-6xl">
             <table className="min-w-full text-gray-700">
                 <thead className="bg-gray-50">
                 <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Название</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Категория</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Модель</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер
-                        инвентаря
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер
-                        завода
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата
-                        ввода в эксплуатацию
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер
-                        свидетельства
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата
-                        проверки
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Годен
-                        до
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Ширина</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Длина</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Высота</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Глубина</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата
-                        вывода из использования
-                    </th>
+                    <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Название</th>
+                    <th onClick={() => requestSort('category')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Категория</th>
+                    <th onClick={() => requestSort('model')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Модель</th>
+                    <th onClick={() => requestSort('inventoryNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер инвентаря</th>
+                    <th onClick={() => requestSort('factoryNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер завода</th>
+                    <th onClick={() => requestSort('dateOfCommissioning')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата ввода в эксплуатацию</th>
+                    <th onClick={() => requestSort('certificateNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер свидетельства</th>
+                    <th onClick={() => requestSort('inspectionDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата проверки</th>
+                    <th onClick={() => requestSort('validUntilDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Годен до</th>
+                    <th onClick={() => requestSort('width')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Ширина</th>
+                    <th onClick={() => requestSort('length')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Длина</th>
+                    <th onClick={() => requestSort('height')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Высота</th>
+                    <th onClick={() => requestSort('depth')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Глубина</th>
+                    <th onClick={() => requestSort('dateOfDecommissioning')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата вывода из использования</th>
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {equipmentList.map((equipment, index) => (
+                {sortedEquipment.map((equipment, index) => (
                     <tr key={index}>
                         <td className="px-6 py-4">{equipment.name}</td>
                         <td className="px-6 py-4">{equipment.category}</td>

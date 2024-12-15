@@ -44,7 +44,7 @@ const CultureManagement = () => {
                 {isFormVisible && <AddCultureForm onAdd={handleAddCulture} />} {/* Conditional rendering of the form */}
             </div>
             <div className="flex-1 ">
-                <CultureTable cultures={cultures} />
+                <CultureTable cultures={cultures} setCultures={setCultures} />
             </div>
         </div>
     );

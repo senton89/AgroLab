@@ -6,6 +6,7 @@ const RegistrationForm = ({ isAdmin }) => {
     const [formData, setFormData] = useState({
         name: '',
         surname: '',
+        patronicname: '',
         login: '',
         password: '',
         role: 'User ', // по умолчанию роль - User

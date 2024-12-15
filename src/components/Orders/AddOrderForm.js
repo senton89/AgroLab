@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CultureRepository from '../../Repository/CultureRepository'; // Импортируйте репозиторий культур
+import useCustomerRepository from '../../Repository/CustomerRepository'; // Импортируйте репозиторий заказчиков
 
 const AddOrderForm = ({ onAdd }) => {
     const [errors, setErrors] = useState({});
@@ -36,6 +37,12 @@ const AddOrderForm = ({ onAdd }) => {
     const [filteredCultures, setFilteredCultures] = useState([]); // Состояние для фильтрации культур
     const [showAddCulture, setShowAddCulture] = useState(false); // Состояние для отображения кнопки добавления культуры
 
+    // Состояние для хранения заказчиков
+    const [filteredCustomers, setFilteredCustomers] = useState([]);
+    const [showAddCustomer, setShowAddCustomer] = useState(false); // Состояние для отображения кнопки добавления заказчика
+
+    const { customerList, loading, error, addCustomer } = useCustomerRepository(); // Используем репозиторий заказчиков
+
     useEffect(() => {
         const fetchCultures = async () => {
             const cultures = await CultureRepository.getCultures();
@@ -46,7 +53,17 @@ const AddOrderForm = ({ onAdd }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'culture') {
+        if (name === 'customer') {
+            setFormData({ ...formData, [name]: value });
+            const filtered = customerList.filter(customer => customer.name.toLowerCase().includes(value.toLowerCase()));
+            setFilteredCustomers(filtered);
+            setShowAddCustomer(!filtered.some(customer => customer.name.toLowerCase() === value.toLowerCase()) && value !== ''); // Показываем кнопку добавления, если введенное значение отсутствует в списке
+            if (filtered.length === 1) {
+                setFormData(prevFormData => ({ ...prevFormData, innKpp: filtered[0].inn })); // Подтягиваем ИНН
+            } else {
+                setFormData(prevFormData => ({ ...prevFormData, innKpp: '' })); // Сбрасываем ИНН, если не найден
+            }
+        } else if (name === 'culture') {
             setFormData({ ...formData, [name]: value });
             const filtered = cultures.filter(culture => culture.toLowerCase().includes(value.toLowerCase()));
             setFilteredCultures(filtered);
@@ -113,7 +130,21 @@ const AddOrderForm = ({ onAdd }) => {
                 seedTreatment: '',
                 analysisType: '',
                 protocol: ''
-        });
+            });
+        }
+    };
+
+    const handleAddCustomer = async () => {
+        if (formData.customer && formData.innKpp) {
+            const newCustomer = { name: formData.customer, innKpp: formData.innKpp }; // Создаем нового заказчика
+            await addCustomer(newCustomer);
+            setFilteredCustomers([]);
+            setShowAddCustomer(false);
+            setFormData({ ...formData, customer: newCustomer.name, innKpp: newCustomer.innKpp }); // Сбросить поля
+        } else {
+            if (!formData.innKpp) {
+                setErrors(prevErrors => ({ ...prevErrors, innKpp: 'ИНН обязателен для добавления заказчика' }));
+            }
         }
     };
 
@@ -124,7 +155,7 @@ const AddOrderForm = ({ onAdd }) => {
             setCultures(cultures);
             setFilteredCultures([]);
             setShowAddCulture(false);
-            setFormData({ ...formData, culture: '' }); // Сбросить поле культуры
+            setFormData({ ...formData, culture: formData.culture }); // Сбросить поле культуры
         }
     };
 
@@ -152,13 +183,13 @@ const AddOrderForm = ({ onAdd }) => {
         if (!formData.storageLocation) newErrors.storageLocation = 'Место хранения обязательно';
         if (!formData.source) newErrors.source = 'Откуда получены или своего урожая обязательно';
         if (!formData.seedPurpose) newErrors.seedPurpose = 'Назначение семян обязательно';
-        if (!formData.processingType) newErrors.processingType = 'Вид подработки обязателен';
+        if (!formData.processingType) newErrors.processingType = 'Вид подработ ки обязателен';
         if (!formData.seedTreatment) newErrors.seedTreatment = 'Протравливание семян обязательно';
         if (!formData.analysisType) newErrors.analysisType = 'Вид анализа семян обязателен';
         if (!formData.protocol) newErrors.protocol = 'Протокол обязателен';
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Return true if no errors
+        return Object.keys(newErrors).length === 0; // Возвращает true, если нет ошибок
     };
 
     const labels = {
@@ -191,12 +222,49 @@ const AddOrderForm = ({ onAdd }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-4 max-w-md overflow-auto">
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-4 max-w-lg overflow-auto">
             <h2 className="text-lg font-bold mb-4">Добавить заказ</h2>
             {Object.keys(formData).map((key) => (
                 <div className="mb-4" key={key}>
                     <label className="block mb-1 text-gray-700">{labels[key]}</label>
-                    {key === 'culture' ? (
+                    {key === 'customer' ? (
+                        <>
+                            <input
+                                type="text"
+                                name={key}
+                                value={formData[key]}
+                                onChange={handleChange}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                placeholder="Введите заказчика"
+                            />
+                            {filteredCustomers.length > 0 && (
+                                <ul className="border border-gray-300 rounded mt-1">
+                                    {filteredCustomers.map((customer, index) => (
+                                        <li
+                                            key={index}
+                                            className="p-2 hover:bg-gray-200 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData({ ...formData, customer: customer.name, innKpp: customer.innKpp });
+                                                setFilteredCustomers([]);
+                                                setShowAddCustomer(false);
+                                            }}
+                                        >
+                                            {customer.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            {showAddCustomer && (
+                                <button
+                                    type="button"
+                                    onClick={handleAddCustomer}
+                                    className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
+                                >
+                                    Добавить заказчика
+                                </button>
+                            )}
+                        </>
+                    ) : key === 'culture' ? (
                         <>
                             <input
                                 type="text"
@@ -227,7 +295,7 @@ const AddOrderForm = ({ onAdd }) => {
                                 <button
                                     type="button"
                                     onClick={handleAddCulture}
-                                    className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
+                                    className="mt-2 bg-green-500 hover:bg-green-700 text-white font bold py-1 px-2 rounded"
                                 >
                                     Добавить культуру
                                 </button>
@@ -311,35 +379,35 @@ const AddOrderForm = ({ onAdd }) => {
                                 required
                             />
                         </>
-) : key === 'sampleCollector' ? (
-        <select
-            name={key}
-            value={formData.sampleCollector}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-        >
-            <option value="Сотрудник ИЛ">Сотрудник ИЛ</option>
-            <option value="Заказчик">Заказчик</option>
-        </select>
-    ) : (
-        <input
-            type="text"
-            name={key}
-            value={formData[key]}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-        />
-    )}
-    {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]}</p>}
-</div>
-))}
-<div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
-    <button type="button" className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded" onClick={() => setFormData({})}>Отменить</button>
-    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Добавить</button>
-</div>
-</form>
-);
+                    ) : key === 'sampleCollector' ? (
+                        <select
+                            name={key}
+                            value={formData.sampleCollector}
+                            onChange={handleChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                        >
+                            <option value="Сотрудник ИЛ">Сотрудник ИЛ</option>
+                            <option value="Заказчик">Заказчик</option>
+                        </select>
+                    ) : (
+                        <input
+                            type="text"
+                            name={key}
+                            value={formData[key]}
+                            onChange={handleChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
+                        />
+                    )}
+                    {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]}</p>}
+                </div>
+            ))}
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
+                <button type="button" className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded" onClick={() => setFormData({})}>Отменить</button>
+                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Добавить</button>
+            </div>
+        </form>
+    );
 };
 
 export default AddOrderForm;

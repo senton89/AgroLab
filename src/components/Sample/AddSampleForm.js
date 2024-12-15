@@ -3,71 +3,86 @@ import React, { useState } from 'react';
 
 const AddSampleForm = ({ onAdd }) => {
     const [errors, setErrors] = useState({});
-    const [sample, setSample] = useState({
-        napravlenie: '',
-        godUrozhaya: '',
-        reprodukcija: '',
-        kategoriaSemjan: '',
-        massaObrazca: '',
-        nomerPartii: '',
-        massaPartii: '',
-        mestoHranenie: '',
-        otKudaPolucheny: '',
-        naznachenieSemjan: '',
-        vidPodrabotki: '',
-        protivlivanieSemjan: '',
-        vidAnalizaSemjan: '',
-        protokol: '',
+    const [sampleData, setSampleData] = useState({
+        direction: '',
+        harvestYear: '',
+        reproduction: '',
+        seedCategory: '',
+        sampleWeight: '',
+        batchNumber: '',
+        batchWeight: '',
+        storageLocation: '',
+        source: '',
+        seedPurpose: '',
+        processingType: '',
+        seedTreatment: '',
+        analysisType: '',
+        protocol: '',
     });
 
     const handleChange = (event) => {
-        setSample({ ...sample, [event.target.name]: event.target.value });
+        setSampleData({ ...sampleData, [event.target.name]: event.target.value });
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if (validateForm()) {
-            onAdd(sample);
-            setSample({
-                napravlenie: '',
-                godUrozhaya: '',
-                reprodukcija: '',
-                kategoriaSemjan: '',
-                massaObrazca: '',
-                nomerPartii: '',
-                massaPartii: '',
-                mestoHranenie: '',
-                otKudaPolucheny: '',
-                naznachenieSemjan: '',
-                vidPodrabotki: '',
-                protivlivanieSemjan: '',
-                vidAnalizaSemjan: '',
-                protokol: '',
+            onAdd(sampleData);
+            setSampleData({
+                direction: '',
+                harvestYear: '',
+                reproduction: '',
+                seedCategory: '',
+                sampleWeight: '',
+                batchNumber: '',
+                batchWeight: '',
+                storageLocation: '',
+                source: '',
+                seedPurpose: '',
+                processingType: '',
+                seedTreatment: '',
+                analysisType: '',
+                protocol: '',
             });
         }
     };
 
     const validateForm = () => {
         const newErrors = {};
+
         // Validate required fields
-        if (!sample.napravlenie) newErrors.napravlenie = 'Направление обязательно';
-        if (!sample.godUrozhaya) newErrors.godUrozhaya = 'Год урожая обязателен';
-        if (!sample.reprodukcija) newErrors.reprodukcija = 'Репродукция обязательна';
-        if (!sample.kategoriaSemjan) newErrors.kategoriaSemjan = 'Категория семян обязательна';
-        if (!sample.massaObrazca) newErrors.massaObrazca = 'Масса образца обязательна';
-        if (!sample.nomerPartii) newErrors.nomerPartii = '№ партии обязателен';
-        if (!sample.massaPartii) newErrors.massaPartii = 'Масса партии обязательна';
-        if (!sample.mestoHranenie) newErrors.mestoHranenie = 'Место хранения обязательно';
-        if (!sample.otKudaPolucheny) newErrors.otKudaPolucheny = 'Откуда получены обязательно';
-        if (!sample.naznachenieSemjan) newErrors.naznachenieSemjan = 'Назначение семян обязательно';
-        if (!sample.vidPodrabotki) newErrors.vidPodrabotki = 'Вид подработки обязателен';
-        if (!sample.protivlivanieSemjan) newErrors.protivlivanieSemjan = 'Протравливание семян обязательно';
-        if (!sample.vidAnalizaSemjan) newErrors.vidAnalizaSemjan = 'Вид анализа семян обязателен';
-        if (!sample.protokol) newErrors.protokol = 'Протокол обязателен';
+        if (!sampleData.direction) newErrors.direction = 'Направление обязательно';
+        if (!sampleData.harvestYear) newErrors.harvestYear = 'Год урожая обязателен';
+        if (!sampleData.reproduction) newErrors.reproduction = 'Репродукция обязательна';
+        if (!sampleData.seedCategory) newErrors.seedCategory = 'Категория семян обязательна';
+        if (!sampleData.sampleWeight) newErrors.sampleWeight = 'Масса образца обязательна';
+        if (!sampleData.batchNumber) newErrors.batchNumber = '№ партии обязателен';
+        if (!sampleData.batchWeight) newErrors.batchWeight = 'Масса партии обязательна';
+        if (!sampleData.storageLocation) newErrors.storageLocation = 'Место хранения обязательно';
+        if (!sampleData.source) newErrors.source = 'Откуда получены обязательно';
+        if (!sampleData.seedPurpose) newErrors.seedPurpose = 'Назначение семян обязательно';
+        if (!sampleData.processingType) newErrors.processingType = 'Вид подработки обязателен';
+        if (!sampleData.seedTreatment) newErrors.seedTreatment = 'Протравливание семян обязательно';
+        if (!sampleData.analysisType) newErrors.analysisType = 'Вид анализа семян обязателен';
+        if (!sampleData.protocol) newErrors.protocol = 'Протокол обязателен';
 
         // Validate numeric fields
-        if (sample.massaObrazca && isNaN(sample.massaObrazca)) newErrors.massaObrazca = 'Масса образца должна быть числом';
-        if (sample.massaPartii && isNaN(sample.massaPartii)) newErrors.massaPartii = 'Масса партии должна быть числом';
+        if (sampleData.sampleWeight) {
+            if (isNaN(sampleData.sampleWeight)) newErrors.sampleWeight = 'Масса образца должна быть числом';
+            else if (parseFloat(sampleData.sampleWeight) <= 0) newErrors.sampleWeight = 'Масса образца должна быть положительным числом';
+        }
+        if (sampleData.batchWeight) {
+            if (isNaN(sampleData.batchWeight)) newErrors.batchWeight = 'Масса партии должна быть числом';
+            else if (parseFloat(sampleData.batchWeight) <= 0) newErrors.batchWeight = 'Масса партии должна быть положительным числом';
+        }
+
+        // Validate year
+        if (sampleData.harvestYear) {
+            const currentYear = new Date().getFullYear();
+            if (isNaN(sampleData.harvestYear) || parseInt(sampleData.harvestYear) < 1900 || parseInt(sampleData.harvestYear) > currentYear) {
+                newErrors.harvestYear = 'Год урожая должен быть числом между 1900 и текущим годом';
+            }
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Возвращает true, если нет ошибок
@@ -80,172 +95,172 @@ const AddSampleForm = ({ onAdd }) => {
                 <label className="block mb-1 text-gray-700">Направление:</label>
                 <input
                     type="text"
-                    name="napravlenie"
-                    value={sample.napravlenie}
+                    name="direction"
+                    value={sampleData.direction}
                     onChange={handleChange}
-                    className="w-full p-2 border border-gray -300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.napravlenie && <p className="text-red-500 text-sm mt-1">{errors.napravlenie}</p>}
+                {errors.direction && <p className="text-red-500 text-sm mt-1">{errors.direction}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Год урожая:</label>
                 <input
                     type="text"
-                    name="godUrozhaya"
-                    value={sample.godUrozhaya}
+                    name="harvestYear"
+                    value={sampleData.harvestYear}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.godUrozhaya && <p className="text-red-500 text-sm mt-1">{errors.godUrozhaya}</p>}
+                {errors.harvestYear && <p className="text-red-500 text-sm mt-1">{errors.harvestYear}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Репродукция:</label>
                 <input
                     type="text"
-                    name="reprodukcija"
-                    value={sample.reprodukcija}
+                    name="reproduction"
+                    value={sampleData.reproduction}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.reprodukcija && <p className="text-red-500 text-sm mt-1">{errors.reprodukcija}</p>}
+                {errors.reproduction && <p className="text-red-500 text-sm mt-1">{errors.reproduction}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Категория семян:</label>
                 <input
                     type="text"
-                    name="kategoriaSemjan"
-                    value={sample.kategoriaSemjan}
+                    name="seedCategory"
+                    value={sampleData.seedCategory}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.kategoriaSemjan && <p className="text-red-500 text-sm mt-1">{errors.kategoriaSemjan}</p>}
+                {errors.seedCategory && <p className="text-red-500 text-sm mt-1">{errors.seedCategory}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Масса образца, г:</label>
                 <input
                     type="text"
-                    name="massaObrazca"
-                    value={sample.massaObrazca}
+                    name="sampleWeight"
+                    value={sampleData.sampleWeight}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.massaObrazca && <p className="text-red-500 text-sm mt-1">{errors.massaObrazca}</p>}
+                {errors.sampleWeight && <p className="text-red-500 text-sm mt-1">{errors.sampleWeight}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">№ партии:</label>
                 <input
                     type="text"
-                    name="nomerPartii"
-                    value={sample.nomerPartii}
+                    name="batchNumber"
+                    value={sampleData.batchNumber}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.nomerPartii && <p className="text-red-500 text-sm mt-1">{errors.nomerPartii}</p>}
+                {errors.batchNumber && <p className="text-red-500 text-sm mt-1">{errors.batchNumber}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Масса партии, ц:</label>
                 <input
                     type="text"
-                    name="massaPartii"
-                    value={sample.massaPartii}
+                    name="batchWeight"
+                    value={sampleData.batchWeight}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.massaPartii && <p className="text-red-500 text-sm mt-1">{errors.massaPartii}</p>}
+                {errors.batchWeight && <p className="text-red-500 text-sm mt-1">{errors.batchWeight}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Место хранения:</label>
                 <input
                     type="text"
-                    name="mestoHranenie"
-                    value={sample.mestoHranenie}
+                    name="storageLocation"
+                    value={sampleData.storageLocation}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.mestoHranenie && <p className="text-red-500 text-sm mt-1">{errors.mestoHranenie}</p>}
+                {errors.storageLocation && <p className="text-red-500 text-sm mt-1">{errors.storageLocation}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Откуда получены:</label>
                 <input
                     type="text"
-                    name="otKudaPolucheny"
-                    value={sample.otKudaPolucheny}
+                    name="source"
+                    value={sampleData.source}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.otKudaPolucheny && <p className="text-red-500 text-sm mt-1">{errors.otKudaPolucheny}</p>}
+                {errors.source && <p className="text-red-500 text-sm mt-1">{errors.source}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Назначение семян:</label>
                 <input
                     type="text"
-                    name="naznachenieSemjan"
-                    value={sample.naznachenieSemjan}
+                    name="seedPurpose"
+                    value={sampleData.seedPurpose}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.naznachenieSemjan && <p className="text-red-500 text-sm mt-1">{errors.naznachenieSemjan}</p>}
+                {errors.seedPurpose && <p className="text-red-500 text-sm mt-1">{errors.seedPurpose}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Вид подработки:</label>
                 <input
                     type="text"
-                    name="vidPodrabotki"
-                    value={sample.vidPodrabotki}
+                    name="processingType"
+                    value={sampleData.processingType}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.vidPodrabotki && <p className="text-red-500 text-sm mt-1">{errors.vidPodrabotki}</p>}
+                {errors.processingType && <p className="text-red-500 text-sm mt-1">{errors.processingType}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Протравливание семян:</label>
                 <input
                     type="text"
-                    name="protivlivanieSemjan"
-                    value={sample.protivlivanieSemjan}
+                    name="seedTreatment"
+                    value={sampleData.seedTreatment}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.protivlivanieSemjan && <p className="text-red-500 text-sm mt-1">{errors.protivlivanieSemjan}</p>}
+                {errors.seedTreatment && <p className="text-red-500 text-sm mt-1">{errors.seedTreatment}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Вид анализа семян:</label>
                 <input
                     type="text"
-                    name="vidAnalizaSemjan"
-                    value={sample.vidAnalizaSemjan}
+                    name="analysisType"
+                    value={sampleData.analysisType}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.vidAnalizaSemjan && <p className="text-red-500 text-sm mt-1">{errors.vidAnalizaSemjan}</p>}
+                {errors.analysisType && <p className="text-red-500 text-sm mt-1">{errors.analysisType}</p>}
             </div>
             <div className="mb-4">
                 <label className="block mb-1 text-gray-700">Протокол:</label>
                 <input
                     type="text"
-                    name="protokol"
-                    value={sample.protokol}
+                    name="protocol"
+                    value={sampleData.protocol}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded"
                     required
                 />
-                {errors.protokol && <p className="text-red-500 text-sm mt-1">{errors.protokol}</p>}
+                {errors.protocol && <p className="text-red-500 text-sm mt-1">{errors.protocol}</p>}
             </div>
             <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
-                <button type="button" className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded" onClick={() => setSample({})}>Отменить</button>
+                <button type="button" className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded" onClick={() => setSampleData({})}>Отменить</button>
                 <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Добавить</button>
             </div>
         </form>

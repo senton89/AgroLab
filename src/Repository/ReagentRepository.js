@@ -1,12 +1,11 @@
 // ReagentRepository.js
 import { useState, useEffect } from 'react';
 import ReagentService from '../services/ReagentService';
+import MockReagentService from '../components/Mockups/MockReagentService'; // Импортируйте мок-сервис
 
+const useMock = true;
 const useReagentRepository = (reagentService) => {
-    if(reagentService===null)
-    {
-        reagentService = ReagentService;
-    }
+    if(useMock) reagentService = MockReagentService;
     const [reagentList, setReagentList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -24,20 +23,25 @@ const useReagentRepository = (reagentService) => {
         setLoading(true);
         try {
             const data = await reagentService.fetchReagents();
-            this.setReagentList(data);
+            setReagentList(data); // Исправлено: используйте setReagentList вместо this.setReagentList
         } catch (err) {
             setError(err.message);
         } finally {
             setLoading(false);
         }
     };
-return {
-    reagentList,
-    loading,
-    error,
-    addReagent,
-    fetchReagents,
-};
+
+    useEffect(() => {
+        fetchReagents(); // Загружаем реагенты при монтировании компонента
+    }, []);
+
+    return {
+        reagentList,
+        loading,
+        error,
+        addReagent,
+        fetchReagents,
+    };
 };
 
 export default useReagentRepository;

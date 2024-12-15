@@ -1,6 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
-import HomePage from './pages/HomePage';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import LabelPage from './pages/LabelPage';
 import LabelPreview from "./components/Label/LabelPreview";
 import Sidebar from "./components/Sidebar";
@@ -12,78 +11,115 @@ import EquipmentManagement from "./components/Equipment/EquipmentManagement";
 import CustomerManagement from "./components/Customer/CustomerManagement";
 import SampleManagement from "./components/Sample/SampleManagement";
 import OrderManagement from "./components/Orders/OrderManagement";
+import ProtectedRoute from './components/ProtectedRoute';
+import LoginForm from "./components/Auth/LoginForm";
+import RegistrationForm from "./components/Auth/RegistrationForm"; // Import the ProtectedRoute component
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Navigate to='/main'/>} />
+                <Route path="/" element={<Navigate to='/main' />} />
                 <Route path="/label" element={<LabelPage />} />
-                <Route path="/label-preview" element={<LabelPreview/>}/>
-                <Route path="/main" element={<div className="bg-gray-100 flex">
-                    <Sidebar/>
-                </div>
-                }/>
+                <Route path="/label-preview" element={<LabelPreview />} />
+                <Route path="/login" element={<LoginForm/>} /> {/* Add your login component here */}
+
+                {/* Protected routes */}
+                <Route path="/main" element={
+                    <ProtectedRoute>
+                        <div className="bg-gray-100 flex">
+                            <Sidebar />
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/register" element={
+                    <ProtectedRoute>
+                        <div className="bg-gray-100 flex">
+                            <Sidebar/>
+                            {(() => {
+                                const user = JSON.parse(localStorage.getItem('user')); // Retrieve user
+                                const isAdmin = user && user.role === 'admin'; // Check if user exists and is admin
+                                return <RegistrationForm isAdmin={isAdmin} />;
+                            })()}
+                        </div>
+                    </ProtectedRoute>
+                } />
                 <Route path="/main-content" element={
-                    <div className="bg-gray-100 flex">
-                        <Sidebar/>
-                        <MainContent/>
-                    </div>
-                }/>
+                    <ProtectedRoute>
+                        <div className="bg-gray-100 flex">
+                            <Sidebar />
+                            <MainContent />
+                        </div>
+                    </ProtectedRoute>
+                } />
                 <Route path="/document-content" element={
-                    <div className="bg-gray-100 flex">
-                        <Sidebar/>
-                        <DocumentForm/>
-                    </div>
-                }/>
+                    <ProtectedRoute>
+                        <div className="bg-gray-100 flex">
+                            <Sidebar />
+                            <DocumentForm />
+                        </div>
+                    </ProtectedRoute>
+                } />
                 <Route path="/reagent-table" element={
-                    <div className="flex">
-                        <Sidebar/>
-                        <div className="flex-1 p-4">
-                            <ReagentManagement/>
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4">
+                                <ReagentManagement />
+                            </div>
                         </div>
-                    </div>
-                }/>
+                    </ProtectedRoute>
+                } />
                 <Route path="/culture-table" element={
-                    <div className="flex">
-                        <Sidebar/>
-                        <div className="flex-1 p-4">
-                            <CultureManagement/>
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4">
+                                <CultureManagement />
+                            </div>
                         </div>
-                    </div>
-                }/>
+                    </ProtectedRoute>
+                } />
                 <Route path="/equipment-table" element={
-                    <div className="flex">
-                        <Sidebar/>
-                        <div className="flex-1 p-4">
-                            <EquipmentManagement/>
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4">
+                                <EquipmentManagement />
+                            </div>
                         </div>
-                    </div>
-                }/>
+                    </ProtectedRoute>
+                } />
                 <Route path="/customers" element={
-                    <div className="flex">
-                        <Sidebar/>
-                        <div className="flex-1 p-4">
-                            <CustomerManagement/>
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4">
+                                <CustomerManagement />
+                            </div>
                         </div>
-                    </div>
-                }/>
+                    </ProtectedRoute>
+                } />
                 <Route path="/samples" element={
-                    <div className="flex">
-                        <Sidebar/>
-                        <div className="flex-1 p-4">
-                            <SampleManagement/>
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4">
+                                <SampleManagement />
+                            </div>
                         </div>
-                    </div>
-                }/>
+                    </ProtectedRoute>
+                } />
                 <Route path="/orders" element={
-                    <div className="flex">
-                        <Sidebar/>
-                        <div className="flex-1 p-4">
-                            <OrderManagement/>
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4">
+                                <OrderManagement />
+                            </div>
                         </div>
-                    </div>
-                }/>
+                    </ProtectedRoute>
+                } />
             </Routes>
         </BrowserRouter>
     );

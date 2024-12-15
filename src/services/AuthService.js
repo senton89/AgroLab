@@ -41,7 +41,7 @@ class AuthService {
         }
     }
 
-    async logoutUser() {
+    static async logoutUser() {
         localStorage.removeItem('user');
     }
 
