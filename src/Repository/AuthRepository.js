@@ -6,21 +6,16 @@ class AuthRepository {
         const result = await AuthService.registerUser(credentials);
         if(result){
             const reagents = await ReagentRepository.fetchReagents();
-            this.checkExpiryDates(this.reagents);
+            this.checkExpiryDates(reagents);
             return true;
         }
         return false;
     }
 
-    async loginUser(credentials) {
+    static async loginUser(credentials) {
         // Call the API to login the user
         const result = await AuthService.loginUser(credentials);
-        if(result){
-            const reagents = await ReagentRepository.fetchReagents();
-            this.checkExpiryDates(this.reagents);
-            return true;
-        }
-        return false;
+        return result;
     }
 
     async logoutUser() {

@@ -22,8 +22,13 @@ const App = () => {
                 <Route path="/" element={<Navigate to='/main' />} />
                 <Route path="/label" element={<LabelPage />} />
                 <Route path="/label-preview" element={<LabelPreview />} />
-                <Route path="/login" element={<LoginForm/>} /> {/* Add your login component here */}
-
+                <Route path="/login" element={
+                    <div className="flex items-center justify-center min-h-screen">
+                        <div className="w-full max-w-screen-sm">
+                            <LoginForm/>
+                        </div>
+                    </div>
+                } />
                 {/* Protected routes */}
                 <Route path="/main" element={
                     <ProtectedRoute>

@@ -1,13 +1,16 @@
 // src/components/LoginForm.js
 import React, { useState } from 'react';
-import ReagentRepository from '../../Repository/ReagentRepository'
 import AuthRepository from "../../Repository/AuthRepository";
+import useReagentRepository from "../../Repository/ReagentRepository";
 
 const LoginForm = () => {
     const [credentials, setCredentials] = useState({
         login: '',
         password: '',
     });
+
+    const { reagentList} = useReagentRepository(); // Используйте хук
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,7 +24,17 @@ const LoginForm = () => {
             const success = await authRepository.loginUser(credentials);
             if (success) {
                 console.log('User logged in successfully');
-                var reagents = ReagentRepository();
+
+                // Проверка срока годности
+                const today = new Date();
+                reagentList.forEach(reagent => {
+                    const expiryDate = new Date(reagent.expiryDate);
+                    const diffInDays = Math.round((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+                    if (diffInDays < 3) {
+                        alert(`Реагент: ${reagent.name}, Осталось: ${diffInDays} дней`);
+                    }
+                });
             } else {
                 console.log('Invalid credentials');
             }
@@ -31,7 +44,7 @@ const LoginForm = () => {
     };
     return (
         <div className="flex-1 p-4">
-            <div className="bg-white p-6 rounded-lg shadow-md h-full w-1/3">
+            <div className="bg-white p-6 rounded-lg shadow-md h-full">
                 <h2 className="text-lg font-bold mb-4">Авторизация пользователя</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 gap-4 mb-4">
