@@ -14,7 +14,7 @@ class AuthRepository {
 
     static async loginUser(credentials) {
         // Call the API to login the user
-        const result = await AuthService.loginUser(credentials);
+        const result = await AuthService.loginUser(credentials)??false;
         return result;
     }
 
