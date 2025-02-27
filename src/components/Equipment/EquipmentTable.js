@@ -34,49 +34,47 @@ const EquipmentTable = ({ equipmentList }) => {
     };
 
     return (
-        <div className="overflow-x-auto max-w-6xl">
-            <table className="min-w-full text-gray-700">
-                <thead className="bg-gray-50">
-                <tr>
-                    <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Название</th>
-                    <th onClick={() => requestSort('category')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Категория</th>
-                    <th onClick={() => requestSort('model')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Модель</th>
-                    <th onClick={() => requestSort('inventoryNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер инвентаря</th>
-                    <th onClick={() => requestSort('factoryNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер завода</th>
-                    <th onClick={() => requestSort('dateOfCommissioning')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата ввода в эксплуатацию</th>
-                    <th onClick={() => requestSort('certificateNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Номер свидетельства</th>
-                    <th onClick={() => requestSort('inspectionDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата проверки</th>
-                    <th onClick={() => requestSort('validUntilDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Годен до</th>
-                    <th onClick={() => requestSort('width')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Ширина</th>
-                    <th onClick={() => requestSort('length')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Длина</th>
-                    <th onClick={() => requestSort('height')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Высота</th>
-                    <th onClick={() => requestSort('depth')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Глубина</th>
-                    <th onClick={() => requestSort('dateOfDecommissioning')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата вывода из использования</th>
+        <div className="w-full rounded-lg shadow-md">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-orange-500 text-white rounded-t-lg">
+                <th onClick={() => requestSort('name')} className="p-2 border cursor-pointer rounded-tl-lg">Название</th>
+                <th onClick={() => requestSort('inventoryNumber')} className="p-2 border cursor-pointer">Номер инвентаря</th>
+                <th onClick={() => requestSort('factoryNumber')} className="p-2 border cursor-pointer">Номер завода</th>
+                <th onClick={() => requestSort('dateOfCommissioning')} className="p-2 border cursor-pointer">Ввод в эксплуатацию</th>
+                <th onClick={() => requestSort('inspectionDate')} className="p-2 border cursor-pointer">Дата проверки</th>
+                <th onClick={() => requestSort('validUntilDate')} className="p-2 border cursor-pointer">Годен до</th>
+                <th onClick={() => requestSort('category')} className="p-2 border cursor-pointer">Категория</th>
+                <th onClick={() => requestSort('model')} className="p-2 border cursor-pointer">Модель</th>
+                <th onClick={() => requestSort('width')} className="p-2 border cursor-pointer">Ширина</th>
+                <th onClick={() => requestSort('length')} className="p-2 border cursor-pointer">Длина</th>
+                <th onClick={() => requestSort('height')} className="p-2 border cursor-pointer">Высота</th>
+                <th onClick={() => requestSort('depth')} className="p-2 border cursor-pointer">Глубина</th>
+                <th onClick={() => requestSort('dateOfDecommissioning')} className="p-2 border cursor-pointer rounded-tr-lg">Дата вывода из использования</th>
+              </tr>
+            </thead>
+            <tbody className="bg-orange-50">
+              {sortedEquipment.map((equipment, index) => (
+                <tr key={index} className={index === sortedEquipment.length - 1 ? 'rounded-b-lg' : ''}>
+                  <td className="p-2 border">{equipment.name}</td>
+                  <td className="p-2 border">{equipment.inventoryNumber}</td>
+                  <td className="p-2 border">{equipment.factoryNumber}</td>
+                  <td className="p-2 border">{equipment.dateOfCommissioning}</td>
+                  <td className="p-2 border">{equipment.inspectionDate}</td>
+                  <td className={`p-2 border ${getValidUntilColor(equipment.validUntilDate)}`}>{equipment.validUntilDate}</td>
+                  <td className="p-2 border">{equipment.category}</td>
+                  <td className="p-2 border">{equipment.model}</td>
+                  <td className="p-2 border">{equipment.width}</td>
+                  <td className="p-2 border">{equipment.length}</td>
+                  <td className="p-2 border">{equipment.height}</td>
+                  <td className="p-2 border">{equipment.depth}</td>
+                  <td className="p-2 border">{equipment.dateOfDecommissioning}</td>
                 </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                {sortedEquipment.map((equipment, index) => (
-                    <tr key={index}>
-                        <td className="px-6 py-4">{equipment.name}</td>
-                        <td className="px-6 py-4">{equipment.category}</td>
-                        <td className="px-6 py-4">{equipment.model}</td>
-                        <td className="px-6 py-4">{equipment.inventoryNumber}</td>
-                        <td className="px-6 py-4">{equipment.factoryNumber}</td>
-                        <td className="px-6 py-4">{equipment.dateOfCommissioning}</td>
-                        <td className="px-6 py-4">{equipment.certificateNumber}</td>
-                        <td className="px-6 py-4">{equipment.inspectionDate}</td>
-                        <td className={`px-6 py-4 ${getValidUntilColor(equipment.validUntilDate)}`}>{equipment.validUntilDate}</td>
-                        <td className="px-6 py-4">{equipment.width}</td>
-                        <td className="px-6 py-4">{equipment.length}</td>
-                        <td className="px-6 py-4">{equipment.height}</td>
-                        <td className="px-6 py-4">{equipment.depth}</td>
-                        <td className="px-6 py-4">{equipment.dateOfDecommissioning}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
         </div>
-    );
+      );
 };
 
 export default EquipmentTable;

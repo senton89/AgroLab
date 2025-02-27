@@ -1,37 +1,34 @@
 // OrderManagement.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useOrderRepository from '../../Repository/OrderRepository';
 import MockOrderService from "../Mockups/MockOrderService";
-import AddOrderForm from "./AddOrderForm";
 import OrderTable from "./OrderTable";
 
 const OrderManagement = () => {
-    const { orderList, loading, error, addOrder } = useOrderRepository(MockOrderService); // Используем мок-сервис
-    const [isFormVisible, setIsFormVisible] = useState(false);
+    const { orderList, error } = useOrderRepository(MockOrderService);
+    const [orderListState, setOrderList] = useState(orderList);
+    const [errorState, setError] = useState(error);
+    const navigate = useNavigate();
 
-    const handleAddOrder = (newOrder) => {
-        addOrder(newOrder);
-        setIsFormVisible(false);
-    };
+    useEffect(() => {
+        setOrderList(orderList);
+        setError(error);
+    }, [orderList, error]);
 
-    const toggleFormVisibility = () => {
-        setIsFormVisible(!isFormVisible);
-    };
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (errorState) return <div>Error: {errorState}</div>;
 
     return (
-        <div className="container mx-auto p-1">
-            <h1 className="text-2xl font-bold mb-3">Учет заказов</h1>
-            <button
-                onClick={toggleFormVisibility}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-            >
-                {isFormVisible ? 'Скрыть форму' : 'Добавить новый заказ'}
-            </button>
-            {isFormVisible && <AddOrderForm onAdd={handleAddOrder} />}
-            <OrderTable orderList={orderList} />
+        <div className="container mx-auto p-4">
+            <div className="flex flex-col w-full">
+                <button
+                    onClick={() => navigate('/orders/add')}
+                    className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end m-6"
+                >
+                    Добавить новый заказ
+                </button>
+                <OrderTable orderList={orderListState} />
+            </div>
         </div>
     );
 };

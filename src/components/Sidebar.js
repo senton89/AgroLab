@@ -1,76 +1,81 @@
 // src/components/Sidebar.js
 import React from 'react';
-import {useNavigate} from "react-router-dom";
-import AuthRepository from "../Repository/AuthRepository";
-// import './../styles/Sidebar.css';
+import { useNavigate } from 'react-router-dom';
+import AuthRepository from '../Repository/AuthRepository';
 
-//на основе данных тебе выше файлов и созданных тобой сервисов и репозиториев создай формы и сервисы с репозиториями к испытаниям(
 const Sidebar = () => {
     const navigate = useNavigate();
     const handleReagentClick = () => {
         navigate(`/reagent-table`);
-    }
+    };
     const handleCultureClick = () => {
         navigate(`/culture-table`);
-    }
+    };
     const handleEquipmentClick = () => {
         navigate(`/equipment-table`);
-    }
+    };
     const handleCustomerClick = () => {
         navigate(`/customers`);
-    }
+    };
     const handleSampleClick = () => {
         navigate(`/samples`);
-    }
+    };
     const handleOrderClick = () => {
         navigate(`/orders`);
-    }
+    };
     const handleLogoutClick = async () => {
         const authRepository = new AuthRepository();
         await authRepository.logoutUser();
         navigate(`/login`);
-    }
+    };
     const handleRegistrateClick = async () => {
         navigate(`/register`);
-    }
+    };
 
     const user = JSON.parse(localStorage.getItem('user'));
 
     return (
-        <div className="flex">
-            <div className="w-55 bg-white shadow-md p-4 rounded-lg h-screen">
-            <h1 className="text-xl font-semibold mb-4">Главная</h1>
-                <ul className="space-y-2">
-                <li><a onClick={handleReagentClick}
-                       className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
-                    className="mr-2">⚗️</span>Реагенты</a></li>
-                <li><a onClick={handleCultureClick}
-                       className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
-                    className="mr-2">🌱</span>Культуры</a></li>
-                <li><a onClick={handleEquipmentClick}
-                       className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
-                    className="mr-2">🪚</span>Оборудование</a></li>
-                <li><a onClick={handleCustomerClick}
-                       className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
-                    className="mr-2">👤</span>Заказчики</a></li>
-                    <li><a onClick={handleSampleClick}
-                       className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
-                    className="mr-2">🔬</span>Образцы</a></li>
-                    <li><a onClick={handleOrderClick}
-                       className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded"><span
-                    className="mr-2">🛍️</span>Заказы</a></li>
-                    {user && user.role === 'admin' && (
-                        <li>
-                            <a onClick={handleRegistrateClick} className="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded">
-                                <span className="mr-2">📥</span>Зарегистрировать нового пользователя
-                            </a>
-                        </li>
-                    )}
-                    <li><a onClick={handleLogoutClick}
-                       className="flex items-center p-2 mt-5 text-gray-700 hover:bg-gray-200 rounded"><span
-                    className="mr-2">⬅️</span>Выйти</a></li>
-            </ul>
-        </div>
+        <div className="w-1/6 w-min-1/6 pr-0 p-8 bg-cover bg-center h-screen" style={{backgroundColor: '#F7F4F2'}}>
+            <div className="flex items-center mb-12">
+                <img alt="Логотип" src="./Logo.png"/>
+            </div>
+            <nav className="space-y-4 text-gray-600">
+                <a onClick={handleReagentClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                    <i className="fas fa-flask mr-2"></i>
+                    Реактивы
+                </a>
+                <a onClick={handleCultureClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                    <i className="fas fa-seedling mr-2"></i>
+                    Культуры
+                </a>
+                <a onClick={handleSampleClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                    <i className="fas fa-vial mr-2"></i>
+                    Образцы
+                </a>
+                <a onClick={handleEquipmentClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                    <i className="fas fa-tools mr-2"></i>
+                    Оборудование
+                </a>
+                <a onClick={handleCustomerClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                    <i className="fas fa-users mr-2"></i>
+                    Заказчики
+                </a>
+                <a onClick={handleOrderClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                    <i className="fas fa-box mr-2"></i>
+                    Заказы
+                </a>
+                <hr className="border-gray-300"/>
+                <a onClick={handleLogoutClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                    <i className="fas fa-sign-out-alt mr-2"></i>
+                    Выход
+                </a>
+                {user && user.role === 'admin' && (
+                    <a onClick={handleRegistrateClick} className="flex items-center hover:text-orange-600 cursor-pointer">
+                        <i className="fas fa-user-plus mr-2"></i>
+                        Регистрация нового пользователя
+                    </a>
+                )}
+            </nav>
         </div>
     );
 };

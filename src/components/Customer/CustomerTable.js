@@ -27,27 +27,40 @@ const CustomerTable = ({ customerList }) => {
     }
 
     return (
-        <div className="overflow-x-auto max-w-6xl">
-            <table className="min-w-full text-gray-700">
-                <thead className="bg-gray-50">
-                <tr>
-                    <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Имя</th>
-                    <th onClick={() => requestSort('email')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Email</th>
-                    <th onClick={() => requestSort('address')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Адрес</th>
-                    <th onClick={() => requestSort('inn')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">ИНН</th>
-                </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                {sortedCustomers.map((customer, index) => (
-                    <tr key={index}>
-                        <td className="px-6 py-4">{customer.name}</td>
-                        <td className="px-6 py-4">{customer.email}</td>
-                        <td className="px-6 py-4">{customer.address}</td>
-                        <td className="px-6 py-4">{customer.inn}</td>
+        <div className="w-full p-6">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <table className="w-full">
+                    <thead className="bg-orange-500 text-white">
+                    <tr>
+                        <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Имя</th>
+                        <th onClick={() => requestSort('email')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                        <th onClick={() => requestSort('address')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Адрес</th>
+                        <th onClick={() => requestSort('inn')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ИНН</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Действия</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                    {sortedCustomers.map((customer) => (
+                        <tr key={customer.id}>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.name}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.email}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.address}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.inn}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex space-x-2">
+                                    <button className="text-blue-500 hover:text-blue-700">
+                                        <i className="fas fa-edit"></i>
+                                    </button>
+                                    <button className="text-red-500 hover:text-red-700">
+                                        <i className="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

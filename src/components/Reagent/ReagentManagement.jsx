@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import ReagentTable from './ReagentTable';
 import AddReagentForm from './AddReagentForm';
 import useReagentRepository from '../../Repository/ReagentRepository'
+import { useNavigate } from 'react-router-dom';
 
 const ReagentManagement = () => {
     const { reagentList, loading, error, addReagent, fetchReagents } = useReagentRepository(); // Используйте хук
     const [isFormVisible, setIsFormVisible] = useState(false); // Состояние для управления видимостью формы
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadReagents = async () => {
@@ -26,20 +28,17 @@ const ReagentManagement = () => {
     };
 
     return (
-        <div className="flex flex-col">
-            <div className="w-1/3 p-1">
-                <h1 className="text-2xl font-bold mb-3">Учет реагентов</h1>
-                <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-                    onClick={() => setIsFormVisible(!isFormVisible)} // Показать форму при нажатии
-                >
-                    {isFormVisible ? "Скрыть форму" : "Добавить реагент"}
-                </button>
+        <div className="container mx-auto p-4">
+            <div className="flex flex-col w-full">
+            <button 
+                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end m-6"
+                onClick={() => navigate('/reagents/add')}
+            >
+                Добавить реагент
+            </button>
+                <ReagentTable reagents={reagentList} />
+            
             </div>
-            {isFormVisible && <AddReagentForm onAdd={handleAddReagent}/>}
-            <div className="flex-1">
-            <ReagentTable reagents={reagentList} />
-        </div>
         </div>
     );
 };

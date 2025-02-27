@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import CultureRepository from '../../Repository/CultureRepository'; // Импортируйте репозиторий культур
-import useCustomerRepository from '../../Repository/CustomerRepository'; // Импортируйте репозиторий заказчиков
+import CultureRepository from '../../Repository/CultureRepository'; 
+import useCustomerRepository from '../../Repository/CustomerRepository'; 
+import { useNavigate } from 'react-router-dom';
 
-const AddOrderForm = ({ onAdd }) => {
+const AddOrderForm = ({ onAdd, onCancel }) => {
+    const navigate = useNavigate();
+
+    const handleCancel = () => {
+        navigate('/orders');
+    };
+
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         customer: '',
@@ -33,15 +40,14 @@ const AddOrderForm = ({ onAdd }) => {
         protocol: ''
     });
 
-    const [cultures, setCultures] = useState([]); // Состояние для хранения культур
-    const [filteredCultures, setFilteredCultures] = useState([]); // Состояние для фильтрации культур
-    const [showAddCulture, setShowAddCulture] = useState(false); // Состояние для отображения кнопки добавления культуры
+    const [cultures, setCultures] = useState([]); 
+    const [filteredCultures, setFilteredCultures] = useState([]); 
+    const [showAddCulture, setShowAddCulture] = useState(false); 
 
-    // Состояние для хранения заказчиков
-    const [filteredCustomers, setFilteredCustomers] = useState([]);
-    const [showAddCustomer, setShowAddCustomer] = useState(false); // Состояние для отображения кнопки добавления заказчика
+    const [filteredCustomers, setFilteredCustomers] = useState([]); 
+    const [showAddCustomer, setShowAddCustomer] = useState(false); 
 
-    const { customerList, loading, error, addCustomer } = useCustomerRepository(); // Используем репозиторий заказчиков
+    const { customerList, loading, error, addCustomer } = useCustomerRepository(); 
 
     useEffect(() => {
         const fetchCultures = async () => {
@@ -57,17 +63,17 @@ const AddOrderForm = ({ onAdd }) => {
             setFormData({ ...formData, [name]: value });
             const filtered = customerList.filter(customer => customer.name.toLowerCase().includes(value.toLowerCase()));
             setFilteredCustomers(filtered);
-            setShowAddCustomer(!filtered.some(customer => customer.name.toLowerCase() === value.toLowerCase()) && value !== ''); // Показываем кнопку добавления, если введенное значение отсутствует в списке
+            setShowAddCustomer(!filtered.some(customer => customer.name.toLowerCase() === value.toLowerCase()) && value !== ''); 
             if (filtered.length === 1) {
-                setFormData(prevFormData => ({ ...prevFormData, innKpp: filtered[0].inn })); // Подтягиваем ИНН
+                setFormData(prevFormData => ({ ...prevFormData, innKpp: filtered[0].inn })); 
             } else {
-                setFormData(prevFormData => ({ ...prevFormData, innKpp: '' })); // Сбрасываем ИНН, если не найден
+                setFormData(prevFormData => ({ ...prevFormData, innKpp: '' })); 
             }
         } else if (name === 'culture') {
             setFormData({ ...formData, [name]: value });
             const filtered = cultures.filter(culture => culture.toLowerCase().includes(value.toLowerCase()));
             setFilteredCultures(filtered);
-            setShowAddCulture(!filtered.includes(value) && value !== ''); // Показываем кнопку добавления, если введенное значение отсутствует в списке
+            setShowAddCulture(!filtered.includes(value) && value !== ''); 
         } else if (name.includes('number') || name.includes('date')) {
             const [field, type] = name.split('.');
             setFormData({
@@ -136,11 +142,11 @@ const AddOrderForm = ({ onAdd }) => {
 
     const handleAddCustomer = async () => {
         if (formData.customer && formData.innKpp) {
-            const newCustomer = { name: formData.customer, innKpp: formData.innKpp }; // Создаем нового заказчика
+            const newCustomer = { name: formData.customer, innKpp: formData.innKpp }; 
             await addCustomer(newCustomer);
             setFilteredCustomers([]);
             setShowAddCustomer(false);
-            setFormData({ ...formData, customer: newCustomer.name, innKpp: newCustomer.innKpp }); // Сбросить поля
+            setFormData({ ...formData, customer: newCustomer.name, innKpp: newCustomer.innKpp }); 
         } else {
             if (!formData.innKpp) {
                 setErrors(prevErrors => ({ ...prevErrors, innKpp: 'ИНН обязателен для добавления заказчика' }));
@@ -155,7 +161,7 @@ const AddOrderForm = ({ onAdd }) => {
             setCultures(cultures);
             setFilteredCultures([]);
             setShowAddCulture(false);
-            setFormData({ ...formData, culture: formData.culture }); // Сбросить поле культуры
+            setFormData({ ...formData, culture: formData.culture }); 
         }
     };
 
@@ -189,7 +195,7 @@ const AddOrderForm = ({ onAdd }) => {
         if (!formData.protocol) newErrors.protocol = 'Протокол обязателен';
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Возвращает true, если нет ошибок
+        return Object.keys(newErrors).length === 0; 
     };
 
     const labels = {
@@ -222,191 +228,180 @@ const AddOrderForm = ({ onAdd }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-4 max-w-lg overflow-auto">
-            <h2 className="text-lg font-bold mb-4">Добавить заказ</h2>
-            {Object.keys(formData).map((key) => (
-                <div className="mb-4" key={key}>
-                    <label className="block mb-1 text-gray-700">{labels[key]}</label>
-                    {key === 'customer' ? (
-                        <>
-                            <input
-                                type="text"
-                                name={key}
-                                value={formData[key]}
-                                onChange={handleChange}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Введите заказчика"
-                            />
-                            {filteredCustomers.length > 0 && (
-                                <ul className="border border-gray-300 rounded mt-1">
-                                    {filteredCustomers.map((customer, index) => (
-                                        <li
-                                            key={index}
-                                            className="p-2 hover:bg-gray-200 cursor-pointer"
-                                            onClick={() => {
-                                                setFormData({ ...formData, customer: customer.name, innKpp: customer.innKpp });
-                                                setFilteredCustomers([]);
-                                                setShowAddCustomer(false);
-                                            }}
+        <div className="flex bg-gray-100">
+            <div className="w-full p-10">
+                <div className="bg-white p-8 rounded-lg shadow-md">
+                    <form onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-3 gap-6">
+                            {Object.keys(formData).map((key) => (
+                                <div key={key}>
+                                    <label className="block text-gray-700">{labels[key]}</label>
+                                    {key === 'customer' ? (
+                                        <>
+                                            <input
+                                                className="w-full border border-gray-300 p-2 rounded mt-1"
+                                                type="text"
+                                                name={key}
+                                                value={formData[key]}
+                                                onChange={handleChange}
+                                            />
+                                            {filteredCustomers.length > 0 && (
+                                                <ul className="border border-gray-300 rounded mt-1">
+                                                    {filteredCustomers.map((customer, index) => (
+                                                        <li
+                                                            key={index}
+                                                            className="p-2 hover:bg-gray-200 cursor-pointer"
+                                                            onClick={() => {
+                                                                setFormData({ ...formData, customer: customer.name, innKpp: customer.innKpp });
+                                                                setFilteredCustomers([]);
+                                                                setShowAddCustomer(false);
+                                                            }}
+                                                        >
+                                                            {customer.name}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                            {showAddCustomer && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleAddCustomer}
+                                                    className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
+                                                >
+                                                    Добавить заказчика
+                                                </button>
+                                            )}
+                                        </>
+                                    ) : key === 'culture' ? (
+                                        <>
+                                            <input
+                                                className="w-full border border-gray-300 p-2 rounded mt-1"
+                                                type="text"
+                                                name={key}
+                                                value={formData[key]}
+                                                onChange={handleChange}
+                                            />
+                                            {filteredCultures.length > 0 && (
+                                                <ul className="border border-gray-300 rounded mt-1">
+                                                    {filteredCultures.map((culture, index) => (
+                                                        <li
+                                                            key={index}
+                                                            className="p-2 hover:bg-gray-200 cursor-pointer"
+                                                            onClick={() => {
+                                                                setFormData({ ...formData, culture });
+                                                                setFilteredCultures([]);
+                                                                setShowAddCulture(false);
+                                                            }}
+                                                        >
+                                                            {culture}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                            {showAddCulture && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleAddCulture}
+                                                    className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
+                                                >
+                                                    Добавить культуру
+                                                </button>
+                                            )}
+                                        </>
+                                    ) : key === 'applicationNumber' || key === 'specificationNumber' || key === 'selectionAct' || key === 'contractNumber' || key === 'direction' ? (
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                className="w-1/2 border border-gray-300 p-2 rounded"
+                                                type="text"
+                                                name={`${key}.number`}
+                                                value={formData[key].number}
+                                                onChange={handleChange}
+                                                placeholder="№"
+                                            />
+                                            <input
+                                                className="w-1/2 border border-gray-300 p-2 rounded"
+                                                type="date"
+                                                name={`${key}.date`}
+                                                value={formData[key].date}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    ) : key === 'sampleArrivalDate' ? (
+                                        <input
+                                            className="w-full border border-gray-300 p-2 rounded mt-1"
+                                            type="date"
+                                            name={key}
+                                            value={formData[key]}
+                                            onChange={handleChange}
+                                        />
+                                    ) : key === 'harvestYear' ? (
+                                        <input
+                                            className="w-full border border-gray-300 p-2 rounded mt-1"
+                                            type="number"
+                                            name={key}
+                                            value={formData[key]}
+                                            onChange={handleChange}
+                                            placeholder="Год"
+                                        />
+                                    ) : key === 'testingPeriod' ? (
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                className="w-1/2 border border-gray-300 p-2 rounded"
+                                                type="date"
+                                                name="testingPeriod.start"
+                                                value={formData.testingPeriod.start}
+                                                onChange={handleChange}
+                                            />
+                                            <input
+                                                className="w-1/2 border border-gray-300 p-2 rounded"
+                                                type="date"
+                                                name="testingPeriod.end"
+                                                value={formData.testingPeriod.end}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    ) : key === 'sampleCollector' ? (
+                                        <select
+                                            className="w-full border border-gray-300 p-2 rounded mt-1"
+                                            name={key}
+                                            value={formData.sampleCollector}
+                                            onChange={handleChange}
                                         >
-                                            {customer.name}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                            {showAddCustomer && (
-                                <button
-                                    type="button"
-                                    onClick={handleAddCustomer}
-                                    className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
-                                >
-                                    Добавить заказчика
-                                </button>
-                            )}
-                        </>
-                    ) : key === 'culture' ? (
-                        <>
-                            <input
-                                type="text"
-                                name={key}
-                                value={formData[key]}
-                                onChange={handleChange}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Введите культуру"
-                            />
-                            {filteredCultures.length > 0 && (
-                                <ul className="border border-gray-300 rounded mt-1">
-                                    {filteredCultures.map((culture, index) => (
-                                        <li
-                                            key={index}
-                                            className="p-2 hover:bg-gray-200 cursor-pointer"
-                                            onClick={() => {
-                                                setFormData({ ...formData, culture });
-                                                setFilteredCultures([]);
-                                                setShowAddCulture(false);
-                                            }}
-                                        >
-                                            {culture}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                            {showAddCulture && (
-                                <button
-                                    type="button"
-                                    onClick={handleAddCulture}
-                                    className="mt-2 bg-green-500 hover:bg-green-700 text-white font bold py-1 px-2 rounded"
-                                >
-                                    Добавить культуру
-                                </button>
-                            )}
-                        </>
-                    ) : key === 'applicationNumber' || key === 'specificationNumber' || key === 'selectionAct' || key === 'contractNumber' ? (
-                        <>
-                            <input
-                                type="text"
-                                name={`${key}.number`}
-                                value={formData[key].number}
-                                onChange={handleChange}
-                                placeholder="№"
-                                className="w-1/2 p-2 border border-gray-300 rounded mr-2"
-                                required
-                            />
-                            <input
-                                type="date"
-                                name={`${key}.date`}
-                                value={formData[key].date}
-                                onChange={handleChange}
-                                className="w-1/2 p-2 border border-gray-300 rounded"
-                                required
-                            />
-                        </>
-                    ) : key === 'sampleArrivalDate' ? (
-                        <input
-                            type="date"
-                            name={key}
-                            value={formData[key]}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                            required
-                        />
-                    ) : key === 'direction' ? (
-                        <>
-                            <input
-                                type="text"
-                                name={`${key}.number`}
-                                value={formData.direction.number}
-                                onChange={handleChange}
-                                placeholder="№"
-                                className="w-1/2 p-2 border border-gray-300 rounded mr-2"
-                                required
-                            />
-                            <input
-                                type="date"
-                                name={`${key}.date`}
-                                value={formData.direction.date}
-                                onChange={handleChange}
-                                className="w-1/2 p-2 border border-gray-300 rounded"
-                                required
-                            />
-                        </>
-                    ) : key === 'harvestYear' ? (
-                        <input
-                            type="number"
-                            name={key}
-                            value={formData[key]}
-                            onChange={handleChange}
-                            placeholder="Год"
-                            className="w-full p-2 border border-gray-300 rounded"
-                            required
-                        />
-                    ) : key === 'testingPeriod' ? (
-                        <>
-                            <input
-                                type="date"
-                                name="testingPeriod.start"
-                                value={formData.testingPeriod.start}
-                                onChange={handleChange}
-                                className="w-1/2 p-2 border border-gray-300 rounded mr-2"
-                                required
-                            />
-                            <input
-                                type="date"
-                                name="testingPeriod.end"
-                                value={formData.testingPeriod.end}
-                                onChange={handleChange}
-                                className="w-1/2 p-2 border border-gray-300 rounded"
-                                required
-                            />
-                        </>
-                    ) : key === 'sampleCollector' ? (
-                        <select
-                            name={key}
-                            value={formData.sampleCollector}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        >
-                            <option value="Сотрудник ИЛ">Сотрудник ИЛ</option>
-                            <option value="Заказчик">Заказчик</option>
-                        </select>
-                    ) : (
-                        <input
-                            type="text"
-                            name={key}
-                            value={formData[key]}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                            required
-                        />
-                    )}
-                    {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]}</p>}
+                                            <option value="Сотрудник ИЛ">Сотрудник ИЛ</option>
+                                            <option value="Заказчик">Заказчик</option>
+                                        </select>
+                                    ) : (
+                                        <input
+                                            className="w-full border border-gray-300 p-2 rounded mt-1"
+                                            type="text"
+                                            name={key}
+                                            value={formData[key]}
+                                            onChange={handleChange}
+                                        />
+                                    )}
+                                    {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]}</p>}
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-6 text-center space-x-4">
+                            <button
+                                type="button"
+                                className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-50"
+                                onClick={handleCancel}
+                            >
+                                Отмена
+                            </button>
+                            <button
+                                className="bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600"
+                                onClick={handleSubmit}
+                            >
+                                Сохранить
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            ))}
-            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
-                <button type="button" className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded" onClick={() => setFormData({})}>Отменить</button>
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Добавить</button>
             </div>
-        </form>
+        </div>
     );
 };
 

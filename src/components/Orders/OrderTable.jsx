@@ -1,4 +1,3 @@
-// OrderTable.jsx
 import React, { useState } from 'react';
 
 const OrderTable = ({ orderList }) => {
@@ -23,58 +22,63 @@ const OrderTable = ({ orderList }) => {
     };
 
     return (
-        <div className="overflow-x-auto max-w-6xl">
-            <table className="min-w-full text-gray-700">
-                <thead className="bg-gray-50">
-                <tr>
-                    <th onClick={() => requestSort('customer')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Заказчик</th>
-                    <th onClick={() => requestSort('innKpp')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">ИНН/КПП</th>
-                    <th onClick={() => requestSort('applicationNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Заявка на испытание</th>
-                    <th onClick={() => requestSort('contractNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Договор</th>
-                    <th onClick={() => requestSort('specificationNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Спецификация</th>
-                    <th onClick={() => requestSort('sampleArrivalDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата поступления</th>
-                    <th onClick={() => requestSort('testingPeriod')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Срок проведения</th>
-                    <th onClick={() => requestSort('culture')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Культура</th>
-                    <th onClick={() => requestSort('sort')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Сорт</th>
-                    <th onClick={() => requestSort('sampleCode')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Код образца</th>
-                    <th onClick={() => requestSort('sampleCollector')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Отбор образцов</th>
-                    <th onClick={() => requestSort('harvestYear')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Год урожая</th>
-                    <th onClick={() => requestSort('reproduction')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Репродукция</th>
-                    <th onClick={() => requestSort('seedCategory')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Категория семян</th>
-                    <th onClick={() => requestSort('sampleWeight')} className="cursor-pointer px- 6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Масса образца</th>
-                    <th onClick={() => requestSort('batchNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">№ партии</th>
-                    <th onClick={() => requestSort('batchWeight')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Масса партии</th>
-                    <th onClick={() => requestSort('storageLocation')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Место хранения</th>
-                    <th onClick={() => requestSort('seedPurpose')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Назначение семян</th>
-                </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                {sortedOrders.map((order, index) => (
-                    <tr key={index}>
-                        <td className="px-6 py-4">{order.customer}</td>
-                        <td className="px-6 py-4">{order.innKpp}</td>
-                        <td className="px-6 py-4">{order.applicationNumber}</td>
-                        <td className="px-6 py-4">{order.contractNumber}</td>
-                        <td className="px-6 py-4">{order.specificationNumber}</td>
-                        <td className="px-6 py-4">{order.sampleArrivalDate}</td>
-                        <td className="px-6 py-4">{order.testingPeriod}</td>
-                        <td className="px-6 py-4">{order.culture}</td>
-                        <td className="px-6 py-4">{order.sort}</td>
-                        <td className="px-6 py-4">{order.sampleCode}</td>
-                        <td className="px-6 py-4">{order.sampleCollector}</td>
-                        <td className="px-6 py-4">{order.harvestYear}</td>
-                        <td className="px-6 py-4">{order.reproduction}</td>
-                        <td className="px-6 py-4">{order.seedCategory}</td>
-                        <td className="px-6 py-4">{order.sampleWeight}</td>
-                        <td className="px-6 py-4">{order.batchNumber}</td>
-                        <td className="px-6 py-4">{order.batchWeight}</td>
-                        <td className="px-6 py-4">{order.storageLocation}</td>
-                        <td className="px-6 py-4">{order.seedPurpose}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+        <div className="flex">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
+                        <thead className="bg-orange-500 text-white">
+                            <tr>
+                                <th onClick={() => requestSort('customer')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    Заказчик
+                                </th>
+                                <th onClick={() => requestSort('innKpp')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    ИНН/КПП
+                                </th>
+                                <th onClick={() => requestSort('applicationNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    Заявка на испытание
+                                </th>
+                                <th onClick={() => requestSort('contractNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    Договор
+                                </th>
+                                <th onClick={() => requestSort('specificationNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    Спецификация
+                                </th>
+                                <th onClick={() => requestSort('sampleArrivalDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    Дата поступления
+                                </th>
+                                <th onClick={() => requestSort('testingPeriod')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    Срок проведения
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                    Действия
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {sortedOrders.map((order, index) => (
+                                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.innKpp}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.applicationNumber}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.contractNumber}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.specificationNumber}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.sampleArrivalDate}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.testingPeriod}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div className="flex space-x-2">
+                                            <button className="text-orange-600 hover:text-orange-700">
+                                                <i className="fas fa-edit"></i>
+                                            </button>
+                                            <button className="text-red-600 hover:text-red-700">
+                                                <i className="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
     );
 };
 

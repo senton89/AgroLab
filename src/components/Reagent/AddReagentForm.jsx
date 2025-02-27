@@ -1,7 +1,12 @@
 // AddReagentForm.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useReagentRepository from '../../Repository/ReagentRepository';
 
 const AddReagentForm = ({ onAdd }) => {
+    const navigate = useNavigate();
+    const reagentRepository = useReagentRepository();
+    const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         name: '',
         date: '',
@@ -16,70 +21,148 @@ const AddReagentForm = ({ onAdd }) => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const validateForm = () => {
+        const newErrors = {};
+        
+        // Проверка обязательных полей
+        if (!formData.name) newErrors.name = 'Имя реактива обязательно';
+        if (!formData.date) newErrors.date = 'Дата обязательна';
+        if (!formData.batch) newErrors.batch = 'Партия обязательна';
+        if (!formData.supplier) newErrors.supplier = 'Поставщик обязателен';
+        if (!formData.expiryDate) newErrors.expiryDate = 'Срок годности обязателен';
+        if (!formData.stock) newErrors.stock = 'Остатки обязательны';
+        
+        // Проверка числовых полей
+        if (formData.stock && (isNaN(formData.stock) || Number(formData.stock) < 0)) {
+            newErrors.stock = 'Остатки должны быть положительным числом';
+        }
+        
+        // Проверка дат
+        if (formData.date && formData.expiryDate) {
+            const startDate = new Date(formData.date);
+            const endDate = new Date(formData.expiryDate);
+            if (endDate < startDate) {
+                newErrors.expiryDate = 'Срок годности не может быть раньше даты получения';
+            }
+        }
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        onAdd(formData);
-        setFormData({
-            name: '',
-            date: '',
-            batch: '',
-            supplier: '',
-            expiryDate: '',
-            stock: ''
-        });
+        if (validateForm()) {
+            onAdd(formData);
+            setFormData({
+                name: '',
+                date: '',
+                batch: '',
+                supplier: '',
+                expiryDate: '',
+                stock: ''
+            });
+            navigate('/reagent-table');
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-4">
-            <h2 className="text-lg font-bold mb-4">Добавить новый реагент</h2>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label className="block mb-1 text-gray-700">Имя</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded" required />
-                </div>
-                <div>
-                    <label className="block mb-1 text-gray-700">Дата</label>
-                    <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded" required />
-                </div>
+        <div className="flex-1 flex items-center justify-center p-8">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+                <h2 className="text-xl font-semibold mb-6">Добавление нового реактива</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-gray-700">Имя</label>
+                        <input
+                            className={`w-full p-3 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                        />
+                        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-gray-700">Дата</label>
+                        <input
+                            className={`w-full p-3 border ${errors.date ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            type="date"
+                            name="date"
+                            value={formData.date}
+                            onChange={handleChange}
+                            required
+                        />
+                        {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-gray-700">Партия</label>
+                        <input
+                            className={`w-full p-3 border ${errors.batch ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            type="text"
+                            name="batch"
+                            value={formData.batch}
+                            onChange={handleChange}
+                            required
+                        />
+                        {errors.batch && <p className="text-red-500 text-sm mt-1">{errors.batch}</p>}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-gray-700">Поставщик</label>
+                        <input
+                            className={`w-full p-3 border ${errors.supplier ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            type="text"
+                            name="supplier"
+                            value={formData.supplier}
+                            onChange={handleChange}
+                            required
+                        />
+                        {errors.supplier && <p className="text-red-500 text-sm mt-1">{errors.supplier}</p>}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-gray-700">Срок годности</label>
+                        <input
+                            className={`w-full p-3 border ${errors.expiryDate ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            type="date"
+                            name="expiryDate"
+                            value={formData.expiryDate}
+                            onChange={handleChange}
+                            required
+                        />
+                        {errors.expiryDate && <p className="text-red-500 text-sm mt-1">{errors.expiryDate}</p>}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-gray-700">Остатки</label>
+                        <input
+                            className={`w-full p-3 border ${errors.stock ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            type="number"
+                            name="stock"
+                            value={formData.stock}
+                            onChange={handleChange}
+                            required
+                            min="0"
+                        />
+                        {errors.stock && <p className="text-red-500 text-sm mt-1">{errors.stock}</p>}
+                    </div>
+                    <div className="flex justify-between mt-6">
+                        <button 
+                            type="button" 
+                            onClick={() => navigate('/reagent-table')} 
+                            className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded shadow"
+                        >
+                            Отмена
+                        </button>
+                        <button 
+                            type="submit" 
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow"
+                        >
+                            Сохранить
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label className="block mb-1 text-gray-700">Партия</label>
-                    <input type="text" name="batch" value={formData.batch} onChange={handleChange}
-                           className="w-full p-2 border border-gray-300 rounded" required />
-                </div>
-                <div>
-                    <label className="block mb-1 text-gray-700">Поставщик</label>
-                    <input type="text" name="supplier" value={formData.supplier} onChange={handleChange}
-                           className="w-full p-2 border border-gray-300 rounded" required />
-                </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label className="block mb-1 text-gray-700">Срок годности</label>
-                    <input type="date" name="expiryDate" value={formData.expiryDate} onChange={handleChange}
-                           className="w-full p-2 border border-gray-300 rounded" required />
-                </div>
-                <div>
-                    <label className="block mb-1 text-gray-700">Остатки</label>
-                    <input type="number" name="stock" value={formData.stock} onChange={handleChange}
-                           className="w-full p-2 border border-gray-300 rounded" required />
-                </div>
-            </div>
-            <div className="flex justify-end">
-            <button type="button" className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded"
-                    onClick={() => setFormData({
-                        name: '',
-                        date: '',
-                        batch: '',
-                        supplier: '',
-                        expiryDate: '',
-                        stock: '' })}>
-                Отменить</button>
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Добавить</button>
-            </div>
-        </form>
-    ); };
+        </div>
+    );
+};
 
 export default AddReagentForm;

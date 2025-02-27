@@ -16,24 +16,31 @@ const CultureTable = ({ cultures, setCultures }) => {
     };
 
     return (
-        <div className="overflow-x-auto">
-            <table className="min-w-full text-gray-700">
-                <thead className="bg-gray-50">
+        <div className="bg-white rounded-lg shadow-md">
+            <table className="w-full">
+                <thead className="bg-orange-500 text-white">
                 <tr>
-                    <th onClick={handleSort} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">
-                        Название
-                    </th>
+                    <th onClick={handleSort} className="cursor-pointer text-left p-2">Наименование</th>
+                    <th className="text-right p-2">Действия</th>
                 </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody>
                 {cultures.length === 0 ? (
                     <tr>
-                        <td className="px-6 py-4 text-center" colSpan="1">Нет доступных культур</td>
+                        <td className="p-2 text-center" colSpan="2">Нет доступных культур</td>
                     </tr>
                 ) : (
                     cultures.map((culture) => (
                         <tr key={culture.id} className="hover:bg-gray-100">
-                            <td className="px-6 py-4">{culture || 'Не указано'}</td> {/* Отображаем 'Не указано', если name отсутствует */}
+                            <td className="p-2">{culture || 'Не указано'}</td>
+                            <td className="text-right p-2">
+                                <button className="text-orange-600 mr-2">
+                                    <i className="fas fa-edit"></i>
+                                </button>
+                                <button className="text-red-600">
+                                    <i className="fas fa-trash"></i>
+                                </button>
+                            </td>
                         </tr>
                     ))
                 )}

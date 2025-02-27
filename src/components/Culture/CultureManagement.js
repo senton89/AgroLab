@@ -1,12 +1,12 @@
 // CultureManagement.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CultureTable from './CultureTable';
-import AddCultureForm from './AddCultureForm';
 import CultureRepository from '../../Repository/CultureRepository';
 
 const CultureManagement = () => {
     const [cultures, setCultures] = useState([]);
-    const [isFormVisible, setIsFormVisible] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadCultures = async () => {
@@ -21,31 +21,20 @@ const CultureManagement = () => {
         loadCultures();
     }, []);
 
-    const handleAddCulture = async (newCulture) => {
-        try {
-            const addedCulture = await CultureRepository.createCulture(newCulture);
-            setCultures([...cultures, addedCulture]);
-            setIsFormVisible(false); // Hide the form after adding
-        } catch (error) {
-            console.error('Error adding culture:', error);
-        }
-    };
-
     return (
-        <div className="flex flex-col">
-            <div className="w-1/3 p-1">
-                <h1 className="text-2xl font-bold mb-3">Учет культур</h1>
+        <div className="flex flex-col p-8 w-full">
+            <div className="mb-6 self-end">
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-                    onClick={() => setIsFormVisible(!isFormVisible)} // Toggle form visibility
+                    className="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 mb-6 self-end"
+                    onClick={() => navigate('/add-culture')}
                 >
-                    {isFormVisible ? 'Скрыть форму' : 'Добавить культуру'}
+                    Добавить культуру
                 </button>
-                {isFormVisible && <AddCultureForm onAdd={handleAddCulture} />} {/* Conditional rendering of the form */}
             </div>
-            <div className="flex-1 ">
+            <div className="bg-white shadow-md rounded-lg overflow-hidden">
                 <CultureTable cultures={cultures} setCultures={setCultures} />
             </div>
+            
         </div>
     );
 };

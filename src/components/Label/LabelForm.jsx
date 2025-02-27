@@ -78,7 +78,7 @@ const LabelForm = () => {
                            className="border p-2 w-full"/>
                 </div>
                 <div className="flex justify-between">
-                    <button type="submit" className="bg-blue-500 text-white p-2">Отправить</button>
+                    <button type="submit" className="bg-orange-500 text-white p-2">Отправить</button>
                     <button type="button" onClick={handleCancel} className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded">Отменить
                     </button>
                 </div>

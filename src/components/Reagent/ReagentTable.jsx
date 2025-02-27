@@ -34,31 +34,49 @@ const ReagentTable = ({ reagents }) => {
     };
 
     return (
-        <div className="overflow-x-auto">
-            <table className="min-w-full text-gray-700">
-                <thead className="bg-gray-50">
-                <tr>
-                    <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Имя</th>
-                    <th onClick={() => requestSort('date')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Дата</th>
-                    <th onClick={() => requestSort('batch')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Партия</th>
-                    <th onClick={() => requestSort('supplier')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Поставщик</th>
-                    <th onClick={() => requestSort('expiryDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Срок годности</th>
-                    <th onClick={() => requestSort('stock')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-blue-600 uppercase tracking-wider">Остатки</th>
-                </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                {sortedReagents.map((reagent, index) => (
-                    <tr key={index}>
-                        <td className="px-6 py-4">{reagent.name}</td>
-                        <td className="px-6 py-4">{reagent.date}</td>
-                        <td className="px-6 py-4">{reagent.batch}</td>
-                        <td className="px-6 py-4">{reagent.supplier}</td>
-                        <td className={`px-6 py-4 ${getExpiryColor(reagent.expiryDate)}`}>{reagent.expiryDate}</td>
-                        <td className="px-6 py-4">{reagent.stock}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className="w-full p-6">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            
+                <table className="w-full">
+                    <thead className="bg-orange-500 text-white">
+                        <tr>
+                            <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Имя</th>
+                            <th onClick={() => requestSort('date')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Дата</th>
+                            <th onClick={() => requestSort('batch')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Партия</th>
+                            <th onClick={() => requestSort('supplier')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Поставщик</th>
+                            <th onClick={() => requestSort('expiryDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Срок годности</th>
+                            <th onClick={() => requestSort('stock')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Остаток</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                        {sortedReagents.map((reagent) => (
+                            <tr key={reagent.id}>
+                                <td className="px-6 py-4 whitespace-nowrap">{reagent.name}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{reagent.date}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{reagent.batch}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{reagent.supplier}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className={`${getExpiryColor(reagent.expiryDate)} text-white px-2 py-1 rounded-full text-center`}>
+                                        {reagent.expiryDate}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">{reagent.stock}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex space-x-2">
+                                        <button className="text-blue-500 hover:text-blue-700">
+                                            <i className="fas fa-edit"></i>
+                                        </button>
+                                        <button className="text-red-500 hover:text-red-700">
+                                            <i className="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

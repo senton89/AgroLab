@@ -1,48 +1,48 @@
-/* src/styles/MainContent.css */
-.main-content {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 100%;
-}
+/*!* src/styles/MainContent.css *!*/
+/*.main-content {*/
+/*    background-color: white;*/
+/*    padding: 1.5rem;*/
+/*    border-radius: 0.5rem;*/
+/*    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+/*    height: 100%;*/
+/*}*/
 
-.main-title {
-    font-size: 1.125rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
+/*.main-title {*/
+/*    font-size: 1.125rem;*/
+/*    font-weight: bold;*/
+/*    margin-bottom: 1rem;*/
+/*}*/
 
-.input-field {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #D1D5DB; /* border-gray-300 */
-    border-radius: 0.25rem;
-}
+/*.input-field {*/
+/*    width: 100%;*/
+/*    padding: 0.5rem;*/
+/*    border: 1px solid #D1D5DB; !* border-gray-300 *!*/
+/*    border-radius: 0.25rem;*/
+/*}*/
 
-.button-cancel {
-    background-color: white;
-    color: #4A5568; /* text-gray-700 */
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    margin-right: 0.5rem;
-    transition: background-color 0.2s;
-}
+/*.button-cancel {*/
+/*    background-color: white;*/
+/*    color: #4A5568; !* text-gray-700 *!*/
+/*    font-weight: bold;*/
+/*    padding: 0.5rem 1rem;*/
+/*    border-radius: 0.25rem;*/
+/*    margin-right: 0.5rem;*/
+/*    transition: background-color 0.2s;*/
+/*}*/
 
-.button-cancel:hover {
-    background-color: #E2E8F0; /* hover:bg-gray-200 */
-}
+/*.button-cancel:hover {*/
+/*    background-color: #E2E8F0; !* hover:bg-gray-200 *!*/
+/*}*/
 
-.button-save {
-    background-color: #4299E1; /* bg-blue-500 */
-    color: white;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    transition: background-color 0.2s;
-}
+/*.button-save {*/
+/*    background-color: #4299E1; !* bg-blue-500 *!*/
+/*    color: white;*/
+/*    font-weight: bold;*/
+/*    padding: 0.5rem 1rem;*/
+/*    border-radius: 0.25rem;*/
+/*    transition: background-color 0.2s;*/
+/*}*/
 
-.button-save:hover {
-    background-color: #3182CE; /* hover:bg-blue-700 */
-}
+/*.button-save:hover {*/
+/*    background-color: #3182CE; !* hover:bg-blue-700 *!*/
+/*}*/

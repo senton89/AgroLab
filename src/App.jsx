@@ -7,6 +7,7 @@ import MainContent from "./components/MainContent";
 import DocumentForm from "./components/Document/DocumentForm";
 import ReagentManagement from "./components/Reagent/ReagentManagement";
 import CultureManagement from "./components/Culture/CultureManagement";
+import AddCultureForm from "./components/Culture/AddCultureForm";
 import EquipmentManagement from "./components/Equipment/EquipmentManagement";
 import CustomerManagement from "./components/Customer/CustomerManagement";
 import SampleManagement from "./components/Sample/SampleManagement";
@@ -14,6 +15,9 @@ import OrderManagement from "./components/Orders/OrderManagement";
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginForm from "./components/Auth/LoginForm";
 import RegistrationForm from "./components/Auth/RegistrationForm"; // Import the ProtectedRoute component
+import AddEquipmentForm from "./components/Equipment/AddEquipmentForm"; // Import the AddEquipmentForm component
+import AddReagentForm from './components/Reagent/AddReagentForm';
+import AddOrderForm from './components/Orders/AddOrderForm';
 
 const App = () => {
     return (
@@ -23,11 +27,7 @@ const App = () => {
                 <Route path="/label" element={<LabelPage />} />
                 <Route path="/label-preview" element={<LabelPreview />} />
                 <Route path="/login" element={
-                    <div className="flex items-center justify-center min-h-screen">
-                        <div className="w-full max-w-screen-sm">
                             <LoginForm/>
-                        </div>
-                    </div>
                 } />
                 {/* Protected routes */}
                 <Route path="/main" element={
@@ -39,7 +39,7 @@ const App = () => {
                 } />
                 <Route path="/register" element={
                     <ProtectedRoute>
-                        <div className="bg-gray-100 flex">
+                        <div className="flex">
                             <Sidebar/>
                             {(() => {
                                 const user = JSON.parse(localStorage.getItem('user')); // Retrieve user
@@ -75,6 +75,16 @@ const App = () => {
                         </div>
                     </ProtectedRoute>
                 } />
+                <Route path="/reagents/add" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <AddReagentForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
                 <Route path="/culture-table" element={
                     <ProtectedRoute>
                         <div className="flex">
@@ -85,12 +95,32 @@ const App = () => {
                         </div>
                     </ProtectedRoute>
                 } />
+                <Route path="/add-culture" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <AddCultureForm onAdd={(culture) => console.log('New culture:', culture)} onClose={() => navigate('/culture-table')} />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
                 <Route path="/equipment-table" element={
                     <ProtectedRoute>
                         <div className="flex">
                             <Sidebar />
                             <div className="flex-1 p-4">
                                 <EquipmentManagement />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/add-equipment" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <AddEquipmentForm onAdd={(equipment) => console.log('New equipment:', equipment)} onClose={() => navigate('/equipment-table')} />
                             </div>
                         </div>
                     </ProtectedRoute>
@@ -121,6 +151,16 @@ const App = () => {
                             <Sidebar />
                             <div className="flex-1 p-4">
                                 <OrderManagement />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/orders/add" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <AddOrderForm />
                             </div>
                         </div>
                     </ProtectedRoute>
