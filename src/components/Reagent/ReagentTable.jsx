@@ -6,9 +6,9 @@ const getExpiryColor = (expiryDate) => {
     const expiryDateObj = new Date(expiryDate);
     const today = new Date();
     const diffInDays = Math.round((expiryDateObj - today) / (1000 * 60 * 60 * 24));
-    if (diffInDays <= 7) return 'bg-red-500'; // Red if less than or equal to 1 week
-    if (diffInDays <= 14) return 'bg-orange-500'; // Orange if less than or equal to 2 weeks
-    if (diffInDays <= 30) return 'bg-yellow-500'; // Yellow if less than 1 month
+    if (diffInDays <= 7) return 'bg-red-400'; // Red if less than or equal to 1 week
+    if (diffInDays <= 14) return 'bg-orange-400'; // Orange if less than or equal to 2 weeks
+    if (diffInDays <= 30) return 'bg-yellow-400'; // Yellow if less than 1 month
     return 'bg-green-500'; // Green if more than 1 month
 };
 
