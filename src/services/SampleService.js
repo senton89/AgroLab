@@ -45,6 +45,19 @@ const SampleService = {
             throw new Error('Не удалось удалить образец');
         }
         return await response.json();
+    },
+
+    async uploadSampleFile(formData) {
+        const response = await fetch(`${API_URL}/upload`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error('Не удалось загрузить файл');
+        }
+
+        return await response.json();
     }
 };
 

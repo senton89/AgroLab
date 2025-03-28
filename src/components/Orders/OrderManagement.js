@@ -19,11 +19,11 @@ const OrderManagement = () => {
     if (errorState) return <div>Error: {errorState}</div>;
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mt-6 mx-10 p-4">
             <div className="flex flex-col w-full">
                 <button
                     onClick={() => navigate('/orders/add')}
-                    className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end m-6"
+                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded w-1/6 self-end mb-10"
                 >
                     Добавить новый заказ
                 </button>

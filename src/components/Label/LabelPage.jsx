@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import LabelForm from '../components/Label/LabelForm';
-import LabelPreview from '../components/Label/LabelPreview';
+import LabelForm from './LabelForm';
+import LabelPreview from './LabelPreview';
 
 const LabelPage = () => {
     const [formData, setFormData] = useState(null);
@@ -10,8 +10,7 @@ const LabelPage = () => {
     };
 
     return (
-        <div className="container mx-auto p-4 mt-4">
-            <h1 className="text-center font-bold text-2xl">Создание этикетки</h1>
+        <div className="mx-auto p-4">
             <LabelForm onSubmit={handleSubmit} />
             {formData && <LabelPreview data={formData} />}
         </div>

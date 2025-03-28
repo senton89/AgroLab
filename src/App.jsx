@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import LabelPage from './pages/LabelPage';
+import LabelPage from './components/Label/LabelPage';
 import LabelPreview from "./components/Label/LabelPreview";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
@@ -18,13 +18,13 @@ import RegistrationForm from "./components/Auth/RegistrationForm"; // Import the
 import AddEquipmentForm from "./components/Equipment/AddEquipmentForm"; // Import the AddEquipmentForm component
 import AddReagentForm from './components/Reagent/AddReagentForm';
 import AddOrderForm from './components/Orders/AddOrderForm';
+import AddSampleForm from "./components/Sample/AddSampleForm";
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Navigate to='/main' />} />
-                <Route path="/label" element={<LabelPage />} />
                 <Route path="/label-preview" element={<LabelPreview />} />
                 <Route path="/login" element={
                             <LoginForm/>
@@ -145,6 +145,26 @@ const App = () => {
                         </div>
                     </ProtectedRoute>
                 } />
+                <Route path="/samples/add" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1">
+                                <AddSampleForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/samples/edit/:id" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1">
+                                <AddSampleForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
                 <Route path="/orders" element={
                     <ProtectedRoute>
                         <div className="flex">
@@ -161,6 +181,16 @@ const App = () => {
                             <Sidebar />
                             <div className="flex-1 p-4 container mx-auto">
                                 <AddOrderForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/label" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <LabelPage />
                             </div>
                         </div>
                     </ProtectedRoute>

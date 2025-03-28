@@ -28,26 +28,31 @@ const SampleTable = ({ sampleList }) => {
         navigate('/label', { state: { sample } }); // Pass the sample data in state
     };
 
+    const handleRowDoubleClick = (sample) => {
+        navigate(`/samples/edit/${sample.id}`, { state: { sample } });
+    };
+
     if (!sampleList || sampleList.length === 0) {
         return <div>Нет доступных образцов.</div>; // Message if the list is empty
     }
 
     return (
-        <div className="w-full p-6">
+        <div className="w-full">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
                 <table className="w-full">
-                    <thead className="bg-orange-500 text-white">
+                    <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
-                        <th onClick={() => requestSort('direction')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Направление</th>
-                        <th onClick={() => requestSort('culture')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Культура</th>
-                        <th onClick={() => requestSort('variety')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Сорт</th>
-                        <th onClick={() => requestSort('harvestYear')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Год урожая</th>
-                        <th onClick={() => requestSort('sampleWeight')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Масса образца (г)</th>
-                        <th onClick={() => requestSort('batchNumber')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">№ партии</th>
-                        <th onClick={() => requestSort('storageLocation')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Место хранения</th>
-                        <th onClick={() => requestSort('analysisType')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Вид анализа</th>
-                        <th onClick={() => requestSort('protocol')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Протокол</th>
-                        <th onClick={() => requestSort('sampleCode')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Код образца</th>
+                        <th onClick={() => requestSort('direction')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Направление</th>
+                        <th onClick={() => requestSort('culture')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Культура</th>
+                        <th onClick={() => requestSort('variety')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Сорт</th>
+                        <th onClick={() => requestSort('harvestYear')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Год урожая</th>
+                        <th onClick={() => requestSort('sampleWeight')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Масса образца (г)</th>
+                        <th onClick={() => requestSort('batchNumber')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">№ партии</th>
+                        <th onClick={() => requestSort('storageLocation')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Место хранения</th>
+                        <th onClick={() => requestSort('analysisType')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Вид анализа</th>
+                        <th onClick={() => requestSort('protocol')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Протокол</th>
+                        <th onClick={() => requestSort('sampleCode')} className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Код образца</th>
+                        <th className="cursor-pointer px-6 py-2 text-left text-xs font-medium uppercase tracking-wider">Этикетка</th>
                         {/* Secondary fields moved to bottom */}
                         {/*
                         <th onClick={() => requestSort('reproduction')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Репродукция</th>
@@ -68,7 +73,9 @@ const SampleTable = ({ sampleList }) => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                     {sortedSamples.map((sample, index) => (
-                        <tr key={index}>
+                        <tr key={index}
+                            className="hover:bg-gray-100 cursor-pointer"
+                            onDoubleClick={() => handleRowDoubleClick(sample)}>
                             <td className="px-6 py-4">{sample.direction}</td>
                             <td className="px-6 py-4">{sample.culture}</td>
                             <td className="px-6 py-4">{sample.variety}</td>
@@ -79,13 +86,17 @@ const SampleTable = ({ sampleList }) => {
                             <td className="px-6 py-4">{sample.analysisType}</td>
                             <td className="px-6 py-4">{sample.protocol}</td>
                             <td className="px-6 py-4">{sample.sampleCode}</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    className=" bg-orange-400 text-white p-2"
-                                    onClick={() => handleLabelClick(sample)} // Pass the sample object
-                                >
-                                    Создать этикетку
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent row click
+                                            handleLabelClick(sample);
+                                        }}
+                                        className="text-blue-500 hover:text-blue-700 p-2 rounded-full hover:bg-gray-100"
+                                        title="Создать этикетку"
+                                    >
+                                    {/*<img src="./label.png" className="w-6 h-6 mx-8"></img>*/}
+                                    <i className="fas fa-tag text-orange-500 hover:text-orange-700 p-2 rounded-full w-6 h-6 mx-8"></i>
                                 </button>
                             </td>
                         </tr>

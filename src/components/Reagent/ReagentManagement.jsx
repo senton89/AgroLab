@@ -31,10 +31,10 @@ const ReagentManagement = () => {
         <div className="container mx-auto p-4">
             <div className="flex flex-col w-full">
             <button 
-                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end m-6"
+                className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end m-6"
                 onClick={() => navigate('/reagents/add')}
             >
-                Добавить реагент
+                Добавить реактив
             </button>
                 <ReagentTable reagents={reagentList} />
             

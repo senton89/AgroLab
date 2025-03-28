@@ -16,9 +16,9 @@ const CultureTable = ({ cultures, setCultures }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="bg-white rounded-lg shadow-md w-full">
             <table className="w-full">
-                <thead className="bg-orange-500 text-white">
+                <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
                     <th onClick={handleSort} className="cursor-pointer text-left p-2">Наименование</th>
                     <th className="text-right p-2">Действия</th>

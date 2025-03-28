@@ -55,7 +55,7 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
     };
 
     return (
-        <div className="bg-white p-8 rounded-lg shadow-md">
+        <div className="bg-white p-8 rounded-lg shadow-md mt-20">
             <div className="flex justify-end">
                 <button className="text-red-500" onClick={() => navigate('/equipment-table')}>
                     <i className="fas fa-times"></i>

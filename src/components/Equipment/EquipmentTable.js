@@ -34,10 +34,10 @@ const EquipmentTable = ({ equipmentList }) => {
     };
 
     return (
-        <div className="w-full rounded-lg shadow-md">
+        <div className="w-max-full overflow-x-auto shadow-md rounded-lg">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-orange-500 text-white rounded-t-lg">
+              <tr className="bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-t-lg">
                 <th onClick={() => requestSort('name')} className="p-2 border cursor-pointer rounded-tl-lg">Название</th>
                 <th onClick={() => requestSort('inventoryNumber')} className="p-2 border cursor-pointer">Номер инвентаря</th>
                 <th onClick={() => requestSort('factoryNumber')} className="p-2 border cursor-pointer">Номер завода</th>

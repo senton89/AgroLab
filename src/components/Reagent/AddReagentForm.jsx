@@ -67,7 +67,7 @@ const AddReagentForm = ({ onAdd }) => {
     };
 
     return (
-        <div className="flex-1 flex items-center justify-center p-8">
+        <div className="flex-1 flex items-center justify-center mt-16 pt-4 p-8">
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-xl font-semibold mb-6">Добавление нового реактива</h2>
                 <form onSubmit={handleSubmit}>

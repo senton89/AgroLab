@@ -21,8 +21,7 @@ const CustomerManagement = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="container mx-auto p-1">
-            <h1 className="text-2xl font-bold mb-3">Учет заказчиков</h1>
+        <div className="container mt-24 mx-6 px-1">
             {/*<button*/}
             {/*    onClick={toggleFormVisibility}*/}
             {/*    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"*/}

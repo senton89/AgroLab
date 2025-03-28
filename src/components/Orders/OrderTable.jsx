@@ -22,10 +22,10 @@ const OrderTable = ({ orderList }) => {
     };
 
     return (
-        <div className="flex">
-                <div className="overflow-x-auto">
+        <div className="flex w-full">
+                <div className="overflow-x-auto w-full">
                     <table className="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
-                        <thead className="bg-orange-500 text-white">
+                        <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                             <tr>
                                 <th onClick={() => requestSort('customer')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                     Заказчик

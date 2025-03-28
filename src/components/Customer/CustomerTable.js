@@ -30,7 +30,7 @@ const CustomerTable = ({ customerList }) => {
         <div className="w-full p-6">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
                 <table className="w-full">
-                    <thead className="bg-orange-500 text-white">
+                    <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
                         <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Имя</th>
                         <th onClick={() => requestSort('email')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>

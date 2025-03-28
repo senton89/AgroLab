@@ -25,7 +25,7 @@ const AddCultureForm = ({ onAdd, onClose }) => {
     };
 
     return (
-        <div className="bg-white p-8 rounded-lg shadow-md max-w-md absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="bg-white mt-20 p-8 rounded-lg shadow-md max-w-xl mx-auto">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-gray-700 text-lg font-semibold">Добавление новой культуры</h2>
             

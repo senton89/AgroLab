@@ -13,14 +13,14 @@ const EquipmentManagement = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full pt-6 p-8 mx-6">
             <button
                     onClick={() => navigate('/add-equipment')}
-                    className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mt-4 self-end m-6 w-1/6"
+                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mt-4 self-end mb-10 w-1/6"
                 >
                     Добавить оборудование
                 </button>
-            <div className="w-full p-8">
+            <div className="rounded-lg overflow-hidden w-full ">
                 <EquipmentTable equipmentList={equipmentList} />
             </div>
         </div>
