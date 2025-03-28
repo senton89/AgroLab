@@ -38,7 +38,8 @@ const AddSampleForm = () => {
         contractNumber: '',
         certificateNumberAndDate: '',
         testingPeriod: '',
-        selectionAct: ''
+        selectionAct: '',
+        category: location.state?.category || 'seeds'
     });
 
     useEffect(() => {
@@ -163,6 +164,8 @@ const AddSampleForm = () => {
                 newErrors.harvestYear = 'Год урожая должен быть числом между 1900 и текущим годом';
             }
         }
+
+        if (!formData.category) newErrors.category = 'Категория образца обязательна';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -322,7 +325,8 @@ const AddSampleForm = () => {
                                     className={`w-full p-3 border ${errors.harvestYear ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                     required
                                 />
-                                {errors.harvestYear && <p className="text-red-500 text-sm mt-1">{errors.harvestYear}</p>}
+                                {errors.harvestYear &&
+                                    <p className="text-red-500 text-sm mt-1">{errors.harvestYear}</p>}
                             </div>
 
                             <div>
@@ -335,7 +339,8 @@ const AddSampleForm = () => {
                                     className={`w-full p-3 border ${errors.reproduction ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                     required
                                 />
-                                {errors.reproduction && <p className="text-red-500 text-sm mt-1">{errors.reproduction}</p>}
+                                {errors.reproduction &&
+                                    <p className="text-red-500 text-sm mt-1">{errors.reproduction}</p>}
                             </div>
 
                             <div>
@@ -348,7 +353,8 @@ const AddSampleForm = () => {
                                     className={`w-full p-3 border ${errors.seedCategory ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                     required
                                 />
-                                {errors.seedCategory && <p className="text-red-500 text-sm mt-1">{errors.seedCategory}</p>}
+                                {errors.seedCategory &&
+                                    <p className="text-red-500 text-sm mt-1">{errors.seedCategory}</p>}
                             </div>
 
                             <div>
@@ -361,7 +367,8 @@ const AddSampleForm = () => {
                                     className={`w-full p-3 border ${errors.sampleWeight ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                     required
                                 />
-                                {errors.sampleWeight && <p className="text-red-500 text-sm mt-1">{errors.sampleWeight}</p>}
+                                {errors.sampleWeight &&
+                                    <p className="text-red-500 text-sm mt-1">{errors.sampleWeight}</p>}
                             </div>
 
                             <div>
@@ -374,7 +381,8 @@ const AddSampleForm = () => {
                                     className={`w-full p-3 border ${errors.batchNumber ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                     required
                                 />
-                                {errors.batchNumber && <p className="text-red-500 text-sm mt-1">{errors.batchNumber}</p>}
+                                {errors.batchNumber &&
+                                    <p className="text-red-500 text-sm mt-1">{errors.batchNumber}</p>}
                             </div>
 
                             <div>
@@ -387,7 +395,8 @@ const AddSampleForm = () => {
                                     className={`w-full p-3 border ${errors.batchWeight ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                     required
                                 />
-                                {errors.batchWeight && <p className="text-red-500 text-sm mt-1">{errors.batchWeight}</p>}
+                                {errors.batchWeight &&
+                                    <p className="text-red-500 text-sm mt-1">{errors.batchWeight}</p>}
                             </div>
 
                             <div>
@@ -400,7 +409,8 @@ const AddSampleForm = () => {
                                     className={`w-full p-3 border ${errors.storageLocation ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                     required
                                 />
-                                {errors.storageLocation && <p className="text-red-500 text-sm mt-1">{errors.storageLocation}</p>}
+                                {errors.storageLocation &&
+                                    <p className="text-red-500 text-sm mt-1">{errors.storageLocation}</p>}
                             </div>
 
                             <div>
@@ -535,6 +545,23 @@ const AddSampleForm = () => {
                                     onChange={handleChange}
                                     className="w-full p-3 border border-gray-300 rounded-lg"
                                 />
+                            </div>
+                            <div>
+                                <label className="block mb-1 text-gray-700">Категория образца*</label>
+                                <select
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleChange}
+                                    className={`w-full p-3 border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                    required
+                                >
+                                    <option value="">Выберите категорию</option>
+                                    <option value="seeds">Семена</option>
+                                    <option value="plants">Растения</option>
+                                    <option value="potatoes">Картофель</option>
+                                    <option value="soil">Почва</option>
+                                </select>
+                                {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
                             </div>
                         </div>
 

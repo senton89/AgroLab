@@ -1,8 +1,8 @@
-import SampleService from '../services/SampleService'; // Убедитесь, что путь правильный
+import SampleService from '../services/SampleService';
 import MockSampleService from '../components/Mockups/MockSampleService';
-import {useEffect, useState} from "react"; // Импортируйте моковый сервис
+import { useEffect, useState } from "react";
 
-const useMock = true; // Установите в true, чтобы использовать моковый сервис
+const useMock = true;
 
 const SampleRepository = () => {
     const service = useMock ? MockSampleService() : SampleService; // Выбор между моковым и реальным сервисом

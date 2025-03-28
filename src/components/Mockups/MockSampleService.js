@@ -23,8 +23,9 @@ class Sample {
                     sampleCode,
                     sampleTakenBy,
                     selectionAct,
-                    culture, // New field for Culture
-                    variety, // New field for Variety
+                    culture,
+                    variety,
+                    category, // New field for sample category
                 }) {
         this.id = id;
         this.direction = direction;
@@ -48,11 +49,13 @@ class Sample {
         this.sampleCode = sampleCode;
         this.sampleTakenBy = sampleTakenBy;
         this.selectionAct = selectionAct;
-        this.culture = culture; // Assigning the new field
-        this.variety = variety; // Assigning the new field
+        this.culture = culture;
+        this.variety = variety;
+        this.category = category || 'seeds'; // Default to seeds if not specified
     }
 }
 
+// Update the sample list with categories
 const sampleList = [
     new Sample({
         id: 1,
@@ -77,8 +80,9 @@ const sampleList = [
         sampleCode: 'Sample Code 1',
         sampleTakenBy: 'Sample Taken By 1',
         selectionAct: 'Selection Act 1',
-        culture: 'Culture 1', // New field value
-        variety: 'Variety 1', // New field value
+        culture: 'Culture 1',
+        variety: 'Variety 1',
+        category: 'seeds',
     }),
     new Sample({
         id: 2,
@@ -103,8 +107,63 @@ const sampleList = [
         sampleCode: 'Sample Code 2',
         sampleTakenBy: 'Sample Taken By 2',
         selectionAct: 'Selection Act 2',
-        culture: 'Culture 2', // New field value
-        variety: 'Variety 2', // New field value
+        culture: 'Culture 2',
+        variety: 'Variety 2',
+        category: 'plants',
+    }),
+    new Sample({
+        id: 3,
+        direction: 'Direction 3',
+        harvestYear: '2023',
+        reproduction: 'Reproduction 3',
+        seedCategory: 'Seed Category 3',
+        sampleWeight: '300',
+        batchNumber: '3',
+        batchWeight: '3000',
+        storageLocation: 'Storage Location 3',
+        source: 'Source 3',
+        seedPurpose: 'Seed Purpose 3',
+        processingType: 'Processing Type 3',
+        seedTreatment: 'Seed Treatment 3',
+        analysisType: 'Analysis Type 3',
+        protocol: 'Protocol 3',
+        applicationForTesting: 'Application for Testing 3',
+        contractNumber: 'Contract Number 3',
+        certificateNumberAndDate: 'Certificate Number 3, Date 2023-01-01',
+        testingPeriod: 'Testing Period 3',
+        sampleCode: 'Sample Code 3',
+        sampleTakenBy: 'Sample Taken By 3',
+        selectionAct: 'Selection Act 3',
+        culture: 'Potato',
+        variety: 'Variety 3',
+        category: 'potatoes',
+    }),
+    new Sample({
+        id: 4,
+        direction: 'Direction 4',
+        harvestYear: '2023',
+        reproduction: 'N/A',
+        seedCategory: 'N/A',
+        sampleWeight: '500',
+        batchNumber: '4',
+        batchWeight: '4000',
+        storageLocation: 'Storage Location 4',
+        source: 'Source 4',
+        seedPurpose: 'N/A',
+        processingType: 'N/A',
+        seedTreatment: 'N/A',
+        analysisType: 'Soil Analysis',
+        protocol: 'Protocol 4',
+        applicationForTesting: 'Application for Testing 4',
+        contractNumber: 'Contract Number 4',
+        certificateNumberAndDate: 'Certificate Number 4, Date 2023-01-01',
+        testingPeriod: 'Testing Period 4',
+        sampleCode: 'Sample Code 4',
+        sampleTakenBy: 'Sample Taken By 4',
+        selectionAct: 'Selection Act 4',
+        culture: 'N/A',
+        variety: 'N/A',
+        category: 'soil',
     }),
 ];
 
