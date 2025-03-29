@@ -15,7 +15,7 @@ const SampleService = {
         return await response.json();
     },
 
-    async fetchSamples() {
+    async getSampleList() {
         const response = await fetch(API_URL);
         if (!response.ok) {
             throw new Error('Не удалось получить образцы');
@@ -55,6 +55,22 @@ const SampleService = {
 
         if (!response.ok) {
             throw new Error('Не удалось загрузить файл');
+        }
+
+        return await response.json();
+    },
+
+    async saveAnalysisResults(analysisData) {
+        const response = await fetch(`${API_URL}/analysis`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(analysisData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Не удалось сохранить результаты анализа');
         }
 
         return await response.json();

@@ -19,6 +19,9 @@ import AddReagentForm from './components/Reagent/AddReagentForm';
 import AddOrderForm from './components/Orders/AddOrderForm';
 import AddSampleForm from "./components/Sample/AddSampleForm";
 import AddCustomerForm from "./components/Customer/AddCustomerForm";
+import PotatoAnalysisForm from "./components/Analysis/PotatoAnalysisForm";
+import SeedAnalysisForm from "./components/Analysis/SeedAnalysisForm";
+import SoilAnalysisForm from "./components/Analysis/SoilAnalysisForm";
 
 const App = () => {
     return (
@@ -182,7 +185,7 @@ const App = () => {
                         <div className="flex">
                             <Sidebar />
                             <div className="flex-1">
-                                <AddSampleForm />
+                                <AddSampleForm/>
                             </div>
                         </div>
                     </ProtectedRoute>
@@ -227,6 +230,36 @@ const App = () => {
                         </div>
                     </ProtectedRoute>
                 } />
+                <Route path="/analysis/potatoes" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <PotatoAnalysisForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/analysis/seeds" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <SeedAnalysisForm/>
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/analysis/soil" element={
+                        <ProtectedRoute>
+                            <div className="flex">
+                                <Sidebar />
+                                <div className="flex-1 p-4 container mx-auto">
+                                    <SoilAnalysisForm/>
+                                </div>
+                            </div>
+                        </ProtectedRoute>
+                    } />
             </Routes>
         </BrowserRouter>
     );

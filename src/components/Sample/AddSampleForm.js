@@ -7,51 +7,72 @@ import SampleRepository from '../../Repository/SampleRepository';
 const AddSampleForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { id } = useParams(); // Get the sample ID from URL if editing
-    const { sample } = location.state || {}; // Get sample data from location state if available
+    const {id} = useParams();
+    const {sample} = location.state || {};
+    const initialCategory = location.state?.category || 'seeds';
 
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [uploadedFile, setUploadedFile] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [category, setCategory] = useState(initialCategory);
 
-    const [formData, setFormData] = useState({
-        direction: '',
-        harvestYear: '',
-        reproduction: '',
-        seedCategory: '',
-        sampleWeight: '',
-        batchNumber: '',
-        batchWeight: '',
-        storageLocation: '',
-        source: '',
-        seedPurpose: '',
-        processingType: '',
-        seedTreatment: '',
-        analysisType: '',
-        protocol: '',
-        culture: '',
-        variety: '',
-        sampleCode: '',
-        sampleTakenBy: 'Сотрудник ИЛ',
-        applicationForTesting: '',
-        contractNumber: '',
-        certificateNumberAndDate: '',
-        testingPeriod: '',
-        selectionAct: '',
-        category: location.state?.category || 'seeds'
-    });
+    // Define form fields for each category
+    const initialFormData = {
+        // Common fields
+        category: initialCategory,
+
+        // Seeds fields
+        test_duration: '',
+        test_object_name: '',
+        sample_code: '',
+        sample_selection: '',
+        sampling_act: '',
+        sampling_nd: '',
+        harvest_year: '',
+        seed_category: '',
+        research_direction: '',
+        sampling_plan: '',
+        additional_info: '',
+        tuber_count: '',
+        batch_number: '',
+        batch_weight: '',
+        storage_location: '',
+        results_distribution: '',
+        sample_storage_period: '',
+
+        // Soil fields
+        culture_id: '',
+        customer: '',
+        inn_kpp: '',
+        test_basis: '',
+        contract_number: '',
+        sample_receipt_date: '',
+        test_conditions: '',
+
+        // Potatoes fields
+        reproduction_id: '',
+        upload_date: '',
+        acceptance_file: '',
+
+        // Plants fields
+        inn: ''
+    };
+
+    const [formData, setFormData] = useState(initialFormData);
 
     useEffect(() => {
         if (id || sample) {
             setIsEditMode(true);
 
-            // If we have sample data from location state, use it
             if (sample) {
-                setFormData(sample);
-            }
-            // Otherwise, fetch the sample data using the ID
-            else if (id) {
+                setFormData({
+                    ...initialFormData,
+                    ...sample,
+                    category: sample.category || initialCategory
+                });
+                setCategory(sample.category || initialCategory);
+            } else if (id) {
                 const fetchSample = async () => {
                     setIsLoading(true);
                     try {
@@ -60,14 +81,19 @@ const AddSampleForm = () => {
                         const foundSample = samples.find(s => s.id === parseInt(id));
 
                         if (foundSample) {
-                            setFormData(foundSample);
+                            setFormData({
+                                ...initialFormData,
+                                ...foundSample,
+                                category: foundSample.category || initialCategory
+                            });
+                            setCategory(foundSample.category || initialCategory);
                         } else {
-                            setErrors({ general: 'Образец не найден' });
+                            setErrors({general: 'Образец не найден'});
                             navigate('/samples');
                         }
                     } catch (error) {
                         console.error('Error fetching sample:', error);
-                        setErrors({ general: 'Ошибка при загрузке образца' });
+                        setErrors({general: 'Ошибка при загрузке образца'});
                     } finally {
                         setIsLoading(false);
                     }
@@ -76,7 +102,7 @@ const AddSampleForm = () => {
                 fetchSample();
             }
         }
-    }, [id, sample, navigate]);
+    }, [id, sample, navigate, initialCategory]);
 
     const onDrop = useCallback(async (acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -110,7 +136,7 @@ const AddSampleForm = () => {
         }
     }, []);
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
         accept: {
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
@@ -122,50 +148,71 @@ const AddSampleForm = () => {
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const {name, value} = e.target;
 
-        // Очистка ошибки при изменении поля
+        if (name === 'category') {
+            setCategory(value);
+        }
+
+        setFormData({...formData, [name]: value});
+
         if (errors[name]) {
-            setErrors({ ...errors, [name]: '' });
+            setErrors({...errors, [name]: ''});
         }
     };
 
     const validateForm = () => {
         const newErrors = {};
 
-        // Проверка обязательных полей
-        if (!formData.direction) newErrors.direction = 'Направление обязательно';
-        if (!formData.harvestYear) newErrors.harvestYear = 'Год урожая обязателен';
-        if (!formData.reproduction) newErrors.reproduction = 'Репродукция обязательна';
-        if (!formData.seedCategory) newErrors.seedCategory = 'Категория семян обязательна';
-        if (!formData.sampleWeight) newErrors.sampleWeight = 'Масса образца обязательна';
-        if (!formData.batchNumber) newErrors.batchNumber = '№ партии обязателен';
-        if (!formData.batchWeight) newErrors.batchWeight = 'Масса партии обязательна';
-        if (!formData.storageLocation) newErrors.storageLocation = 'Место хранения обязательно';
-        if (!formData.culture) newErrors.culture = 'Культура обязательна';
-        if (!formData.variety) newErrors.variety = 'Сорт обязателен';
-
-        // Проверка числовых полей
-        if (formData.sampleWeight && isNaN(formData.sampleWeight)) {
-            newErrors.sampleWeight = 'Масса образца должна быть числом';
+        // Common validations
+        if (!formData.category) {
+            newErrors.category = 'Категория обязательна';
         }
 
-        if (formData.batchWeight && isNaN(formData.batchWeight)) {
-            newErrors.batchWeight = 'Масса партии должна быть числом';
+        // Common validations for all categories
+        if (!formData.test_object_name) newErrors.test_object_name = 'Название объекта испытания обязательно';
+
+        // Category-specific validations
+        if (category === 'seeds') {
+            if (!formData.test_duration) newErrors.test_duration = 'Срок испытания обязателен';
+            if (!formData.sample_code) newErrors.sample_code = 'Код образца обязателен';
+            if (!formData.harvest_year) newErrors.harvest_year = 'Год урожая обязателен';
+            if (!formData.seed_category) newErrors.seed_category = 'Категория семян обязательна';
+            if (!formData.batch_number) newErrors.batch_number = '№ партии обязателен';
+            if (!formData.batch_weight) newErrors.batch_weight = 'Масса партии обязательна';
+            if (!formData.storage_location) newErrors.storage_location = 'Место хранения обязательно';
+        } else if (category === 'soil') {
+            if (!formData.culture_id) newErrors.culture_id = 'Культура обязательна';
+            if (!formData.customer) newErrors.customer = 'Заказчик обязателен';
+            if (!formData.inn_kpp) newErrors.inn_kpp = 'ИНН/КПП обязателен';
+            if (!formData.test_basis) newErrors.test_basis = 'Основание для испытания обязательно';
+            if (!formData.contract_number) newErrors.contract_number = 'Номер договора обязателен';
+        } else if (category === 'potatoes') {
+            if (!formData.culture_id) newErrors.culture_id = 'Культура обязательна';
+            if (!formData.reproduction_id) newErrors.reproduction_id = 'Репродукция обязательна';
+            if (!formData.customer) newErrors.customer = 'Заказчик обязателен';
+            if (!formData.harvest_year) newErrors.harvest_year = 'Год урожая обязателен';
+        } else if (category === 'plants') {
+            if (!formData.culture_id) newErrors.culture_id = 'Культура обязательна';
+            if (!formData.customer) newErrors.customer = 'Заказчик обязателен';
+            if (!formData.inn) newErrors.inn = 'ИНН обязателен';
+            if (!formData.research_direction) newErrors.research_direction = 'Направление исследования обязательно';
         }
 
-        // Проверка года
-        if (formData.harvestYear) {
+        // Numeric validations
+        if (formData.batch_weight && isNaN(formData.batch_weight)) {
+            newErrors.batch_weight = 'Масса партии должна быть числом';
+        }
+
+        // Year validation
+        if (formData.harvest_year) {
             const currentYear = new Date().getFullYear();
-            if (isNaN(formData.harvestYear) ||
-                parseInt(formData.harvestYear) < 1900 ||
-                parseInt(formData.harvestYear) > currentYear) {
-                newErrors.harvestYear = 'Год урожая должен быть числом между 1900 и текущим годом';
+            if (isNaN(formData.harvest_year) ||
+                parseInt(formData.harvest_year) < 1900 ||
+                parseInt(formData.harvest_year) > currentYear) {
+                newErrors.harvest_year = 'Год урожая должен быть числом между 1900 и текущим годом';
             }
         }
-
-        if (!formData.category) newErrors.category = 'Категория образца обязательна';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -220,18 +267,779 @@ const AddSampleForm = () => {
         navigate('/samples');
     };
 
+    const handleCreateAnalysis = () => {
+        if (!formData.category) setErrors({category: 'Категория обязательна'});
+        else if (formData.category === 'plants') alert('Растения не имеют четкого анализа');
+        else navigate(`/analysis/${formData.category}`);
+    };
+
+    const renderCategoryFields = () => {
+        switch (formData.category) {
+            case 'seeds':
+                return (
+                    <>
+                        <div>
+                            <label className="block mb-1 text-gray-700">Срок испытания*</label>
+                            <input
+                                type="text"
+                                name="test_duration"
+                                value={formData.test_duration}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.test_duration ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.test_duration &&
+                                <p className="text-red-500 text-sm mt-1">{errors.test_duration}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Название объекта испытания*</label>
+                            <input
+                                type="text"
+                                name="test_object_name"
+                                value={formData.test_object_name}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.test_object_name ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.test_object_name &&
+                                <p className="text-red-500 text-sm mt-1">{errors.test_object_name}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Код образца*</label>
+                            <input
+                                type="text"
+                                name="sample_code"
+                                value={formData.sample_code}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.sample_code ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.sample_code && <p className="text-red-500 text-sm mt-1">{errors.sample_code}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Отбор образца</label>
+                            <input
+                                type="text"
+                                name="sample_selection"
+                                value={formData.sample_selection}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Акт отбора</label>
+                            <input
+                                type="text"
+                                name="sampling_act"
+                                value={formData.sampling_act}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">НД на отбор</label>
+                            <input
+                                type="text"
+                                name="sampling_nd"
+                                value={formData.sampling_nd}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Год урожая*</label>
+                            <input
+                                type="text"
+                                name="harvest_year"
+                                value={formData.harvest_year}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.harvest_year ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.harvest_year && <p className="text-red-500 text-sm mt-1">{errors.harvest_year}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Категория семян*</label>
+                            <input
+                                type="text"
+                                name="seed_category"
+                                value={formData.seed_category}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.seed_category ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.seed_category &&
+                                <p className="text-red-500 text-sm mt-1">{errors.seed_category}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Направление исследования</label>
+                            <input
+                                type="text"
+                                name="research_direction"
+                                value={formData.research_direction}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">План отбора</label>
+                            <input
+                                type="text"
+                                name="sampling_plan"
+                                value={formData.sampling_plan}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Дополнительная информация</label>
+                            <textarea
+                                name="additional_info"
+                                value={formData.additional_info}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                                rows="3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Количество клубней</label>
+                            <input
+                                type="number"
+                                name="tuber_count"
+                                value={formData.tuber_count}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">№ партии*</label>
+                            <input
+                                type="text"
+                                name="batch_number"
+                                value={formData.batch_number}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.batch_number ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.batch_number && <p className="text-red-500 text-sm mt-1">{errors.batch_number}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Масса партии*</label>
+                            <input
+                                type="text"
+                                name="batch_weight"
+                                value={formData.batch_weight}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.batch_weight ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.batch_weight && <p className="text-red-500 text-sm mt-1">{errors.batch_weight}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Место хранения*</label>
+                            <input
+                                type="text"
+                                name="storage_location"
+                                value={formData.storage_location}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.storage_location ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.storage_location &&
+                                <p className="text-red-500 text-sm mt-1">{errors.storage_location}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Рассылка результатов</label>
+                            <input
+                                type="text"
+                                name="results_distribution"
+                                value={formData.results_distribution}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Срок хранения образца</label>
+                            <input
+                                type="text"
+                                name="sample_storage_period"
+                                value={formData.sample_storage_period}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+                    </>
+                );
+
+            case 'soil':
+                return (
+                    <>
+                        <div>
+                            <label className="block mb-1 text-gray-700">Культура*</label>
+                            <input
+                                type="text"
+                                name="culture_id"
+                                value={formData.culture_id}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.culture_id ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.culture_id && <p className="text-red-500 text-sm mt-1">{errors.culture_id}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Заказчик*</label>
+                            <input
+                                type="text"
+                                name="customer"
+                                value={formData.customer}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.customer ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.customer && <p className="text-red-500 text-sm mt-1">{errors.customer}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">ИНН/КПП*</label>
+                            <input
+                                type="text"
+                                name="inn_kpp"
+                                value={formData.inn_kpp}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.inn_kpp ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.inn_kpp && <p className="text-red-500 text-sm mt-1">{errors.inn_kpp}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Основание для испытания*</label>
+                            <input
+                                type="text"
+                                name="test_basis"
+                                value={formData.test_basis}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.test_basis ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.test_basis && <p className="text-red-500 text-sm mt-1">{errors.test_basis}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Номер договора*</label>
+                            <input
+                                type="text"
+                                name="contract_number"
+                                value={formData.contract_number}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.contract_number ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.contract_number &&
+                                <p className="text-red-500 text-sm mt-1">{errors.contract_number}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Название объекта испытания*</label>
+                            <input
+                                type="text"
+                                name="test_object_name"
+                                value={formData.test_object_name}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.test_object_name ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.test_object_name &&
+                                <p className="text-red-500 text-sm mt-1">{errors.test_object_name}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Отбор образца</label>
+                            <input
+                                type="text"
+                                name="sample_selection"
+                                value={formData.sample_selection}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Дата получения образца</label>
+                            <input
+                                type="date"
+                                name="sample_receipt_date"
+                                value={formData.sample_receipt_date}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Срок испытания</label>
+                            <input
+                                type="text"
+                                name="test_duration"
+                                value={formData.test_duration}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Акт отбора</label>
+                            <input
+                                type="text"
+                                name="sampling_act"
+                                value={formData.sampling_act}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Направление исследования</label>
+                            <input
+                                type="text"
+                                name="research_direction"
+                                value={formData.research_direction}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Условия испытания</label>
+                            <textarea
+                                name="test_conditions"
+                                value={formData.test_conditions}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                                rows="3"
+                            />
+                        </div>
+                    </>
+                );
+
+            case 'potatoes':
+                return (
+                    <>
+                        <div>
+                            <label className="block mb-1 text-gray-700">Культура*</label>
+                            <input
+                                type="text"
+                                name="culture_id"
+                                value={formData.culture_id}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.culture_id ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.culture_id && <p className="text-red-500 text-sm mt-1">{errors.culture_id}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Репродукция*</label>
+                            <input
+                                type="text"
+                                name="reproduction_id"
+                                value={formData.reproduction_id}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.reproduction_id ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.reproduction_id &&
+                                <p className="text-red-500 text-sm mt-1">{errors.reproduction_id}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Дата загрузки</label>
+                            <input
+                                type="date"
+                                name="upload_date"
+                                value={formData.upload_date}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Файл приемки</label>
+                            <input
+                                type="text"
+                                name="acceptance_file"
+                                value={formData.acceptance_file}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Заказчик*</label>
+                            <input
+                                type="text"
+                                name="customer"
+                                value={formData.customer}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.customer ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.customer && <p className="text-red-500 text-sm mt-1">{errors.customer}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">ИНН/КПП</label>
+                            <input
+                                type="text"
+                                name="inn_kpp"
+                                value={formData.inn_kpp}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Основание для испытания</label>
+                            <input
+                                type="text"
+                                name="test_basis"
+                                value={formData.test_basis}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Номер договора</label>
+                            <input
+                                type="text"
+                                name="contract_number"
+                                value={formData.contract_number}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Дата получения образца</label>
+                            <input
+                                type="date"
+                                name="sample_receipt_date"
+                                value={formData.sample_receipt_date}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Срок испытания</label>
+                            <input
+                                type="text"
+                                name="test_duration"
+                                value={formData.test_duration}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Название объекта испытания*</label>
+                            <input
+                                type="text"
+                                name="test_object_name"
+                                value={formData.test_object_name}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.test_object_name ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.test_object_name &&
+                                <p className="text-red-500 text-sm mt-1">{errors.test_object_name}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Код образца</label>
+                            <input
+                                type="text"
+                                name="sample_code"
+                                value={formData.sample_code}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Отбор образца</label>
+                            <input
+                                type="text"
+                                name="sample_selection"
+                                value={formData.sample_selection}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Акт отбора</label>
+                            <input
+                                type="text"
+                                name="sampling_act"
+                                value={formData.sampling_act}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">НД на отбор</label>
+                            <input
+                                type="text"
+                                name="sampling_nd"
+                                value={formData.sampling_nd}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Год урожая*</label>
+                            <input
+                                type="text"
+                                name="harvest_year"
+                                value={formData.harvest_year}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.harvest_year ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.harvest_year && <p className="text-red-500 text-sm mt-1">{errors.harvest_year}</p>}
+                        </div>
+                    </>
+                );
+
+// Now let's add the 'plants' case:
+            case 'plants':
+                return (
+                    <>
+                        <div>
+                            <label className="block mb-1 text-gray-700">Культура*</label>
+                            <input
+                                type="text"
+                                name="culture_id"
+                                value={formData.culture_id}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.culture_id ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.culture_id && <p className="text-red-500 text-sm mt-1">{errors.culture_id}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Дата загрузки</label>
+                            <input
+                                type="date"
+                                name="upload_date"
+                                value={formData.upload_date}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Файл приемки</label>
+                            <input
+                                type="text"
+                                name="acceptance_file"
+                                value={formData.acceptance_file}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Заказчик*</label>
+                            <input
+                                type="text"
+                                name="customer"
+                                value={formData.customer}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.customer ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.customer && <p className="text-red-500 text-sm mt-1">{errors.customer}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">ИНН*</label>
+                            <input
+                                type="text"
+                                name="inn"
+                                value={formData.inn}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.inn ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.inn && <p className="text-red-500 text-sm mt-1">{errors.inn}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Основание для испытания</label>
+                            <input
+                                type="text"
+                                name="test_basis"
+                                value={formData.test_basis}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Дата получения образца</label>
+                            <input
+                                type="date"
+                                name="sample_receipt_date"
+                                value={formData.sample_receipt_date}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Срок испытания</label>
+                            <input
+                                type="text"
+                                name="test_duration"
+                                value={formData.test_duration}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Название объекта испытания*</label>
+                            <input
+                                type="text"
+                                name="test_object_name"
+                                value={formData.test_object_name}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.test_object_name ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.test_object_name &&
+                                <p className="text-red-500 text-sm mt-1">{errors.test_object_name}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Код образца</label>
+                            <input
+                                type="text"
+                                name="sample_code"
+                                value={formData.sample_code}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Отбор образца</label>
+                            <input
+                                type="text"
+                                name="sample_selection"
+                                value={formData.sample_selection}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Акт отбора</label>
+                            <input
+                                type="text"
+                                name="sampling_act"
+                                value={formData.sampling_act}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">НД на отбор</label>
+                            <input
+                                type="text"
+                                name="sampling_nd"
+                                value={formData.sampling_nd}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Направление исследования*</label>
+                            <input
+                                type="text"
+                                name="research_direction"
+                                value={formData.research_direction}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.research_direction ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.research_direction &&
+                                <p className="text-red-500 text-sm mt-1">{errors.research_direction}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">План отбора</label>
+                            <input
+                                type="text"
+                                name="sampling_plan"
+                                value={formData.sampling_plan}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Дополнительная информация</label>
+                            <textarea
+                                name="additional_info"
+                                value={formData.additional_info}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg"
+                                rows="3"
+                            />
+                        </div>
+                    </>
+                );
+        };
+    };
+
     return (
         <div className="flex-1 p-8 bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-6xl mx-auto">
                 <h2 className="text-2xl font-semibold text-gray-700 mb-6">
                     {isEditMode ? 'Редактирование образца' : 'Добавление нового образца'}
                 </h2>
+
                 {/* Drag and Drop зона */}
                 <div className="mb-6">
                     <div
                         {...getRootProps()}
                         className={`border-2 border-dashed p-8 rounded-lg text-center cursor-pointer transition-colors
-              ${isDragActive ? 'border-orange-500 bg-orange-50' : 'border-gray-300 hover:border-orange-400'}`}
+            ${isDragActive ? 'border-orange-500 bg-orange-50' : 'border-gray-300 hover:border-orange-400'}`}
                     >
                         <input {...getInputProps()} />
                         {uploadedFile ? (
@@ -275,277 +1083,7 @@ const AddSampleForm = () => {
                 ) : (
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {/* Основные поля формы */}
-                            <div>
-                                <label className="block mb-1 text-gray-700">Культура*</label>
-                                <input
-                                    type="text"
-                                    name="culture"
-                                    value={formData.culture}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.culture ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.culture && <p className="text-red-500 text-sm mt-1">{errors.culture}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Сорт*</label>
-                                <input
-                                    type="text"
-                                    name="variety"
-                                    value={formData.variety}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.variety ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.variety && <p className="text-red-500 text-sm mt-1">{errors.variety}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Направление*</label>
-                                <input
-                                    type="text"
-                                    name="direction"
-                                    value={formData.direction}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.direction ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.direction && <p className="text-red-500 text-sm mt-1">{errors.direction}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Год урожая*</label>
-                                <input
-                                    type="text"
-                                    name="harvestYear"
-                                    value={formData.harvestYear}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.harvestYear ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.harvestYear &&
-                                    <p className="text-red-500 text-sm mt-1">{errors.harvestYear}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Репродукция*</label>
-                                <input
-                                    type="text"
-                                    name="reproduction"
-                                    value={formData.reproduction}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.reproduction ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.reproduction &&
-                                    <p className="text-red-500 text-sm mt-1">{errors.reproduction}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Категория семян*</label>
-                                <input
-                                    type="text"
-                                    name="seedCategory"
-                                    value={formData.seedCategory}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.seedCategory ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.seedCategory &&
-                                    <p className="text-red-500 text-sm mt-1">{errors.seedCategory}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Масса образца, г*</label>
-                                <input
-                                    type="text"
-                                    name="sampleWeight"
-                                    value={formData.sampleWeight}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.sampleWeight ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.sampleWeight &&
-                                    <p className="text-red-500 text-sm mt-1">{errors.sampleWeight}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">№ партии*</label>
-                                <input
-                                    type="text"
-                                    name="batchNumber"
-                                    value={formData.batchNumber}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.batchNumber ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.batchNumber &&
-                                    <p className="text-red-500 text-sm mt-1">{errors.batchNumber}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Масса партии, ц*</label>
-                                <input
-                                    type="text"
-                                    name="batchWeight"
-                                    value={formData.batchWeight}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.batchWeight ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.batchWeight &&
-                                    <p className="text-red-500 text-sm mt-1">{errors.batchWeight}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Место хранения*</label>
-                                <input
-                                    type="text"
-                                    name="storageLocation"
-                                    value={formData.storageLocation}
-                                    onChange={handleChange}
-                                    className={`w-full p-3 border ${errors.storageLocation ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    required
-                                />
-                                {errors.storageLocation &&
-                                    <p className="text-red-500 text-sm mt-1">{errors.storageLocation}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Откуда получены</label>
-                                <input
-                                    type="text"
-                                    name="source"
-                                    value={formData.source}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Назначение семян</label>
-                                <input
-                                    type="text"
-                                    name="seedPurpose"
-                                    value={formData.seedPurpose}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Вид подработки</label>
-                                <input
-                                    type="text"
-                                    name="processingType"
-                                    value={formData.processingType}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Протравливание семян</label>
-                                <input
-                                    type="text"
-                                    name="seedTreatment"
-                                    value={formData.seedTreatment}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Вид анализа семян</label>
-                                <input
-                                    type="text"
-                                    name="analysisType"
-                                    value={formData.analysisType}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Код образца</label>
-                                <input
-                                    type="text"
-                                    name="sampleCode"
-                                    value={formData.sampleCode}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Отбор образцов провел</label>
-                                <select
-                                    name="sampleTakenBy"
-                                    value={formData.sampleTakenBy}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                >
-                                    <option value="Сотрудник ИЛ">Сотрудник ИЛ</option>
-                                    <option value="Заказчик">Заказчик</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Протокол</label>
-                                <input
-                                    type="text"
-                                    name="protocol"
-                                    value={formData.protocol}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Заявка на испытание</label>
-                                <input
-                                    type="text"
-                                    name="applicationForTesting"
-                                    value={formData.applicationForTesting}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Договор</label>
-                                <input
-                                    type="text"
-                                    name="contractNumber"
-                                    value={formData.contractNumber}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Срок проведения испытания</label>
-                                <input
-                                    type="text"
-                                    name="testingPeriod"
-                                    value={formData.testingPeriod}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-1 text-gray-700">Акт отбора</label>
-                                <input
-                                    type="text"
-                                    name="selectionAct"
-                                    value={formData.selectionAct}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
-                                />
-                            </div>
+                            {/* Category selection field */}
                             <div>
                                 <label className="block mb-1 text-gray-700">Категория образца*</label>
                                 <select
@@ -563,6 +1101,9 @@ const AddSampleForm = () => {
                                 </select>
                                 {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
                             </div>
+
+                            {/* Render fields based on selected category */}
+                            {renderCategoryFields()}
                         </div>
 
                         {errors.submit && (
@@ -579,9 +1120,17 @@ const AddSampleForm = () => {
                             >
                                 Отмена
                             </button>
+
+                            <button
+                                type="button"
+                                className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg shadow"
+                                onClick={handleCreateAnalysis}
+                            >
+                                Провести анализ
+                            </button>
+
                             <button
                                 type="submit"
-                                onClick={handleSubmit}
                                 disabled={isLoading}
                                 className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg shadow"
                             >
@@ -593,6 +1142,6 @@ const AddSampleForm = () => {
             </div>
         </div>
     );
-};
 
+};
 export default AddSampleForm;

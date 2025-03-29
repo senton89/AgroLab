@@ -64,5 +64,4 @@ const SampleManagement = () => {
     );
 };
 
-
 export default SampleManagement;

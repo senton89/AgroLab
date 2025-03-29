@@ -1,4 +1,5 @@
 // MockSampleService.js
+
 class Sample {
     constructor({
                     id,
@@ -25,7 +26,36 @@ class Sample {
                     selectionAct,
                     culture,
                     variety,
-                    category, // New field for sample category
+                    category,
+                    // New fields from the form
+                    test_duration,
+                    test_object_name,
+                    sample_code,
+                    sample_selection,
+                    sampling_act,
+                    sampling_nd,
+                    harvest_year,
+                    seed_category,
+                    research_direction,
+                    sampling_plan,
+                    additional_info,
+                    tuber_count,
+                    batch_number,
+                    batch_weight,
+                    storage_location,
+                    results_distribution,
+                    sample_storage_period,
+                    culture_id,
+                    customer,
+                    inn_kpp,
+                    test_basis,
+                    contract_number,
+                    sample_receipt_date,
+                    test_conditions,
+                    reproduction_id,
+                    upload_date,
+                    acceptance_file,
+                    inn
                 }) {
         this.id = id;
         this.direction = direction;
@@ -52,10 +82,40 @@ class Sample {
         this.culture = culture;
         this.variety = variety;
         this.category = category || 'seeds'; // Default to seeds if not specified
+
+        // New fields from the form
+        this.test_duration = test_duration || '';
+        this.test_object_name = test_object_name || '';
+        this.sample_code = sample_code || sampleCode || '';
+        this.sample_selection = sample_selection || '';
+        this.sampling_act = sampling_act || selectionAct || '';
+        this.sampling_nd = sampling_nd || '';
+        this.harvest_year = harvest_year || harvestYear || '';
+        this.seed_category = seed_category || seedCategory || '';
+        this.research_direction = research_direction || '';
+        this.sampling_plan = sampling_plan || '';
+        this.additional_info = additional_info || '';
+        this.tuber_count = tuber_count || '';
+        this.batch_number = batch_number || batchNumber || '';
+        this.batch_weight = batch_weight || batchWeight || '';
+        this.storage_location = storage_location || storageLocation || '';
+        this.results_distribution = results_distribution || '';
+        this.sample_storage_period = sample_storage_period || '';
+        this.culture_id = culture_id || culture || '';
+        this.customer = customer || '';
+        this.inn_kpp = inn_kpp || '';
+        this.test_basis = test_basis || '';
+        this.contract_number = contract_number || contractNumber || '';
+        this.sample_receipt_date = sample_receipt_date || '';
+        this.test_conditions = test_conditions || '';
+        this.reproduction_id = reproduction_id || reproduction || '';
+        this.upload_date = upload_date || '';
+        this.acceptance_file = acceptance_file || '';
+        this.inn = inn || '';
     }
 }
 
-// Update the sample list with categories
+// Update the sample list with categories and new fields
 const sampleList = [
     new Sample({
         id: 1,
@@ -83,6 +143,10 @@ const sampleList = [
         culture: 'Culture 1',
         variety: 'Variety 1',
         category: 'seeds',
+        test_duration: '10 days',
+        test_object_name: 'Wheat Seeds',
+        sample_selection: 'Manual',
+        research_direction: 'Quality Testing'
     }),
     new Sample({
         id: 2,
@@ -110,6 +174,12 @@ const sampleList = [
         culture: 'Culture 2',
         variety: 'Variety 2',
         category: 'plants',
+        test_duration: '15 days',
+        test_object_name: 'Corn Plants',
+        culture_id: 'Corn',
+        customer: 'Farming Corp',
+        inn: '1234567890',
+        research_direction: 'Disease Resistance'
     }),
     new Sample({
         id: 3,
@@ -137,6 +207,13 @@ const sampleList = [
         culture: 'Potato',
         variety: 'Variety 3',
         category: 'potatoes',
+        test_duration: '20 days',
+        test_object_name: 'Potato Tubers',
+        culture_id: 'Potato',
+        reproduction_id: 'Elite',
+        customer: 'Potato Farm LLC',
+        harvest_year: '2023',
+        tuber_count: '50'
     }),
     new Sample({
         id: 4,
@@ -164,6 +241,13 @@ const sampleList = [
         culture: 'N/A',
         variety: 'N/A',
         category: 'soil',
+        test_duration: '30 days',
+        test_object_name: 'Clay Soil',
+        culture_id: 'Wheat',
+        customer: 'Agricultural Research Center',
+        inn_kpp: '1234567890/123456789',
+        test_basis: 'Research Project',
+        contract_number: 'SOIL-2023-001'
     }),
 ];
 
@@ -182,7 +266,7 @@ const MockSampleService = () => {
     const updateSample = async (id, updatedSample) => {
         const index = sampleList.findIndex(sample => sample.id === id);
         if (index !== -1) {
-            sampleList[index] = { ...sampleList[index], ...updatedSample };
+            sampleList[index] = new Sample({ ...sampleList[index], ...updatedSample, id });
             return sampleList[index];
         }
         throw new Error('Sample not found');
@@ -197,11 +281,23 @@ const MockSampleService = () => {
         throw new Error('Sample not found');
     };
 
+    const uploadSampleFile = async (formData) => {
+        // Mock implementation for file upload
+        return {
+            data: {
+                test_object_name: 'Extracted from file',
+                sample_code: 'AUTO-' + Math.floor(Math.random() * 1000),
+                harvest_year: new Date().getFullYear().toString()
+            }
+        };
+    };
+
     return {
         addSample,
         getSampleList,
         updateSample,
-        deleteSample
+        deleteSample,
+        uploadSampleFile
     };
 };
 

@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 const useMock = true;
 
 const SampleRepository = () => {
-    const service = useMock ? MockSampleService() : SampleService; // Выбор между моковым и реальным сервисом
-    const [sampleList, setSampleList] = useState()
-    const [loading, setLoading] = useState(true); // Состояние загрузки
-    const [error, setError] = useState(null); // Состояние ошибки
+    const service = useMock ? MockSampleService() : SampleService; // Choose between mock and real service
+    const [sampleList, setSampleList] = useState([]);
+    const [loading, setLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
 
     useEffect(() => {
         const fetchSampleList = async () => {
@@ -18,17 +18,17 @@ const SampleRepository = () => {
             } catch (err) {
                 setError(err.message);
             } finally {
-                setLoading(false); // Устанавливаем состояние загрузки в false
+                setLoading(false); // Set loading state to false
             }
         };
 
         fetchSampleList();
-    }, [service]); // Зависимость от сервиса
+    }, [service]); // Dependency on service
 
     const addSample = async (newSample) => {
         try {
             const addedSample = await service.addSample(newSample);
-            setSampleList((prevList) => [...prevList, addedSample]); // Обновляем список образцов
+            setSampleList((prevList) => [...prevList, addedSample]); // Update sample list
             return addedSample;
         } catch (error) {
             throw error;
@@ -39,8 +39,10 @@ const SampleRepository = () => {
         try {
             const updatedSampleResponse = await service.updateSample(id, updatedSample);
             setSampleList((prevList) =>
-                prevList.map(sample => sample.id === id ? updatedSampleResponse : sample)
-            ); // Обновляем список образцов
+                prevList.map(sample =>
+                    sample.id === id ? updatedSampleResponse : sample
+                )
+            ); // Update sample list
             return updatedSampleResponse;
         } catch (error) {
             throw error;
@@ -50,8 +52,37 @@ const SampleRepository = () => {
     const deleteSample = async (id) => {
         try {
             const deletedSampleResponse = await service.deleteSample(id);
-            setSampleList((prevList) => prevList.filter(sample => sample.id !== id)); // Обновляем список образцов
+            setSampleList((prevList) =>
+                prevList.filter(sample => sample.id !== id)
+            ); // Update sample list
             return deletedSampleResponse;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const uploadSampleFile = async (formData) => {
+        try {
+            return await service.uploadSampleFile(formData);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const saveAnalysisResults = async (analysisData) => {
+        try {
+            const result = await service.saveAnalysisResults(analysisData);
+            // If the analysis is for an existing sample, update it in the list
+            if (analysisData.sampleId) {
+                setSampleList((prevList) =>
+                    prevList.map(sample =>
+                        sample.id === analysisData.sampleId ?
+                            { ...sample, analysisResults: result } :
+                            sample
+                    )
+                );
+            }
+            return result;
         } catch (error) {
             throw error;
         }
@@ -64,6 +95,8 @@ const SampleRepository = () => {
         addSample,
         updateSample,
         deleteSample,
+        uploadSampleFile,
+        saveAnalysisResults
     };
 };
 
