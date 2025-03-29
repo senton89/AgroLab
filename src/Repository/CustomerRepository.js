@@ -24,14 +24,41 @@ const useCustomerRepository = () => {
 
     const addCustomer = async (newCustomer) => {
         try {
-            const addedCustomer = await MockCustomerService.addCustomer(newCustomer); // Используйте мок-сервис
-            setCustomerList([...customerList, addedCustomer]);
+            // Check if customer has an id (editing existing customer)
+            if (newCustomer.id) {
+                // Update existing customer
+                const updatedCustomers = customerList.map(customer =>
+                    customer.id === newCustomer.id ? newCustomer : customer
+                );
+                setCustomerList(updatedCustomers);
+                return newCustomer;
+            } else {
+                // Add new customer
+                const addedCustomer = await MockCustomerService.addCustomer(newCustomer);
+                setCustomerList([...customerList, addedCustomer]);
+                return addedCustomer;
+            }
         } catch (err) {
             setError(err.message);
+            throw err;
         }
     };
 
-    return { customerList, loading, error, addCustomer };
+    const updateCustomer = async (id, updatedCustomer) => {
+        try {
+            // In a real app, this would call an API
+            const updatedCustomers = customerList.map(customer =>
+                customer.id === id ? { ...customer, ...updatedCustomer } : customer
+            );
+            setCustomerList(updatedCustomers);
+            return updatedCustomers.find(customer => customer.id === id);
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        }
+    };
+
+    return { customerList, loading, error, addCustomer, updateCustomer };
 };
 
 export default useCustomerRepository;

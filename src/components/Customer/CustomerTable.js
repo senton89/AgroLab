@@ -1,7 +1,9 @@
 // CustomerTable.jsx
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 
 const CustomerTable = ({ customerList }) => {
+    const navigate = useNavigate(); // Initialize navigate
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
 
     const sortedCustomers = [...customerList].sort((a, b) => {
@@ -22,6 +24,10 @@ const CustomerTable = ({ customerList }) => {
         setSortConfig({ key, direction });
     };
 
+    const handleRowDoubleClick = (customer) => {
+        navigate('/customers/edit', { state: { customer } });
+    };
+
     if (!customerList || customerList.length === 0) {
         return <div>Нет доступных заказчиков.</div>; // Сообщение, если список пуст
     }
@@ -36,26 +42,19 @@ const CustomerTable = ({ customerList }) => {
                         <th onClick={() => requestSort('email')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
                         <th onClick={() => requestSort('address')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Адрес</th>
                         <th onClick={() => requestSort('inn')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ИНН</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Действия</th>
-                    </tr>
+                        </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                    {sortedCustomers.map((customer) => (
-                        <tr key={customer.id}>
+                    {sortedCustomers.map((customer, index) => (
+                        <tr
+                            key={index}
+                            className="hover:bg-gray-100"
+                            onDoubleClick={() => handleRowDoubleClick(customer)} // Add double-click handler
+                        >
                             <td className="px-6 py-4 whitespace-nowrap">{customer.name}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{customer.email}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{customer.address}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{customer.inn}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="flex space-x-2">
-                                    <button className="text-blue-500 hover:text-blue-700">
-                                        <i className="fas fa-edit"></i>
-                                    </button>
-                                    <button className="text-red-500 hover:text-red-700">
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
                         </tr>
                     ))}
                     </tbody>

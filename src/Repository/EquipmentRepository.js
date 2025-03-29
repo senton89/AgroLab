@@ -1,10 +1,12 @@
 // EquipmentRepository.js
 import { useState, useEffect } from 'react';
 import EquipmentService from '../services/EquipmentService';
+import MockEquipmentService from "../components/Mockups/MockEquipmentService";
 
-const useEquipmentRepository = (equipmentService) => {
-    if(equipmentService===null)
-    {
+const isMock = true;
+
+const useEquipmentRepository = (equipmentService = MockEquipmentService) => {
+    if(!isMock) {
         equipmentService = EquipmentService;
     }
     const [equipmentList, setEquipmentList] = useState([]);
@@ -31,6 +33,28 @@ const useEquipmentRepository = (equipmentService) => {
         }
     };
 
+    const updateEquipment = async (id, updatedEquipment) => {
+        try {
+            // For mock service, implement update logic
+            if (equipmentService === MockEquipmentService) {
+                // Find the equipment in the list and update it
+                const updatedList = equipmentList.map(equipment =>
+                    equipment.id === id ? { ...equipment, ...updatedEquipment } : equipment
+                );
+                setEquipmentList(updatedList);
+                return updatedEquipment;
+            } else {
+                // For real service, call the API
+                const result = await equipmentService.updateEquipment(id, updatedEquipment);
+                await fetchEquipment(); // Refresh the list
+                return result;
+            }
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        }
+    };
+
     useEffect(() => {
         fetchEquipment();
     }, []);
@@ -40,6 +64,7 @@ const useEquipmentRepository = (equipmentService) => {
         loading,
         error,
         addEquipment,
+        updateEquipment
     };
 };
 

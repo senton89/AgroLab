@@ -1,12 +1,16 @@
 // AddReagentForm.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useReagentRepository from '../../Repository/ReagentRepository';
 
 const AddReagentForm = ({ onAdd }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { reagent } = location.state || {};
     const reagentRepository = useReagentRepository();
     const [errors, setErrors] = useState({});
+    const [isEditMode, setIsEditMode] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         date: '',
@@ -15,6 +19,13 @@ const AddReagentForm = ({ onAdd }) => {
         expiryDate: '',
         stock: ''
     });
+
+    useEffect(() => {
+        if (reagent) {
+            setFormData(reagent);
+            setIsEditMode(true);
+        }
+    }, [reagent]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -50,19 +61,23 @@ const AddReagentForm = ({ onAdd }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (validateForm()) {
-            onAdd(formData);
-            setFormData({
-                name: '',
-                date: '',
-                batch: '',
-                supplier: '',
-                expiryDate: '',
-                stock: ''
-            });
-            navigate('/reagent-table');
+            try {
+                if (isEditMode) {
+                    // Update existing reagent
+                    await reagentRepository.updateReagent(formData.id, formData);
+                } else {
+                    // Add new reagent
+                    await reagentRepository.addReagent(formData);
+                }
+                navigate('/reagent-table');
+            } catch (error) {
+                console.error('Error saving reagent:', error);
+                setErrors({ submit: 'Error saving reagent. Please try again.' });
+            }
         }
     };
 
@@ -145,18 +160,18 @@ const AddReagentForm = ({ onAdd }) => {
                         {errors.stock && <p className="text-red-500 text-sm mt-1">{errors.stock}</p>}
                     </div>
                     <div className="flex justify-between mt-6">
-                        <button 
-                            type="button" 
-                            onClick={() => navigate('/reagent-table')} 
+                        <button
+                            type="button"
+                            onClick={() => navigate('/reagent-table')}
                             className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded shadow"
                         >
                             Отмена
                         </button>
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow"
                         >
-                            Сохранить
+                            {isEditMode ? 'Сохранить изменения' : 'Сохранить'}
                         </button>
                     </div>
                 </form>

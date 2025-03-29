@@ -33,6 +33,20 @@ const MockEquipmentService = {
                 resolve(mockEquipmentData);
             }, 500); // Simulate network delay
         });
+    },
+
+    async updateEquipment(id, updatedEquipment) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const index = mockEquipmentData.findIndex(equipment => equipment.id === id);
+                if (index !== -1) {
+                    mockEquipmentData[index] = { ...mockEquipmentData[index], ...updatedEquipment };
+                    resolve(mockEquipmentData[index]);
+                } else {
+                    reject(new Error('Equipment not found'));
+                }
+            }, 500); // Simulate network delay
+        });
     }
 };
 

@@ -14,6 +14,10 @@ const CultureRepository = {
         const service = isTesting ? MockCultureService : CultureService; // Выбор сервиса
         return await service.addCulture(culture); // Используем выбранный сервис
     },
+    async updateCulture(oldCulture, newCulture) {
+        const service = isTesting ? MockCultureService : CultureService;
+        return await service.updateCulture(oldCulture, newCulture);
+    },
 };
 
 export default CultureRepository;

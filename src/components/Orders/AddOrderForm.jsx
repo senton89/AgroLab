@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import CultureRepository from '../../Repository/CultureRepository'; 
 import useCustomerRepository from '../../Repository/CustomerRepository'; 
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
+import useOrderRepository from "../../Repository/OrderRepository";
 
 const AddOrderForm = ({ onAdd, onCancel }) => {
     const navigate = useNavigate();
+    const location = useLocation(); // Add this
+    const { order } = location.state || {}; // Get order data if editing
+    const [isEditMode, setIsEditMode] = useState(false); // Track edit mode
 
     const handleCancel = () => {
         navigate('/orders');
@@ -39,6 +43,68 @@ const AddOrderForm = ({ onAdd, onCancel }) => {
         analysisType: '',
         protocol: ''
     });
+
+    // Load order data when component mounts
+    useEffect(() => {
+        if (order) {
+            setIsEditMode(true);
+
+            // Parse complex fields like applicationNumber from string format
+            const parsedOrder = {
+                ...order,
+                applicationNumber: parseNumberAndDate(order.applicationNumber),
+                contractNumber: parseNumberAndDate(order.contractNumber),
+                specificationNumber: parseNumberAndDate(order.specificationNumber),
+                selectionAct: parseNumberAndDate(order.selectionAct || ''),
+                testingPeriod: parseDateRange(order.testingPeriod),
+            };
+
+            setFormData(parsedOrder);
+        }
+    }, [order]);
+
+    const parseNumberAndDate = (str) => {
+        if (!str) return { number: '', date: '' };
+
+        const match = str.match(/№(\d+)\s+от\s+(\d{2}\.\d{2}\.\d{4})/);
+        if (match) {
+            return {
+                number: match[1],
+                date: formatDateForInput(match[2]) // Convert DD.MM.YYYY to YYYY-MM-DD for input
+            };
+        }
+        return { number: '', date: '' };
+    };
+
+    const parseDateRange = (str) => {
+        if (!str) return { start: '', end: '' };
+
+        const dates = str.split('-');
+        if (dates.length === 2) {
+            return {
+                start: formatDateForInput(dates[0]),
+                end: formatDateForInput(dates[1])
+            };
+        }
+        return { start: '', end: '' };
+    };
+
+    // Convert DD.MM.YYYY to YYYY-MM-DD
+    const formatDateForInput = (dateStr) => {
+        if (!dateStr) return '';
+
+        // Handle different date formats
+        const parts = dateStr.split('.');
+        if (parts.length === 3) {
+            let year = parts[2];
+            // Handle 2-digit years
+            if (year.length === 2) {
+                year = `20${year}`;
+            }
+            return `${year}-${parts[1]}-${parts[0]}`;
+        }
+        return dateStr;
+    };
 
     const [cultures, setCultures] = useState([]); 
     const [filteredCultures, setFilteredCultures] = useState([]); 
@@ -97,7 +163,7 @@ const AddOrderForm = ({ onAdd, onCancel }) => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
             const formattedData = {
@@ -108,36 +174,52 @@ const AddOrderForm = ({ onAdd, onCancel }) => {
                 selectionAct: `${formData.selectionAct.number} от ${formData.selectionAct.date}`,
                 testingPeriod: `Срок: с ${formData.testingPeriod.start} по ${formData.testingPeriod.end}`
             };
-            onAdd(formattedData);
-            setFormData({
-                customer: '',
-                innKpp: '',
-                applicationNumber: { number: '', date: '' },
-                contractNumber: { number: '', date: '' },
-                specificationNumber: { number: '', date: '' },
-                sampleArrivalDate: '',
-                testingPeriod: { start: '', end: '' },
-                culture: '',
-                sort: '',
-                sampleCode: '',
-                sampleCollector: 'Сотрудник ИЛ',
-                selectionAct: { number: '', date: '' },
-                direction: { number: '', date: '' },
-                harvestYear: '',
-                reproduction: '',
-                seedCategory: '',
-                sampleWeight: '',
-                batchNumber: '',
-                batchWeight: '',
-                storageLocation: '',
-                source: '',
-                seedPurpose: '',
-                processingType: '',
-                seedTreatment: '',
-                analysisType: '',
-                protocol: ''
-            });
+            try {
+                const orderRepo = useOrderRepository();
+
+                if (isEditMode) {
+                    await orderRepo.updateOrder(formData.id, formattedData);
+                } else {
+                    await orderRepo.addOrder(formattedData);
+                }
+
+                navigate('/orders');
+            } catch (error) {
+                console.error('Error saving order:', error);
+                setErrors({
+                    submit: 'Произошла ошибка при сохранении заказа. Пожалуйста, попробуйте снова.'
+                });
+            }
         }
+        // onAdd(formattedData);
+        // setFormData({
+        //     customer: '',
+        //     innKpp: '',
+        //     applicationNumber: { number: '', date: '' },
+        //     contractNumber: { number: '', date: '' },
+        //     specificationNumber: { number: '', date: '' },
+        //     sampleArrivalDate: '',
+        //     testingPeriod: { start: '', end: '' },
+        //     culture: '',
+        //     sort: '',
+        //     sampleCode: '',
+        //     sampleCollector: 'Сотрудник ИЛ',
+        //     selectionAct: { number: '', date: '' },
+        //     direction: { number: '', date: '' },
+        //     harvestYear: '',
+        //     reproduction: '',
+        //     seedCategory: '',
+        //     sampleWeight: '',
+        //     batchNumber: '',
+        //     batchWeight: '',
+        //     storageLocation: '',
+        //     source: '',
+        //     seedPurpose: '',
+        //     processingType: '',
+        //     seedTreatment: '',
+        //     analysisType: '',
+        //     protocol: ''
+        // });
     };
 
     const handleAddCustomer = async () => {
@@ -195,7 +277,7 @@ const AddOrderForm = ({ onAdd, onCancel }) => {
         if (!formData.protocol) newErrors.protocol = 'Протокол обязателен';
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; 
+        return Object.keys(newErrors).length === 0;
     };
 
     const labels = {

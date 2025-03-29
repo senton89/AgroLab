@@ -1,5 +1,6 @@
 // EquipmentTable.jsx
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 
 const getValidUntilColor = (validUntilDate) => {
     if (!validUntilDate) return 'bg-gray-300'; // Default color if no date is set
@@ -13,6 +14,7 @@ const getValidUntilColor = (validUntilDate) => {
 };
 
 const EquipmentTable = ({ equipmentList }) => {
+    const navigate = useNavigate();
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
 
     const sortedEquipment = [...equipmentList].sort((a, b) => {
@@ -31,6 +33,10 @@ const EquipmentTable = ({ equipmentList }) => {
             direction = 'descending';
         }
         setSortConfig({ key, direction });
+    };
+
+    const handleRowDoubleClick = (equipment) => {
+        navigate('/edit-equipment', { state: { equipment } }); // Navigate to edit form with equipment data
     };
 
     return (
@@ -54,27 +60,31 @@ const EquipmentTable = ({ equipmentList }) => {
               </tr>
             </thead>
             <tbody className="bg-orange-50">
-              {sortedEquipment.map((equipment, index) => (
-                <tr key={index} className={index === sortedEquipment.length - 1 ? 'rounded-b-lg' : ''}>
-                  <td className="p-2 border">{equipment.name}</td>
-                  <td className="p-2 border">{equipment.inventoryNumber}</td>
-                  <td className="p-2 border">{equipment.factoryNumber}</td>
-                  <td className="p-2 border">{equipment.dateOfCommissioning}</td>
-                  <td className="p-2 border">{equipment.inspectionDate}</td>
-                  <td className={`p-2 border ${getValidUntilColor(equipment.validUntilDate)}`}>{equipment.validUntilDate}</td>
-                  <td className="p-2 border">{equipment.category}</td>
-                  <td className="p-2 border">{equipment.model}</td>
-                  <td className="p-2 border">{equipment.width}</td>
-                  <td className="p-2 border">{equipment.length}</td>
-                  <td className="p-2 border">{equipment.height}</td>
-                  <td className="p-2 border">{equipment.depth}</td>
-                  <td className="p-2 border">{equipment.dateOfDecommissioning}</td>
-                </tr>
+              {sortedEquipment.map((equipment) => (
+                  <tr
+                      key={equipment.id}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onDoubleClick={() => handleRowDoubleClick(equipment)} // Add double-click handler
+                  >
+                      <td className="p-2 border">{equipment.name}</td>
+                      <td className="p-2 border">{equipment.inventoryNumber}</td>
+                      <td className="p-2 border">{equipment.factoryNumber}</td>
+                      <td className="p-2 border">{equipment.dateOfCommissioning}</td>
+                      <td className="p-2 border">{equipment.inspectionDate}</td>
+                      <td className={`p-2 border ${getValidUntilColor(equipment.validUntilDate)}`}>{equipment.validUntilDate}</td>
+                      <td className="p-2 border">{equipment.category}</td>
+                      <td className="p-2 border">{equipment.model}</td>
+                      <td className="p-2 border">{equipment.width}</td>
+                      <td className="p-2 border">{equipment.length}</td>
+                      <td className="p-2 border">{equipment.height}</td>
+                      <td className="p-2 border">{equipment.depth}</td>
+                      <td className="p-2 border">{equipment.dateOfDecommissioning}</td>
+                  </tr>
               ))}
             </tbody>
           </table>
         </div>
-      );
+    );
 };
 
 export default EquipmentTable;

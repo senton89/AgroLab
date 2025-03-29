@@ -1,11 +1,26 @@
 // AddCultureForm.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import CultureRepository from '../../Repository/CultureRepository';
 
 const AddCultureForm = ({ onAdd, onClose }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const { culture } = location.state || {};
+
     const [cultureName, setCultureName] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [originalCulture, setOriginalCulture] = useState('');
+
+    useEffect(() => {
+        if (culture) {
+            setCultureName(culture);
+            setIsEditMode(true);
+            setOriginalCulture(culture);
+        }
+    }, [culture]);
 
     const validateForm = () => {
         if (!cultureName.trim()) {
@@ -16,11 +31,21 @@ const AddCultureForm = ({ onAdd, onClose }) => {
         return true;
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (validateForm()) {
-            onAdd({ cultureName });
-            setCultureName('');
-            navigate('/culture-table');
+            try {
+                if (isEditMode) {
+                    // Update existing culture
+                    await CultureRepository.updateCulture(originalCulture, cultureName);
+                } else {
+                    // Add new culture
+                    await CultureRepository.createCulture(cultureName);
+                }
+                setCultureName('');
+                navigate('/culture-table');
+            } catch (error) {
+                setError('Произошла ошибка при сохранении культуры');
+            }
         }
     };
 
@@ -56,7 +81,7 @@ const AddCultureForm = ({ onAdd, onClose }) => {
                     className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow"
                     onClick={handleSave}
                 >
-                    Сохранить
+                    {isEditMode ? 'Сохранить изменения' : 'Сохранить'}
                 </button>
             </div>
         </div>

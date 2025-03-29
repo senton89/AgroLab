@@ -29,6 +29,11 @@ const MockOrderService = {
     addOrder: async (order) => {
         // Здесь можно добавить логику для добавления образца
         console.log('Добавлен новый заказ:', order);
+    },
+
+    updateOrder: async (id, updatedOrder) => {
+        console.log('Обновлен заказ:', id, updatedOrder);
+        return updatedOrder;
     }
 };
 

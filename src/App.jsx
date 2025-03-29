@@ -4,7 +4,6 @@ import LabelPage from './components/Label/LabelPage';
 import LabelPreview from "./components/Label/LabelPreview";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
-import DocumentForm from "./components/Document/DocumentForm";
 import ReagentManagement from "./components/Reagent/ReagentManagement";
 import CultureManagement from "./components/Culture/CultureManagement";
 import AddCultureForm from "./components/Culture/AddCultureForm";
@@ -19,6 +18,7 @@ import AddEquipmentForm from "./components/Equipment/AddEquipmentForm"; // Impor
 import AddReagentForm from './components/Reagent/AddReagentForm';
 import AddOrderForm from './components/Orders/AddOrderForm';
 import AddSampleForm from "./components/Sample/AddSampleForm";
+import AddCustomerForm from "./components/Customer/AddCustomerForm";
 
 const App = () => {
     return (
@@ -57,14 +57,6 @@ const App = () => {
                         </div>
                     </ProtectedRoute>
                 } />
-                <Route path="/document-content" element={
-                    <ProtectedRoute>
-                        <div className="bg-gray-100 flex">
-                            <Sidebar />
-                            <DocumentForm />
-                        </div>
-                    </ProtectedRoute>
-                } />
                 <Route path="/reagent-table" element={
                     <ProtectedRoute>
                         <div className="flex">
@@ -76,6 +68,16 @@ const App = () => {
                     </ProtectedRoute>
                 } />
                 <Route path="/reagents/add" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <AddReagentForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/reagents/edit" element={
                     <ProtectedRoute>
                         <div className="flex">
                             <Sidebar />
@@ -125,12 +127,42 @@ const App = () => {
                         </div>
                     </ProtectedRoute>
                 } />
+                <Route path="/edit-equipment" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1 p-4 container mx-auto">
+                                <AddEquipmentForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
                 <Route path="/customers" element={
                     <ProtectedRoute>
                         <div className="flex">
                             <Sidebar />
                             <div className="flex-1 p-4">
                                 <CustomerManagement />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/customers/add" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1">
+                                <AddCustomerForm />
+                            </div>
+                        </div>
+                    </ProtectedRoute>
+                } />
+                <Route path="/customers/edit" element={
+                    <ProtectedRoute>
+                        <div className="flex">
+                            <Sidebar />
+                            <div className="flex-1">
+                                <AddCustomerForm />
                             </div>
                         </div>
                     </ProtectedRoute>

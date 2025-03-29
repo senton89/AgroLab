@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 
 const CultureTable = ({ cultures, setCultures }) => {
     const [sortOrder, setSortOrder] = useState('asc');
+    const navigate = useNavigate();
 
     const handleSort = () => {
         const sortedCultures = [...cultures].sort((a, b) => {
@@ -15,13 +17,18 @@ const CultureTable = ({ cultures, setCultures }) => {
         setCultures(sortedCultures); // Обновляем список культур
     };
 
+    const handleRowDoubleClick = (culture) => {
+        // Navigate to the add culture form with the culture data
+        navigate('/add-culture', { state: { culture } });
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-md w-full">
             <table className="w-full">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
-                    <th onClick={handleSort} className="cursor-pointer text-left p-2">Наименование</th>
-                    <th className="text-right p-2">Действия</th>
+                    <th onClick={handleSort}
+                        className="cursor-pointer text-left p-2">Наименование</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,17 +37,13 @@ const CultureTable = ({ cultures, setCultures }) => {
                         <td className="p-2 text-center" colSpan="2">Нет доступных культур</td>
                     </tr>
                 ) : (
-                    cultures.map((culture) => (
-                        <tr key={culture.id} className="hover:bg-gray-100">
-                            <td className="p-2">{culture || 'Не указано'}</td>
-                            <td className="text-right p-2">
-                                <button className="text-orange-600 mr-2">
-                                    <i className="fas fa-edit"></i>
-                                </button>
-                                <button className="text-red-600">
-                                    <i className="fas fa-trash"></i>
-                                </button>
-                            </td>
+                    cultures.map((culture, index) => (
+                        <tr
+                            key={index}
+                            className="hover:bg-gray-100"
+                            onDoubleClick={() => handleRowDoubleClick(culture)}
+                        >
+                        <td className="p-2">{culture || 'Не указано'}</td>
                         </tr>
                     ))
                 )}

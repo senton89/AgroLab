@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import useEquipmentRepository from "../../Repository/EquipmentRepository";
 
 const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
     const navigate = useNavigate();
+    const location = useLocation(); // Get location to access state
+    const { equipment } = location.state || {}; // Extract equipment from state if it exists
+    const [isEditMode, setIsEditMode] = useState(false); // Track if we're in edit mode
+    const { addEquipment, updateEquipment } = useEquipmentRepository();
+
     const [formData, setFormData] = useState(initialData || {
         name: '',
         category: '',
@@ -21,17 +27,16 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
     });
     const [errors, setErrors] = useState({});
 
+    useEffect(() => {
+        if (equipment) {
+            setFormData(equipment);
+            setIsEditMode(true);
+        }
+    }, [equipment]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-            onSave(formData);
-            navigate('/equipment-table');
-        }
     };
 
     const validateForm = () => {
@@ -54,6 +59,26 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
         return Object.keys(newErrors).length === 0;
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (validateForm()) {
+            try {
+                if (isEditMode) {
+                    // Update existing equipment
+                    await updateEquipment(formData.id, formData);
+                } else {
+                    // Add new equipment
+                    await addEquipment(formData);
+                }
+                navigate('/equipment-table');
+            } catch (error) {
+                console.error('Error saving equipment:', error);
+                setErrors({ submit: 'Error saving equipment. Please try again.' });
+            }
+        }
+    };
+
     return (
         <div className="bg-white p-8 rounded-lg shadow-md mt-20">
             <div className="flex justify-end">
@@ -62,7 +87,7 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
                 </button>
             </div>
             <form className="grid grid-cols-3 gap-4" onSubmit={handleSubmit}>
-                {Object.keys(formData).map((key, index) => (
+                {Object.keys(formData).filter(key => key !== 'id').map((key, index) => (
                     <div key={index}>
                         <label className="block text-gray-700">{{
                             name: 'Название',
@@ -93,10 +118,17 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
                 ))}
                 <div className="col-span-3 flex justify-center mt-4">
                     <button
+                        type="button"
+                        onClick={() => navigate('/equipment-table')}
+                        className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-3 px-6 border border-gray-300 rounded-lg shadow mr-4"
+                    >
+                        Отмена
+                    </button>
+                    <button
                         type="submit"
                         className="bg-orange-500 text-white px-4 py-2 rounded"
                     >
-                        {mode === 'edit' ? 'Сохранить изменения' : 'Добавить оборудование'}
+                        {isEditMode ? 'Сохранить изменения' : 'Добавить оборудование'}
                     </button>
                 </div>
             </form>

@@ -21,6 +21,19 @@ const MockReagentService = {
             }, 1000);
         });
     },
-};
 
+    updateReagent: async (id, updatedReagent) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const index = reagents.findIndex(reagent => reagent.id === id);
+                if (index !== -1) {
+                    reagents[index] = { ...reagents[index], ...updatedReagent };
+                    resolve(reagents[index]);
+                } else {
+                    reject(new Error('Reagent not found'));
+                }
+            }, 1000);
+        });
+    }
+};
 export default MockReagentService;

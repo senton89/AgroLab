@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 
 const OrderTable = ({ orderList }) => {
+    const navigate = useNavigate(); // Add this
     const [sortConfig, setSortConfig] = useState({ key: 'customer', direction: 'ascending' });
 
     const sortedOrders = [...orderList].sort((a, b) => {
@@ -19,6 +21,10 @@ const OrderTable = ({ orderList }) => {
             direction = 'descending';
         }
         setSortConfig({ key, direction });
+    };
+
+    const handleRowDoubleClick = (order) => {
+        navigate('/orders/add', { state: { order } }); // Navigate to add form with order data
     };
 
     return (
@@ -48,31 +54,23 @@ const OrderTable = ({ orderList }) => {
                                 <th onClick={() => requestSort('testingPeriod')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                     Срок проведения
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                                    Действия
-                                </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {sortedOrders.map((order, index) => (
-                                <tr key={index} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer}</td>
+                        {sortedOrders.map((order, index) => (
+                            <tr
+                                key={index}
+                                className="hover:bg-gray-100 border-b border-gray-200"
+                                onDoubleClick={() => handleRowDoubleClick(order)} // Add double-click handler
+                            >
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.innKpp}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.applicationNumber}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.contractNumber}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.specificationNumber}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.sampleArrivalDate}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.testingPeriod}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div className="flex space-x-2">
-                                            <button className="text-orange-600 hover:text-orange-700">
-                                                <i className="fas fa-edit"></i>
-                                            </button>
-                                            <button className="text-red-600 hover:text-red-700">
-                                                <i className="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>

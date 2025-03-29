@@ -1,5 +1,6 @@
 // ReagentTable.jsx
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 
 const getExpiryColor = (expiryDate) => {
     if (!expiryDate) return 'bg-gray-300'; // Default color if no date is set
@@ -13,6 +14,7 @@ const getExpiryColor = (expiryDate) => {
 };
 
 const ReagentTable = ({ reagents }) => {
+    const navigate = useNavigate();
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
 
     const sortedReagents = [...reagents].sort((a, b) => {
@@ -33,10 +35,14 @@ const ReagentTable = ({ reagents }) => {
         setSortConfig({ key, direction });
     };
 
+    const handleRowDoubleClick = (reagent) => {
+        navigate('/reagents/edit', { state: { reagent } });
+    };
+
     return (
         <div className="w-full p-6">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            
+
                 <table className="w-full">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                         <tr>
@@ -46,12 +52,15 @@ const ReagentTable = ({ reagents }) => {
                             <th onClick={() => requestSort('supplier')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Поставщик</th>
                             <th onClick={() => requestSort('expiryDate')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Срок годности</th>
                             <th onClick={() => requestSort('stock')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Остаток</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Действия</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                        {sortedReagents.map((reagent) => (
-                            <tr key={reagent.id}>
+                        {sortedReagents.map((reagent, index) => (
+                            <tr
+                                key={index}
+                                className="hover:bg-gray-100"
+                                onDoubleClick={() => handleRowDoubleClick(reagent)}
+                            >
                                 <td className="px-6 py-4 whitespace-nowrap">{reagent.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{reagent.date}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{reagent.batch}</td>
@@ -62,16 +71,6 @@ const ReagentTable = ({ reagents }) => {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">{reagent.stock}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex space-x-2">
-                                        <button className="text-blue-500 hover:text-blue-700">
-                                            <i className="fas fa-edit"></i>
-                                        </button>
-                                        <button className="text-red-500 hover:text-red-700">
-                                            <i className="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
                             </tr>
                         ))}
                     </tbody>

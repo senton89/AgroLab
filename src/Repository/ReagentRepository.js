@@ -6,6 +6,7 @@ import MockReagentService from '../components/Mockups/MockReagentService'; // И
 const useMock = true;
 const useReagentRepository = (reagentService) => {
     if(useMock) reagentService = MockReagentService;
+
     const [reagentList, setReagentList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -16,6 +17,28 @@ const useReagentRepository = (reagentService) => {
             await fetchReagents();
         } catch (err) {
             setError(err.message);
+        }
+    };
+
+    const updateReagent = async (id, updatedReagent) => {
+        try {
+            // For mock service, we need to implement the update logic
+            if (useMock) {
+                // Find the reagent in the list and update it
+                const updatedList = reagentList.map(reagent =>
+                    reagent.id === id ? { ...reagent, ...updatedReagent } : reagent
+                );
+                setReagentList(updatedList);
+                return updatedReagent;
+            } else {
+                // For real service, call the API
+                const result = await reagentService.updateReagent(id, updatedReagent);
+                await fetchReagents();
+                return result;
+            }
+        } catch (err) {
+            setError(err.message);
+            throw err;
         }
     };
 
@@ -40,6 +63,7 @@ const useReagentRepository = (reagentService) => {
         loading,
         error,
         addReagent,
+        updateReagent,
         fetchReagents,
     };
 };

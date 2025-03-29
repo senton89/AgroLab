@@ -8,16 +8,16 @@ const CultureManagement = () => {
     const [cultures, setCultures] = useState([]);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const loadCultures = async () => {
-            try {
-                const fetchedCultures = await CultureRepository.getCultures();
-                setCultures(fetchedCultures);
-            } catch (error) {
-                console.error('Error fetching cultures:', error);
-            }
-        };
+    const loadCultures = async () => {
+        try {
+            const fetchedCultures = await CultureRepository.getCultures();
+            setCultures(fetchedCultures);
+        } catch (error) {
+            console.error('Error fetching cultures:', error);
+        }
+    };
 
+    useEffect(() => {
         loadCultures();
     }, []);
 
