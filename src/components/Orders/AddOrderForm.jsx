@@ -310,7 +310,7 @@ const AddOrderForm = ({ onAdd, onCancel }) => {
     };
 
     return (
-        <div className="flex bg-gray-100">
+        <div className="flex">
             <div className="w-full p-10">
                 <div className="bg-white p-8 rounded-lg shadow-md">
                     <form onSubmit={handleSubmit}>

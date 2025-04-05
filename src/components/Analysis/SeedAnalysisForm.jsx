@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import SampleRepository from '../../Repository/SampleRepository';
+import CultureRepository from "../../Repository/CultureRepository";
 
 const SeedAnalysisForm = () => {
     const navigate = useNavigate();
@@ -47,6 +48,51 @@ const SeedAnalysisForm = () => {
         notes: ''
     });
 
+    // useEffect(() => {
+    //     if (id || sample) {
+    //         if (sample) {
+    //             setFormData(prevData => ({
+    //                 ...prevData,
+    //                 sampleId: sample.id || '',
+    //                 sampleCode: sample.sampleCode || '',
+    //                 variety: sample.variety || '',
+    //                 batchNumber: sample.batchNumber || '',
+    //                 culture: sample.culture || ''
+    //             }));
+    //         } else if (id) {
+    //             const fetchSample = async () => {
+    //                 setIsLoading(true);
+    //                 try {
+    //                     const sampleRepo = SampleRepository();
+    //                     const samples = await sampleRepo.getSampleList();
+    //                     const foundSample = samples.find(s => s.id === parseInt(id));
+    //
+    //                     if (foundSample) {
+    //                         setFormData(prevData => ({
+    //                             ...prevData,
+    //                             sampleId: foundSample.id || '',
+    //                             sampleCode: foundSample.sampleCode || '',
+    //                             variety: foundSample.variety || '',
+    //                             batchNumber: foundSample.batchNumber || '',
+    //                             culture: foundSample.culture || ''
+    //                         }));
+    //                     } else {
+    //                         setErrors({ general: 'Образец не найден' });
+    //                         navigate('/samples');
+    //                     }
+    //                 } catch (error) {
+    //                     console.error('Error fetching sample:', error);
+    //                     setErrors({ general: 'Ошибка при загрузке образца' });
+    //                 } finally {
+    //                     setIsLoading(false);
+    //                 }
+    //             };
+    //
+    //             fetchSample();
+    //         }
+    //     }
+    // }, [id, sample, navigate]);
+
     useEffect(() => {
         if (id || sample) {
             if (sample) {
@@ -56,8 +102,13 @@ const SeedAnalysisForm = () => {
                     sampleCode: sample.sampleCode || '',
                     variety: sample.variety || '',
                     batchNumber: sample.batchNumber || '',
-                    culture: sample.culture || ''
+                    culture: sample.culture || sample.culture_id || ''
                 }));
+
+                // Fetch norms for this culture if available
+                if (sample.culture || sample.culture_id) {
+                    fetchCultureNorms(sample.culture || sample.culture_id, sample.reproduction || sample.reproduction_id || 'elite');
+                }
             } else if (id) {
                 const fetchSample = async () => {
                     setIsLoading(true);
@@ -73,8 +124,13 @@ const SeedAnalysisForm = () => {
                                 sampleCode: foundSample.sampleCode || '',
                                 variety: foundSample.variety || '',
                                 batchNumber: foundSample.batchNumber || '',
-                                culture: foundSample.culture || ''
+                                culture: foundSample.culture || foundSample.culture_id || ''
                             }));
+
+                            // Fetch norms for this culture if available
+                            if (foundSample.culture || foundSample.culture_id) {
+                                fetchCultureNorms(foundSample.culture || foundSample.culture_id, foundSample.reproduction || foundSample.reproduction_id || 'elite');
+                            }
                         } else {
                             setErrors({ general: 'Образец не найден' });
                             navigate('/samples');
@@ -91,6 +147,43 @@ const SeedAnalysisForm = () => {
             }
         }
     }, [id, sample, navigate]);
+
+    const fetchCultureNorms = async (cultureName, reproduction) => {
+        try {
+            const norms = await CultureRepository.getNormsByCulture(cultureName, 'seeds', reproduction);
+            if (norms) {
+                // Update validation criteria based on norms
+                setValidationCriteria(norms);
+            }
+        } catch (error) {
+            console.error('Error fetching culture norms:', error);
+        }
+    };
+
+    const [validationCriteria, setValidationCriteria] = useState({
+        germination: 92, // Всхожесть
+        seedPurity: 98.0, // Чистота семян
+        otherCropSeeds: 40, // Семена других культурных растений
+        weedSeeds: 20, // Семена сорных растений
+        quarantineSeeds: 0, // Семена карантинных растений
+        ergotSclerotia: 0, // Склероции спорыньи
+        wheatNematodeGalls: 0, // Галлы пшеничной нематоды
+        smutFormations: 0, // Головневые образования
+        germinationEnergy: 0, // Энергия прорастания
+        waste: 100, // Отход
+        oatSeeds: 40, // Овес (часть других культурных растений)
+        alternaria: 100, // Альтернариоз
+        fusarium: 100, // Фузариоз
+        helminthosporium: 100, // Гельминтоспориоз
+        septoria: 100, // Септориоз
+        yellowSpot: 100, // Желтая пятнистость
+        nigrosporiosis: 100, // Нитроспориоз
+        blackEar: 100, // Чернь колоса
+        mold: 100, // Плесневение
+        totalDiseaseInfection: 100, // Общая зараженность болезнями
+        thousandSeedWeight: 0 // Масса 1000 семян
+    });
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -164,50 +257,50 @@ const SeedAnalysisForm = () => {
         let passesStandard = true;
         const notes = [];
 
-        // Check germination (min 92%)
-        if (formData.germination < 92) {
+        // Check germination (using norm from culture)
+        if (formData.germination < validationCriteria.germination) {
             passesStandard = false;
-            notes.push('Всхожесть ниже допустимой нормы (мин. 92%)');
+            notes.push(`Всхожесть ниже допустимой нормы (мин. ${validationCriteria.germination}%)`);
         }
 
-        // Check seed purity (min 98%)
-        if (formData.seedPurity < 98.0) {
+        // Check seed purity (using norm from culture)
+        if (formData.seedPurity < validationCriteria.seedPurity) {
             passesStandard = false;
-            notes.push('Чистота семян ниже допустимой нормы (мин. 98.0%)');
+            notes.push(`Чистота семян ниже допустимой нормы (мин. ${validationCriteria.seedPurity}%)`);
         }
 
-        // Check other crop seeds (max 40 per kg)
-        if (formData.otherCropSeeds > 40) {
+        // Check other crop seeds (using norm from culture)
+        if (formData.otherCropSeeds > validationCriteria.otherCropSeeds) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество семян других культурных растений (макс. 40 шт/кг)');
+            notes.push(`Превышено допустимое количество семян других культурных растений (макс. ${validationCriteria.otherCropSeeds} шт/кг)`);
         }
 
-        // Check weed seeds (max 20 per kg)
-        if (formData.weedSeeds > 20) {
+        // Check weed seeds (using norm from culture)
+        if (formData.weedSeeds > validationCriteria.weedSeeds) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество семян сорных растений (макс. 20 шт/кг)');
+            notes.push(`Превышено допустимое количество семян сорных растений (макс. ${validationCriteria.weedSeeds} шт/кг)`);
         }
 
         // Check quarantine seeds (not allowed)
-        if (formData.quarantineSeeds > 0) {
+        if (formData.quarantineSeeds > validationCriteria.quarantineSeeds) {
             passesStandard = false;
             notes.push('Наличие семян карантинных растений не допускается');
         }
 
         // Check ergot sclerotia (not allowed)
-        if (formData.ergotSclerotia > 0) {
+        if (formData.ergotSclerotia > validationCriteria.ergotSclerotia) {
             passesStandard = false;
             notes.push('Наличие склероций спорыньи не допускается');
         }
 
         // Check wheat nematode galls (not allowed)
-        if (formData.wheatNematodeGalls > 0) {
+        if (formData.wheatNematodeGalls > validationCriteria.wheatNematodeGalls) {
             passesStandard = false;
             notes.push('Наличие галлов пшеничной нематоды не допускается');
         }
 
         // Check smut formations (not allowed)
-        if (formData.smutFormations > 0) {
+        if (formData.smutFormations > validationCriteria.smutFormations) {
             passesStandard = false;
             notes.push('Наличие головневых образований не допускается');
         }
@@ -263,7 +356,7 @@ const SeedAnalysisForm = () => {
     };
 
     return (
-        <div className="flex-1 p-8 bg-gray-100">
+        <div className="flex-1 p-8">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-6xl mx-auto">
                 <h2 className="text-2xl font-semibold text-gray-700 mb-6">
                     Анализ образца семян
@@ -588,7 +681,7 @@ const SeedAnalysisForm = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Септориоз (р. Septoria)</label>
+                                    <label className="block mb-1 text-gray-700 mt-6">Септориоз (р. Septoria)</label>
                                     <input
                                         type="number"
                                         name="septoria"
@@ -620,7 +713,7 @@ const SeedAnalysisForm = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Нитроспориоз (р. Nigrospora)</label>
+                                    <label className="block mb-1 text-gray-700 mt-6">Нитроспориоз (р. Nigrospora)</label>
                                     <input
                                         type="number"
                                         name="nigrosporiosis"
@@ -649,10 +742,10 @@ const SeedAnalysisForm = () => {
                                     />
                                     {errors.blackEar && <p className="text-red-500 text-sm mt-1">{errors.blackEar}</p>}
                                     <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
-                                    <div className="mb-6">
-                                        <div>
-                                            <label className="block mb-1 text-gray-700">Плесневение (p. Mucor)</label>
-                                            <input
+                                </div>
+                                    <div>
+                                        <label className="block mb-1 text-gray-700">Плесневение (p. Mucor)</label>
+                                        <input
                                                 type="number"
                                                 name="mold"
                                                 value={formData.mold}
@@ -661,13 +754,12 @@ const SeedAnalysisForm = () => {
                                                 min="0"
                                                 max="100"
                                                 step="0.1"
-                                            />
-                                            {errors.mold && <p className="text-red-500 text-sm mt-1">{errors.mold}</p>}
-                                            <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
-                                        </div>
-
-                                        <div>
-                                            <label className="block mb-1 text-gray-700 mt-6">Общая зараженность болезнями, %</label>
+                                        />
+                                        {errors.mold && <p className="text-red-500 text-sm mt-1">{errors.mold}</p>}
+                                        <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
+                                    </div>
+                                    <div>
+                                        <label className="block mb-1 text-gray-700">Общая зараженность болезнями, %</label>
                                             <input
                                                 type="number"
                                                 name="totalDiseaseInfection"
@@ -680,7 +772,6 @@ const SeedAnalysisForm = () => {
                                             />
                                             {errors.totalDiseaseInfection && <p className="text-red-500 text-sm mt-1">{errors.totalDiseaseInfection}</p>}
                                             <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
-                                        </div>
                                     </div>
 
                                     {errors.submit && (
@@ -716,7 +807,6 @@ const SeedAnalysisForm = () => {
                                             )}
                                         </div>
                                     )}
-                            </div>
                             </div>
                             </div>
                         </form>

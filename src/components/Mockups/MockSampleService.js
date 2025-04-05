@@ -292,12 +292,28 @@ const MockSampleService = () => {
         };
     };
 
+    const generateProtocol = async (sampleId) => {
+        // Находим образец по ID
+        const sample = sampleList.find(s => s.id === sampleId);
+        if (!sample) {
+            throw new Error('Sample not found');
+        }
+
+        // В режиме мока просто возвращаем объект с URL для скачивания
+        // В реальном приложении здесь будет логика для получения файла с сервера
+        return {
+            downloadUrl: `https://example.com/protocols/sample-${sampleId}.docx`,
+            message: `Протокол для образца ${sample.test_object_name} успешно сформирован`
+        };
+    };
+
     return {
         addSample,
         getSampleList,
         updateSample,
         deleteSample,
-        uploadSampleFile
+        uploadSampleFile,
+        generateProtocol
     };
 };
 

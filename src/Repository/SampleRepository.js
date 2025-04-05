@@ -88,6 +88,14 @@ const SampleRepository = () => {
         }
     };
 
+    const generateProtocol = async (sampleId) => {
+        try {
+            return await service.generateProtocol(sampleId);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         sampleList,
         loading,
@@ -96,7 +104,8 @@ const SampleRepository = () => {
         updateSample,
         deleteSample,
         uploadSampleFile,
-        saveAnalysisResults
+        saveAnalysisResults,
+        generateProtocol
     };
 };
 

@@ -1028,7 +1028,7 @@ const AddSampleForm = () => {
     };
 
     return (
-        <div className="flex-1 p-8 bg-gray-100">
+        <div className="flex-1 p-8">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-6xl mx-auto">
                 <h2 className="text-2xl font-semibold text-gray-700 mb-6">
                     {isEditMode ? 'Редактирование образца' : 'Добавление нового образца'}

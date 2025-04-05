@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import SampleRepository from '../../Repository/SampleRepository';
+import CultureRepository from "../../Repository/CultureRepository";
 
 const PotatoAnalysisForm = () => {
     const navigate = useNavigate();
@@ -47,7 +48,6 @@ const PotatoAnalysisForm = () => {
         passesStandard: false,
         notes: ''
     });
-
     useEffect(() => {
         if (id || sample) {
             if (sample) {
@@ -56,8 +56,14 @@ const PotatoAnalysisForm = () => {
                     sampleId: sample.id || '',
                     sampleCode: sample.sampleCode || '',
                     variety: sample.variety || '',
-                    batchNumber: sample.batchNumber || ''
+                    batchNumber: sample.batchNumber || '',
+                    culture: sample.culture || sample.culture_id || ''
                 }));
+
+                // Fetch norms for this culture if available
+                if (sample.culture || sample.culture_id) {
+                    fetchCultureNorms(sample.culture || sample.culture_id, sample.reproduction || sample.reproduction_id || 'elite');
+                }
             } else if (id) {
                 const fetchSample = async () => {
                     setIsLoading(true);
@@ -72,8 +78,14 @@ const PotatoAnalysisForm = () => {
                                 sampleId: foundSample.id || '',
                                 sampleCode: foundSample.sampleCode || '',
                                 variety: foundSample.variety || '',
-                                batchNumber: foundSample.batchNumber || ''
+                                batchNumber: foundSample.batchNumber || '',
+                                culture: foundSample.culture || foundSample.culture_id || ''
                             }));
+
+                            // Fetch norms for this culture if available
+                            if (foundSample.culture || foundSample.culture_id) {
+                                fetchCultureNorms(foundSample.culture || foundSample.culture_id, foundSample.reproduction || foundSample.reproduction_id || 'elite');
+                            }
                         } else {
                             setErrors({ general: 'Образец не найден' });
                             navigate('/samples');
@@ -90,6 +102,86 @@ const PotatoAnalysisForm = () => {
             }
         }
     }, [id, sample, navigate]);
+
+    const fetchCultureNorms = async (cultureName, reproduction) => {
+        try {
+            const norms = await CultureRepository.getNormsByCulture(cultureName, 'potatoes', reproduction);
+            if (norms) {
+                // Update validation criteria based on norms
+                setValidationCriteria(norms);
+            }
+        } catch (error) {
+            console.error('Error fetching culture norms:', error);
+        }
+    };
+    const [validationCriteria, setValidationCriteria] = useState({
+        dryRotTotal: 1,
+        dryRotPhoma: 1,
+        dryRotFusarium: 1,
+        dryRotAlternaria: 1,
+        dryRotPhytophthora: 1,
+        wetRot: 1,
+        scabTotal: 5,
+        commonScab: 5,
+        netScab: 5,
+        powderyScab: 3,
+        wrinkledTubers: 1,
+        rhizoctonia: 3,
+        ringRot: 0,
+        stemNematode: 0,
+        rustySpots: 5,
+        mechanicalDamage: 5,
+        pestDamage: 2,
+        suffocationSigns: 0,
+        frozenTubers: 0,
+        burnedTubers: 0,
+        deformedTubers: 0,
+        tuberOutgrowths: 0,
+        cutCrushedTubers: 0,
+        peeledSkinTubers: 0
+    });
+    // useEffect(() => {
+    //     if (id || sample) {
+    //         if (sample) {
+    //             setFormData(prevData => ({
+    //                 ...prevData,
+    //                 sampleId: sample.id || '',
+    //                 sampleCode: sample.sampleCode || '',
+    //                 variety: sample.variety || '',
+    //                 batchNumber: sample.batchNumber || ''
+    //             }));
+    //         } else if (id) {
+    //             const fetchSample = async () => {
+    //                 setIsLoading(true);
+    //                 try {
+    //                     const sampleRepo = SampleRepository();
+    //                     const samples = await sampleRepo.getSampleList();
+    //                     const foundSample = samples.find(s => s.id === parseInt(id));
+    //
+    //                     if (foundSample) {
+    //                         setFormData(prevData => ({
+    //                             ...prevData,
+    //                             sampleId: foundSample.id || '',
+    //                             sampleCode: foundSample.sampleCode || '',
+    //                             variety: foundSample.variety || '',
+    //                             batchNumber: foundSample.batchNumber || ''
+    //                         }));
+    //                     } else {
+    //                         setErrors({ general: 'Образец не найден' });
+    //                         navigate('/samples');
+    //                     }
+    //                 } catch (error) {
+    //                     console.error('Error fetching sample:', error);
+    //                     setErrors({ general: 'Ошибка при загрузке образца' });
+    //                 } finally {
+    //                     setIsLoading(false);
+    //                 }
+    //             };
+    //
+    //             fetchSample();
+    //         }
+    //     }
+    // }, [id, sample, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -168,121 +260,120 @@ const PotatoAnalysisForm = () => {
     };
 
     const analyzeResults = () => {
-        // Analysis based on GOST 33996-2016 standards
+        // Analysis based on GOST 33996-2016 standards and culture-specific norms
         let passesStandard = true;
         const notes = [];
 
-        // Check dry rot (max 1%)
-        if (formData.dryRotTotal > 1) {
+        // Check dry rot (using norm from culture)
+        if (formData.dryRotTotal > validationCriteria.dryRotTotal) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней, пораженных сухой гнилью (макс. 1%)');
+            notes.push(`Превышено допустимое количество клубней, пораженных сухой гнилью (макс. ${validationCriteria.dryRotTotal}%)`);
         }
 
-        // Check wet rot (max 1%)
-        if (formData.wetRot > 1) {
+        // Check wet rot (using norm from culture)
+        if (formData.wetRot > validationCriteria.wetRot) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней, пораженных мокрой гнилью (макс. 1%)');
+            notes.push(`Превышено допустимое количество клубней, пораженных мокрой гнилью (макс. ${validationCriteria.wetRot}%)`);
         }
 
-        // Check common scab (max 5%)
-        if (formData.commonScab > 5) {
+        // Check common scab (using norm from culture)
+        if (formData.commonScab > validationCriteria.commonScab) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней, пораженных обыкновенной паршой (макс. 5%)');
+            notes.push(`Превышено допустимое количество клубней, пораженных обыкновенной паршой (макс. ${validationCriteria.commonScab}%)`);
         }
 
-        // Check net scab (max 5%)
-        if (formData.netScab > 5) {
+        // Check net scab (using norm from culture)
+        if (formData.netScab > validationCriteria.netScab) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней, пораженных сетчатой паршой (макс. 5%)');
+            notes.push(`Превышено допустимое количество клубней, пораженных сетчатой паршой (макс. ${validationCriteria.netScab}%)`);
         }
 
-        // Check powdery scab (max 3%)
-        if (formData.powderyScab > 3) {
+        // Check powdery scab (using norm from culture)
+        if (formData.powderyScab > validationCriteria.powderyScab) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней, пораженных порошистой паршой (макс. 3%)');
+            notes.push(`Превышено допустимое количество клубней, пораженных порошистой паршой (макс. ${validationCriteria.powderyScab}%)`);
         }
 
-        // Check wrinkled tubers (max 1%)
-        if (formData.wrinkledTubers > 1) {
+        // Check wrinkled tubers (using norm from culture)
+        if (formData.wrinkledTubers > validationCriteria.wrinkledTubers) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество сморщенных клубней (макс. 1%)');
+            notes.push(`Превышено допустимое количество сморщенных клубней (макс. ${validationCriteria.wrinkledTubers}%)`);
         }
 
-        // Check rhizoctonia (max 3%)
-        if (formData.rhizoctonia > 3) {
+        // Check rhizoctonia (using norm from culture)
+        if (formData.rhizoctonia > validationCriteria.rhizoctonia) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней, пораженных ризоктониозом (макс. 3%)');
+            notes.push(`Превышено допустимое количество клубней, пораженных ризоктониозом (макс. ${validationCriteria.rhizoctonia}%)`);
         }
 
         // Check ring rot (not allowed)
-        if (formData.ringRot > 0) {
+        if (formData.ringRot > validationCriteria.ringRot) {
             passesStandard = false;
             notes.push('Наличие клубней, пораженных кольцевой гнилью, не допускается');
         }
 
         // Check stem nematode (not allowed)
-        if (formData.stemNematode > 0) {
+        if (formData.stemNematode > validationCriteria.stemNematode) {
             passesStandard = false;
             notes.push('Наличие клубней, пораженных стеблевой нематодой, не допускается');
         }
 
-        // Check rusty spots (max 5%)
-        if (formData.rustySpots > 5) {
+        // Check rusty spots (using norm from culture)
+        if (formData.rustySpots > validationCriteria.rustySpots) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней с железистой пятнистостью (макс. 5%)');
+            notes.push(`Превышено допустимое количество клубней с железистой пятнистостью (макс. ${validationCriteria.rustySpots}%)`);
         }
 
-        // Check mechanical damage (max 5%)
-        if (formData.mechanicalDamage > 5) {
+        // Check mechanical damage (using norm from culture)
+        if (formData.mechanicalDamage > validationCriteria.mechanicalDamage) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней с механическими повреждениями (макс. 5%)');
+            notes.push(`Превышено допустимое количество клубней с механическими повреждениями (макс. ${validationCriteria.mechanicalDamage}%)`);
         }
 
-        // Check pest damage (max 2%)
-        if (formData.pestDamage > 2) {
+        // Check pest damage (using norm from culture)
+        if (formData.pestDamage > validationCriteria.pestDamage) {
             passesStandard = false;
-            notes.push('Превышено допустимое количество клубней с повреждениями вредителями (макс. 2%)');
+            notes.push(`Превышено допустимое количество клубней с повреждениями вредителями (макс. ${validationCriteria.pestDamage}%)`);
         }
 
-        // Check new fields
-        // Suffocation signs (not allowed)
-        if (formData.suffocationSigns > 0) {
+        // Check suffocation signs (not allowed)
+        if (formData.suffocationSigns > validationCriteria.suffocationSigns) {
             passesStandard = false;
             notes.push('Наличие клубней с признаками удушья не допускается');
         }
 
-        // Frozen tubers (not allowed)
-        if (formData.frozenTubers > 0) {
+        // Check frozen tubers (not allowed)
+        if (formData.frozenTubers > validationCriteria.frozenTubers) {
             passesStandard = false;
             notes.push('Наличие подмороженных клубней не допускается');
         }
 
-        // Burned tubers (not allowed)
-        if (formData.burnedTubers > 0) {
+        // Check burned tubers (not allowed)
+        if (formData.burnedTubers > validationCriteria.burnedTubers) {
             passesStandard = false;
             notes.push('Наличие клубней с ожогами не допускается');
         }
 
-        // Deformed tubers (not allowed)
-        if (formData.deformedTubers > 0) {
+        // Check deformed tubers (not allowed)
+        if (formData.deformedTubers > validationCriteria.deformedTubers) {
             passesStandard = false;
             notes.push('Наличие уродливых клубней не допускается');
         }
 
-        // Tubers with outgrowths (not allowed)
-        if (formData.tuberOutgrowths > 0) {
+        // Check tubers with outgrowths (not allowed)
+        if (formData.tuberOutgrowths > validationCriteria.tuberOutgrowths) {
             passesStandard = false;
             notes.push('Наличие клубней с израстаниями не допускается');
         }
 
-        // Cut and crushed tubers (not allowed)
-        if (formData.cutCrushedTubers > 0) {
+        // Check cut and crushed tubers (not allowed)
+        if (formData.cutCrushedTubers > validationCriteria.cutCrushedTubers) {
             passesStandard = false;
             notes.push('Наличие разрезанных и раздавленных клубней не допускается');
         }
 
-        // Tubers with peeled skin (not allowed)
-        if (formData.peeledSkinTubers > 0) {
+        // Check tubers with peeled skin (not allowed)
+        if (formData.peeledSkinTubers > validationCriteria.peeledSkinTubers) {
             passesStandard = false;
             notes.push('Наличие клубней с ободранной кожурой (>1/4 поверхности) не допускается');
         }
@@ -340,7 +431,7 @@ const PotatoAnalysisForm = () => {
     };
 
     return (
-        <div className="flex-1 p-8 bg-gray-100">
+        <div className="flex-1 p-8">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-6xl mx-auto">
                 <h2 className="text-2xl font-semibold text-gray-700 mb-6">
                     Анализ образца картофеля по ГОСТ 33996-2016

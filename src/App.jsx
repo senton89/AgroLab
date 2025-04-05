@@ -35,7 +35,7 @@ const App = () => {
                 {/* Protected routes */}
                 <Route path="/main" element={
                     <ProtectedRoute>
-                        <div className="bg-gray-100 flex">
+                        <div className="flex">
                             <Sidebar />
                         </div>
                     </ProtectedRoute>

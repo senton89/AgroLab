@@ -1,8 +1,10 @@
 import AuthService from '../services/AuthService';
 import ReagentRepository from '../Repository/ReagentRepository'
+
 class AuthRepository {
+    // Метод для регистрации пользователя
     async registerUser(credentials) {
-        // Call the API to register the user
+        // Вызов API для регистрации пользователя
         const result = await AuthService.registerUser(credentials);
         if(result){
             const reagents = await ReagentRepository.fetchReagents();
@@ -12,22 +14,26 @@ class AuthRepository {
         return false;
     }
 
+    // Метод для входа пользователя
     static async loginUser(credentials) {
-        // Call the API to login the user
+        // Вызов API для входа пользователя
         const result = await AuthService.loginUser(credentials)??false;
         return result;
     }
 
+    // Метод для выхода пользователя
     async logoutUser() {
-        // Call the API to logout the user
+        // Вызов API для выхода пользователя
         return AuthService.logoutUser();
     }
 
+    // Метод для получения информации о пользователе
     async getUser() {
-        // Get the user from local storage
+        // Получение пользователя из локального хранилища
         return AuthService.getUser();
     }
 
+    // Метод для проверки сроков годности реагентов
     checkExpiryDates = (reagents) => {
         const today = new Date();
         reagents.forEach(reagent => {

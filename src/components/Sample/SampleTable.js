@@ -1,10 +1,13 @@
 // SampleTable.jsx
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import SampleRepository from '../../Repository/SampleRepository';
 
 const SampleTable = ({ sampleList }) => {
     const navigate = useNavigate();
+    const sampleRepo = SampleRepository();
     const [sortConfig, setSortConfig] = useState({ key: 'direction', direction: 'ascending' });
+    const [isLoading, setIsLoading] = useState(false);
 
     const sortedSamples = [...sampleList].sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -32,8 +35,36 @@ const SampleTable = ({ sampleList }) => {
         navigate(`/samples/edit/${sample.id}`, { state: { sample } });
     };
 
+    const handleGenerateProtocol = async (e, sample) => {
+        e.stopPropagation();
+        setIsLoading(true);
+        try {
+            const response = await sampleRepo.generateProtocol(sample.id);
+            // Предполагаем, что сервер возвращает URL для скачивания протокола
+            if (response && response.downloadUrl) {
+                window.open(response.downloadUrl, '_blank');
+            } else {
+                // Если сервер возвращает бинарные данные, можно создать blob и скачать
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `protocol-${sample.id}.docx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
+        } catch (error) {
+            console.error('Ошибка при формировании протокола:', error);
+            alert('Не удалось сформировать протокол. Пожалуйста, попробуйте снова.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     if (!sampleList || sampleList.length === 0) {
-        return <div className="text-center py-4">Нет доступных образцов.</div>;
+        return <div>Нет доступных образцов.</div>;
     }
 
     // Get the category of the first sample to determine which columns to show
@@ -94,7 +125,7 @@ const SampleTable = ({ sampleList }) => {
 
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full bg-white">
+            <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
                     {columns.map((column) => (
@@ -111,12 +142,12 @@ const SampleTable = ({ sampleList }) => {
                     </th>
                 </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-gray-200">
                 {sortedSamples.map((sample) => (
                     <tr
                         key={sample.id}
-                        className="hover:bg-gray-100 cursor-pointer"
                         onDoubleClick={() => handleRowDoubleClick(sample)}
+                        className="hover:bg-gray-50 cursor-pointer"
                     >
                         {columns.map((column) => (
                             <td key={column.key} className="px-6 py-4 whitespace-nowrap">
@@ -134,13 +165,70 @@ const SampleTable = ({ sampleList }) => {
                             >
                                 <i className="fas fa-tag"></i>
                             </button>
+                            <button
+                                onClick={(e) => handleGenerateProtocol(e, sample)}
+                                className="text-orange-500 hover:text-blue-700 p-2 rounded-full hover:bg-gray-100 ml-2"
+                                title="Сформировать протокол"
+                                disabled={isLoading}
+                            >
+                                <i className="fas fa-file-alt"></i>
+                            </button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+            {isLoading && (
+                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded-lg shadow-lg flex items-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500 mr-3"></div>
+                        <span>Формирование протокола...</span>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
+//
+//             <table className="min-w-full bg-white">
+//                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
+//                 <tr>
+//                     {columns.map((column) => (
+//                         <th
+//                             key={column.key}
+//                             onClick={() => requestSort(column.key)}
+//                             className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+//                         >
+//                             {column.label}
+//                         </th>
+//                     ))}
+//                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+//                         Действия
+//                     </th>
+//                 </tr>
+//                 </thead>
+//                 <tbody className="divide-y divide-gray-200">
+//                 {sortedSamples.map((sample) => (
+//                     <tr
+//                         key={sample.id}
+//                         className="hover:bg-gray-100 cursor-pointer"
+//                         onDoubleClick={() => handleRowDoubleClick(sample)}
+//                     >
+//                         {columns.map((column) => (
+//                             <td key={column.key} className="px-6 py-4 whitespace-nowrap">
+//                                 {sample[column.key] || '-'}
+//                             </td>
+//                         ))}
+//                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+//                             <button
+//                                 onClick={(e) => {
+//                                     e.stopPropagation();
+//                                     handleLabelClick(sample);
+//                                 }}
+//                                 className="text-orange-500 hover:text-blue-700 p-2 rounded-full hover:bg-gray-100"
+//                                 title="Создать этикетку"
+//                             >
+//                                 <i className="fas fa-tag"></i>
+
 
 export default SampleTable;
