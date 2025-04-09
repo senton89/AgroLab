@@ -67,6 +67,14 @@ const SampleTable = ({ sampleList }) => {
         return <div>Нет доступных образцов.</div>;
     }
 
+    if (!sampleList || sampleList.length === 0) {
+        return (
+            <div className="bg-white p-8 rounded-lg shadow-md text-center">
+                <p className="text-gray-600">Нет доступных образцов по вашему запросу.</p>
+            </div>
+        );
+    }
+
     // Get the category of the first sample to determine which columns to show
     const category = sampleList[0]?.category || 'seeds';
 

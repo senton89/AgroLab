@@ -1,10 +1,16 @@
 // SearchBar.jsx
 import React from 'react';
 
-const SearchBar = () => {
+const SearchBar = ({ searchQuery, setSearchQuery }) => {
     return (
         <div className="mb-4">
-            <input type="search" placeholder="Поисковый запрос" className="w-full p-2 border border-gray-300 rounded" />
+            <input
+                type="search"
+                placeholder="Найти образец"
+                className="w-2/3 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 mt-2"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
         </div>
     );
 };

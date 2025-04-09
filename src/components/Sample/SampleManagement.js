@@ -1,6 +1,7 @@
 // SampleManagement.jsx
 import React, { useState } from 'react';
 import SampleTable from './SampleTable';
+import SearchBar from '../SearchBar'; // Import the SearchBar component
 import { useNavigate } from "react-router-dom";
 import SampleRepository from '../../Repository/SampleRepository';
 
@@ -15,6 +16,7 @@ const SampleManagement = () => {
     const { sampleList, loading, error } = SampleRepository();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('seeds');
+    const [searchQuery, setSearchQuery] = useState(''); // Add state for search query
 
     if (loading) return (
         <div className="flex justify-center items-center h-64">
@@ -24,8 +26,20 @@ const SampleManagement = () => {
 
     if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
 
-    // Filter samples by category
-    const filteredSamples = sampleList ? sampleList.filter(sample => sample.category === activeTab) : [];
+    // Filter samples by category and search query
+    const filteredSamples = sampleList ? sampleList.filter(sample => {
+        // First filter by category
+        const categoryMatch = sample.category === activeTab;
+
+        // If no search query, just return category match
+        if (!searchQuery.trim()) return categoryMatch;
+
+        // Otherwise, check if any field contains the search query (case insensitive)
+        const query = searchQuery.toLowerCase();
+        return categoryMatch && Object.values(sample).some(value =>
+            value && typeof value === 'string' && value.toLowerCase().includes(query)
+        );
+    }) : [];
 
     const handleAddSample = () => {
         navigate('/samples/add', { state: { category: activeTab } });
@@ -50,12 +64,20 @@ const SampleManagement = () => {
                 ))}
             </div>
 
-            <button
-                onClick={handleAddSample}
-                className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded self-end mb-10 w-1/6"
-            >
-                Добавить образец
-            </button>
+            <div className="flex justify-between items-center mb-6">
+                {/* Search Bar */}
+                <div className="w-2/3">
+                    <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                </div>
+
+                {/* Add Sample Button */}
+                <button
+                    onClick={handleAddSample}
+                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded w-1/4"
+                >
+                    Добавить образец
+                </button>
+            </div>
 
             <div className="rounded-lg overflow-hidden w-full">
                 <SampleTable sampleList={filteredSamples} />
