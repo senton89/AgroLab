@@ -57,6 +57,26 @@ const useEquipmentRepository = (equipmentService = MockEquipmentService) => {
         }
     };
 
+    // Метод для удаления оборудования
+    const deleteEquipment = async (id) => {
+        try {
+            if (equipmentService === MockEquipmentService) {
+                // Для мок-сервиса удаляем из локального списка
+                const updatedList = equipmentList.filter(equipment => equipment.id !== id);
+                setEquipmentList(updatedList);
+                return { success: true };
+            } else {
+                // Для реального сервиса вызовите API
+                const result = await equipmentService.deleteEquipment(id);
+                await fetchEquipment(); // Обновляем список
+                return result;
+            }
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        }
+    };
+
     useEffect(() => {
         fetchEquipment(); // Загружаем оборудование при монтировании компонента
     }, []);
@@ -66,7 +86,8 @@ const useEquipmentRepository = (equipmentService = MockEquipmentService) => {
         loading,
         error,
         addEquipment,
-        updateEquipment
+        updateEquipment,
+        deleteEquipment
     }; // Возвращаем данные и методы
 };
 

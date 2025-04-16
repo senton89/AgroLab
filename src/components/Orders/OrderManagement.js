@@ -6,7 +6,7 @@ import MockOrderService from "../Mockups/MockOrderService";
 import OrderTable from "./OrderTable";
 
 const OrderManagement = () => {
-    const { orderList, error } = useOrderRepository(MockOrderService);
+    const { orderList, error, deleteOrder } = useOrderRepository(MockOrderService);
     const [orderListState, setOrderList] = useState(orderList);
     const [errorState, setError] = useState(error);
     const navigate = useNavigate();
@@ -15,6 +15,16 @@ const OrderManagement = () => {
         setOrderList(orderList);
         setError(error);
     }, [orderList, error]);
+
+    const handleDeleteOrder = async (id) => {
+        try {
+            await deleteOrder(id);
+            setOrderList(prevOrders => prevOrders.filter(order => order.id !== id));
+        } catch (error) {
+            console.error('Error deleting order:', error);
+            alert('Не удалось удалить заказ. Пожалуйста, попробуйте снова.');
+        }
+    };
 
     if (errorState) return <div>Error: {errorState}</div>;
 
@@ -27,7 +37,7 @@ const OrderManagement = () => {
                 >
                     Добавить новый заказ
                 </button>
-                <OrderTable orderList={orderListState} />
+                <OrderTable orderList={orderListState} onDelete={handleDeleteOrder} />
             </div>
         </div>
     );

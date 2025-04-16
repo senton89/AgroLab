@@ -21,6 +21,16 @@ const CultureManagement = () => {
         loadCultures();
     }, []);
 
+    const handleDeleteCulture = async (culture) => {
+        try {
+            await CultureRepository.deleteCulture(culture);
+            loadCultures();
+        } catch (error) {
+            console.error('Error deleting culture:', error);
+            alert(`Ошибка при удалении культуры: ${error.message}`);
+        }
+    };
+
     return (
         <div className="flex flex-col p-8 w-2/3 mx-6 mt-2">
             <div className="mb-4 self-end">
@@ -32,7 +42,7 @@ const CultureManagement = () => {
                 </button>
             </div>
             <div className="rounded-lg overflow-hidden">
-                <CultureTable cultures={cultures} setCultures={setCultures} />
+                <CultureTable cultures={cultures} setCultures={setCultures} onDelete={handleDeleteCulture} />
             </div>
             
         </div>

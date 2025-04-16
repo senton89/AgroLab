@@ -54,12 +54,36 @@ const useOrderRepository = (orderService= MockOrderService) => {
         }
     };
 
+    const deleteOrder = async (id) => {
+        try {
+            if (orderService === MockOrderService) {
+                // For mock service
+                const updatedList = orderList.filter(order => order.id !== id);
+                setOrderList(updatedList);
+                return { success: true };
+            } else {
+                // For real service
+                const result = await orderService.deleteOrder(id);
+                const fetchOrders = async () => {
+                    const orders = await orderService.getOrders();
+                    setOrderList(orders);
+                };
+                await fetchOrders();
+                return result;
+            }
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        }
+    };
+
     return {
         orderList,
         loading,
         error,
         addOrder,
-        updateOrder
+        updateOrder,
+        deleteOrder
     }; // Возвращаем данные и методы
 };
 

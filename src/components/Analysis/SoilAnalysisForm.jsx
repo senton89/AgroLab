@@ -203,15 +203,17 @@ const SoilAnalysisForm = () => {
 
                 // Here you would typically save the analysis results
                 // For example:
-                // const sampleRepo = SampleRepository();
-                // await sampleRepo.saveAnalysisResults(updatedFormData);
+                const sampleRepo = SampleRepository();
+                await sampleRepo.saveAnalysisResults(updatedFormData);
 
                 // Show success message or navigate
-                alert(
-                    analysisResults.passesStandard
-                        ? 'Почва соответствует стандартам плодородия'
-                        : `Почва не соответствует стандартам плодородия. Рекомендации: ${analysisResults.notes}`
-                );
+                // alert(
+                //     analysisResults.passesStandard
+                //         ? 'Почва соответствует стандартам плодородия'
+                //         : `Почва не соответствует стандартам плодородия. Рекомендации: ${analysisResults.notes}`
+                // );
+
+                navigate(-1);
             } catch (error) {
                 console.error('Error analyzing sample:', error);
                 setErrors({

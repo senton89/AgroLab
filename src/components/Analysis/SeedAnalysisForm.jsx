@@ -331,15 +331,17 @@ const SeedAnalysisForm = () => {
 
                 // Here you would typically save the analysis results
                 // For example:
-                // const sampleRepo = SampleRepository();
-                // await sampleRepo.saveAnalysisResults(updatedFormData);
+                const sampleRepo = SampleRepository();
+                await sampleRepo.saveAnalysisResults(updatedFormData);
 
                 // Show success message or navigate
-                alert(
-                    analysisResults.passesStandard
-                        ? 'Образец соответствует стандарту'
-                        : `Образец не соответствует стандарту. Причины: ${analysisResults.notes}`
-                );
+                // alert(
+                //     analysisResults.passesStandard
+                //         ? 'Образец соответствует стандарту'
+                //         : `Образец не соответствует стандарту. Причины: ${analysisResults.notes}`
+                // );
+
+                navigate(-1);
             } catch (error) {
                 console.error('Error analyzing sample:', error);
                 setErrors({
@@ -434,7 +436,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.germinationEnergy && <p className="text-red-500 text-sm mt-1">{errors.germinationEnergy}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не нормировано</p>
                                 </div>
 
                                 <div>
@@ -450,7 +451,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.germination && <p className="text-red-500 text-sm mt-1">{errors.germination}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не менее 92%</p>
                                 </div>
 
                                 <div>
@@ -466,7 +466,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.seedPurity && <p className="text-red-500 text-sm mt-1">{errors.seedPurity}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не менее 98.0%</p>
                                 </div>
 
                                 <div>
@@ -482,7 +481,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.waste && <p className="text-red-500 text-sm mt-1">{errors.waste}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не нормировано</p>
                                 </div>
 
                                 <div>
@@ -497,7 +495,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.thousandSeedWeight && <p className="text-red-500 text-sm mt-1">{errors.thousandSeedWeight}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не нормировано</p>
                                 </div>
                             </div>
                         </div>
@@ -517,7 +514,6 @@ const SeedAnalysisForm = () => {
                                         step="1"
                                     />
                                     {errors.otherCropSeeds && <p className="text-red-500 text-sm mt-1">{errors.otherCropSeeds}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 40 шт/кг</p>
                                 </div>
 
                                 <div>
@@ -532,7 +528,6 @@ const SeedAnalysisForm = () => {
                                         step="1"
                                     />
                                     {errors.oatSeeds && <p className="text-red-500 text-sm mt-1">{errors.oatSeeds}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 40 шт/кг</p>
                                 </div>
 
                                 <div>
@@ -547,7 +542,6 @@ const SeedAnalysisForm = () => {
                                         step="1"
                                     />
                                     {errors.weedSeeds && <p className="text-red-500 text-sm mt-1">{errors.weedSeeds}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 20 шт/кг</p>
                                 </div>
 
                                 <div>
@@ -568,7 +562,7 @@ const SeedAnalysisForm = () => {
                             <h3 className="text-lg font-medium text-gray-700 mb-4">Карантинные объекты</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Семян карантинных растений (всего)</label>
+                                    <label className="block mb-1 text-gray-700">Семян карантинных растений</label>
                                     <input
                                         type="number"
                                         name="quarantineSeeds"
@@ -579,7 +573,6 @@ const SeedAnalysisForm = () => {
                                         step="1"
                                     />
                                     {errors.quarantineSeeds && <p className="text-red-500 text-sm mt-1">{errors.quarantineSeeds}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
                                 </div>
 
                                 <div>
@@ -594,7 +587,6 @@ const SeedAnalysisForm = () => {
                                         step="1"
                                     />
                                     {errors.ergotSclerotia && <p className="text-red-500 text-sm mt-1">{errors.ergotSclerotia}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
                                 </div>
 
                                 <div>
@@ -609,7 +601,6 @@ const SeedAnalysisForm = () => {
                                         step="1"
                                     />
                                     {errors.wheatNematodeGalls && <p className="text-red-500 text-sm mt-1">{errors.wheatNematodeGalls}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
                                 </div>
 
                                 <div>
@@ -624,7 +615,6 @@ const SeedAnalysisForm = () => {
                                         step="1"
                                     />
                                     {errors.smutFormations && <p className="text-red-500 text-sm mt-1">{errors.smutFormations}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
                                 </div>
                             </div>
                         </div>
@@ -645,7 +635,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.alternaria && <p className="text-red-500 text-sm mt-1">{errors.alternaria}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                 </div>
 
                                 <div>
@@ -661,7 +650,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.fusarium && <p className="text-red-500 text-sm mt-1">{errors.fusarium}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                 </div>
 
                                 <div>
@@ -677,7 +665,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.helminthosporium && <p className="text-red-500 text-sm mt-1">{errors.helminthosporium}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                 </div>
 
                                 <div>
@@ -693,7 +680,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.septoria && <p className="text-red-500 text-sm mt-1">{errors.septoria}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                 </div>
 
                                 <div>
@@ -709,7 +695,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.yellowSpot && <p className="text-red-500 text-sm mt-1">{errors.yellowSpot}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                 </div>
 
                                 <div>
@@ -725,7 +710,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.nigrosporiosis && <p className="text-red-500 text-sm mt-1">{errors.nigrosporiosis}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                 </div>
 
                                 <div>
@@ -741,7 +725,6 @@ const SeedAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.blackEar && <p className="text-red-500 text-sm mt-1">{errors.blackEar}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                 </div>
                                     <div>
                                         <label className="block mb-1 text-gray-700">Плесневение (p. Mucor)</label>
@@ -756,7 +739,6 @@ const SeedAnalysisForm = () => {
                                                 step="0.1"
                                         />
                                         {errors.mold && <p className="text-red-500 text-sm mt-1">{errors.mold}</p>}
-                                        <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                     </div>
                                     <div>
                                         <label className="block mb-1 text-gray-700">Общая зараженность болезнями, %</label>
@@ -771,7 +753,6 @@ const SeedAnalysisForm = () => {
                                                 step="0.1"
                                             />
                                             {errors.totalDiseaseInfection && <p className="text-red-500 text-sm mt-1">{errors.totalDiseaseInfection}</p>}
-                                            <p className="text-sm text-gray-500 mt-1">Норма: не установлено</p>
                                     </div>
 
                                     {errors.submit && (

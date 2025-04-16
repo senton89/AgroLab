@@ -366,7 +366,7 @@ const AddSampleForm = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-1 text-gray-700">Категория семян*</label>
+                            <label className="block mb-1 text-gray-700">Репродукция*</label>
                             <input
                                 type="text"
                                 name="seed_category"

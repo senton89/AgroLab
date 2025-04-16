@@ -43,7 +43,19 @@ const CustomerService = {
             throw new Error('Не удалось обновить клиента');
         }
         return await response.json();
-    }
+    },
+
+    // Метод для удаления клиента
+    async deleteCustomer(id) {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Не удалось удалить клиента');
+        }
+        return await response.json();
+    },
 };
 
 export default CustomerService;

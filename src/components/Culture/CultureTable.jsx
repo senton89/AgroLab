@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
+import DeleteButton from "../DeleteButton";
 
-const CultureTable = ({ cultures, setCultures }) => {
+const CultureTable = ({ cultures, setCultures, onDelete }) => {
     const [sortOrder, setSortOrder] = useState('asc');
     const navigate = useNavigate();
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const isAdmin = user && user.role === 'admin';
 
     const handleSort = () => {
         const sortedCultures = [...cultures].sort((a, b) => {
@@ -22,31 +26,43 @@ const CultureTable = ({ cultures, setCultures }) => {
         navigate('/add-culture', { state: { culture } });
     };
 
+    if (!cultures || cultures.length === 0) {
+        return (
+            <div className="bg-white p-4 rounded-lg shadow">
+                <p className="text-center text-gray-500">Нет доступных культур</p>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-white rounded-lg shadow-md w-full">
             <table className="w-full">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
                     <th onClick={handleSort}
-                        className="cursor-pointer text-left p-2">Наименование</th>
+                        className="cursor-pointer text-left pl-6 p-2">Наименование</th>
+                    <th className="cursor-pointer text-right p-2"></th>
                 </tr>
                 </thead>
-                <tbody>
-                {cultures.length === 0 ? (
-                    <tr>
-                        <td className="p-2 text-center" colSpan="2">Нет доступных культур</td>
+                <tbody className="divide-y divide-gray-200">
+                {cultures.map((culture, index) => (
+                    <tr
+                        key={index}
+                        className="hover:bg-gray-50 cursor-pointer"
+                        onDoubleClick={() => handleRowDoubleClick(culture)}
+                    >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            {typeof culture === 'object' ? culture.name : culture}
+                        </td>
+                        <td className="px-6 py-1 whitespace-nowrap text-right text-sm font-medium">
+                            <DeleteButton
+                                onDelete={() => onDelete(culture)}
+                                itemName="культуру"
+                                isAdmin={isAdmin}
+                            />
+                        </td>
                     </tr>
-                ) : (
-                    cultures.map((culture, index) => (
-                        <tr
-                            key={index}
-                            className="hover:bg-gray-100"
-                            onDoubleClick={() => handleRowDoubleClick(culture)}
-                        >
-                        <td className="p-2">{culture || 'Не указано'}</td>
-                        </tr>
-                    ))
-                )}
+                ))}
                 </tbody>
             </table>
         </div>

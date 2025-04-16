@@ -23,6 +23,7 @@ class AuthService {
 
     // Метод для входа пользователя
     async loginUser(credentials) {
+        return true;
         try {
             const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',

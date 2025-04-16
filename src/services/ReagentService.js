@@ -41,6 +41,18 @@ const ReagentService = {
             throw new Error('Не удалось обновить реагент');
         }
         return await response.json();
+    },
+
+    deleteReagent: async (id) => {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Не удалось удалить реагент');
+        }
+
+        return await response.json();
     }
 };
 

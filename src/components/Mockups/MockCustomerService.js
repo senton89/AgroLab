@@ -53,6 +53,20 @@ const MockCustomerService = {
                 }
             }, 500);
         });
+    },
+
+    async deleteCustomer(id) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const index = mockCustomerData.findIndex(customer => customer.id === id);
+                if (index !== -1) {
+                    mockCustomerData.splice(index, 1);
+                    resolve({ success: true });
+                } else {
+                    reject(new Error('Customer not found'));
+                }
+            }, 500);
+        });
     }
 };
 

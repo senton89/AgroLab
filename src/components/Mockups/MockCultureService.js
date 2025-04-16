@@ -38,6 +38,22 @@ const MockCultureService = {
                 }
             }, 100); // Simulate delay
         });
+    },
+
+    async deleteCulture(culture) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const cultureToDelete = typeof culture === 'object' ? culture.name : culture;
+                const index = mockCultures.indexOf(cultureToDelete);
+
+                if (index !== -1) {
+                    mockCultures.splice(index, 1);
+                    resolve({ success: true });
+                } else {
+                    resolve({ success: false, error: 'Culture not found' });
+                }
+            }, 100); // Simulate delay
+        });
     }
 };
 

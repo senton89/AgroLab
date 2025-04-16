@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useReagentRepository from '../../Repository/ReagentRepository';
+import ReagentCalculator from "./ReagentCalculator";
 
 const AddReagentForm = ({ onAdd }) => {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ const AddReagentForm = ({ onAdd }) => {
     const reagentRepository = useReagentRepository();
     const [errors, setErrors] = useState({});
     const [isEditMode, setIsEditMode] = useState(false);
+    const [showCalculator, setShowCalculator] = useState(false);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -83,7 +85,7 @@ const AddReagentForm = ({ onAdd }) => {
 
     return (
         <div className="flex-1 flex items-center justify-center mt-16 pt-4 p-8">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mr-4">
                 <h2 className="text-xl font-semibold mb-6">Добавление нового реактива</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
@@ -168,6 +170,13 @@ const AddReagentForm = ({ onAdd }) => {
                             Отмена
                         </button>
                         <button
+                            type="button"
+                            onClick={() => setShowCalculator(!showCalculator)}
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow mx-4"
+                        >
+                            Показать калькулятор
+                        </button>
+                        <button
                             type="submit"
                             className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow"
                         >
@@ -176,6 +185,7 @@ const AddReagentForm = ({ onAdd }) => {
                     </div>
                 </form>
             </div>
+            {showCalculator && <ReagentCalculator />}
         </div>
     );
 };

@@ -43,6 +43,25 @@ const useReagentRepository = (reagentService) => {
         }
     };
 
+    const deleteReagent = async (id) => {
+        try {
+            if (useMock) {
+                // For mock service
+                const updatedList = reagentList.filter(reagent => reagent.id !== id);
+                setReagentList(updatedList);
+                return { success: true };
+            } else {
+                // For real service
+                const result = await reagentService.deleteReagent(id);
+                await fetchReagents(); // Refresh the list
+                return result;
+            }
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        }
+    };
+
     // Метод для получения реагентов
     const fetchReagents = async () => {
         setLoading(true); // Начинаем загрузку
@@ -67,6 +86,7 @@ const useReagentRepository = (reagentService) => {
         addReagent,
         updateReagent,
         fetchReagents,
+        deleteReagent,
     }; // Возвращаем данные и методы
 };
 

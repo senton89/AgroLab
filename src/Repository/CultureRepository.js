@@ -51,6 +51,12 @@ const CultureRepository = {
         }
 
         return null;
+    },
+
+    // Метод для удаления культуры
+    async deleteCulture(culture) {
+        const service = isTesting ? MockCultureService : CultureService;
+        return await service.deleteCulture(culture);
     }
 };
 

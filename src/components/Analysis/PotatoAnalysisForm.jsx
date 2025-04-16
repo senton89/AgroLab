@@ -405,16 +405,17 @@ const PotatoAnalysisForm = () => {
 
                 // Here you would typically save the analysis results
                 // For example:
-                // const sampleRepo = SampleRepository();
-                // await sampleRepo.saveAnalysisResults(updatedFormData);
+                const sampleRepo = SampleRepository();
+                await sampleRepo.saveAnalysisResults(updatedFormData);
 
                 // Show success message or navigate
-                alert(
-                    analysisResults.passesStandard
-                        ? 'Образец соответствует стандарту ГОСТ 33996-2016'
-                        : `Образец не соответствует стандарту ГОСТ 33996-2016. Причины: ${analysisResults.notes}`
-                );
+                // alert(
+                //     analysisResults.passesStandard
+                //         ? 'Образец соответствует стандарту ГОСТ 33996-2016'
+                //         : `Образец не соответствует стандарту ГОСТ 33996-2016. Причины: ${analysisResults.notes}`
+                // );
 
+                navigate(-1);
             } catch (error) {
                 console.error('Error analyzing sample:', error);
                 setErrors({
@@ -500,7 +501,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.dryRotTotal && <p className="text-red-500 text-sm mt-1">{errors.dryRotTotal}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -581,7 +582,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.wetRot && <p className="text-red-500 text-sm mt-1">{errors.wetRot}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -602,7 +603,6 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.scabTotal && <p className="text-red-500 text-sm mt-1">{errors.scabTotal}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 5%</p>
                                 </div>
 
                                 <div>
@@ -683,7 +683,6 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.rhizoctonia && <p className="text-red-500 text-sm mt-1">{errors.rhizoctonia}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 5%</p>
                                 </div>
 
                                 <div>
@@ -699,7 +698,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.ringRot && <p className="text-red-500 text-sm mt-1">{errors.ringRot}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -715,7 +714,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.stemNematode && <p className="text-red-500 text-sm mt-1">{errors.stemNematode}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -731,7 +730,6 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.rustySpots && <p className="text-red-500 text-sm mt-1">{errors.rustySpots}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 2%</p>
                                 </div>
 
                                 <div>
@@ -747,7 +745,6 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.mechanicalDamage && <p className="text-red-500 text-sm mt-1">{errors.mechanicalDamage}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 5%</p>
                                 </div>
 
                                 <div>
@@ -763,7 +760,6 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.pestDamage && <p className="text-red-500 text-sm mt-1">{errors.pestDamage}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не более 2%</p>
                                 </div>
                             </div>
                         </div>
@@ -784,7 +780,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.suffocationSigns && <p className="text-red-500 text-sm mt-1">{errors.suffocationSigns}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -800,7 +796,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.frozenTubers && <p className="text-red-500 text-sm mt-1">{errors.frozenTubers}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -816,7 +812,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.burnedTubers && <p className="text-red-500 text-sm mt-1">{errors.burnedTubers}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -832,7 +828,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.deformedTubers && <p className="text-red-500 text-sm mt-1">{errors.deformedTubers}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -848,7 +844,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.tuberOutgrowths && <p className="text-red-500 text-sm mt-1">{errors.tuberOutgrowths}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -864,7 +860,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.cutCrushedTubers && <p className="text-red-500 text-sm mt-1">{errors.cutCrushedTubers}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
 
                                 <div>
@@ -880,7 +876,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.peeledSkinTubers && <p className="text-red-500 text-sm mt-1">{errors.peeledSkinTubers}</p>}
-                                    <p className="text-sm text-gray-500 mt-1">Норма: не допускается</p>
+                                    
                                 </div>
                             </div>
                         </div>

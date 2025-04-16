@@ -2,12 +2,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import SampleRepository from '../../Repository/SampleRepository';
+import DeleteButton from "../DeleteButton";
 
 const SampleTable = ({ sampleList }) => {
     const navigate = useNavigate();
     const sampleRepo = SampleRepository();
     const [sortConfig, setSortConfig] = useState({ key: 'direction', direction: 'ascending' });
     const [isLoading, setIsLoading] = useState(false);
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const isAdmin = user && user.role === 'admin';
 
     const sortedSamples = [...sampleList].sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -33,6 +37,19 @@ const SampleTable = ({ sampleList }) => {
 
     const handleRowDoubleClick = (sample) => {
         navigate(`/samples/edit/${sample.id}`, { state: { sample } });
+    };
+
+    const handleDeleteSample = async (sampleId) => {
+        setIsLoading(true);
+        try {
+            await sampleRepo.deleteSample(sampleId);
+            window.location.reload();
+        } catch (error) {
+            console.error('Ошибка при удалении образца:', error);
+            alert('Не удалось удалить образец. Пожалуйста, попробуйте снова.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleGenerateProtocol = async (e, sample) => {
@@ -133,19 +150,19 @@ const SampleTable = ({ sampleList }) => {
 
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-center">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
                     {columns.map((column) => (
                         <th
                             key={column.key}
                             onClick={() => requestSort(column.key)}
-                            className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider"
                         >
                             {column.label}
                         </th>
                     ))}
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider">
                         Действия
                     </th>
                 </tr>
@@ -168,7 +185,7 @@ const SampleTable = ({ sampleList }) => {
                                     e.stopPropagation();
                                     handleLabelClick(sample);
                                 }}
-                                className="text-orange-500 hover:text-blue-700 p-2 rounded-full hover:bg-gray-100"
+                                className="text-orange-500 hover:text-blue-700 py-2 pr-2 rounded-full hover:bg-gray-100"
                                 title="Создать этикетку"
                             >
                                 <i className="fas fa-tag"></i>
@@ -181,6 +198,13 @@ const SampleTable = ({ sampleList }) => {
                             >
                                 <i className="fas fa-file-alt"></i>
                             </button>
+                            <div className="pl-2">
+                            <DeleteButton
+                                onDelete={() => handleDeleteSample(sample.id)}
+                                itemName="образец"
+                                isAdmin={isAdmin}
+                            />
+                            </div>
                         </td>
                     </tr>
                 ))}
@@ -197,46 +221,5 @@ const SampleTable = ({ sampleList }) => {
         </div>
     );
 };
-//
-//             <table className="min-w-full bg-white">
-//                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
-//                 <tr>
-//                     {columns.map((column) => (
-//                         <th
-//                             key={column.key}
-//                             onClick={() => requestSort(column.key)}
-//                             className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-//                         >
-//                             {column.label}
-//                         </th>
-//                     ))}
-//                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-//                         Действия
-//                     </th>
-//                 </tr>
-//                 </thead>
-//                 <tbody className="divide-y divide-gray-200">
-//                 {sortedSamples.map((sample) => (
-//                     <tr
-//                         key={sample.id}
-//                         className="hover:bg-gray-100 cursor-pointer"
-//                         onDoubleClick={() => handleRowDoubleClick(sample)}
-//                     >
-//                         {columns.map((column) => (
-//                             <td key={column.key} className="px-6 py-4 whitespace-nowrap">
-//                                 {sample[column.key] || '-'}
-//                             </td>
-//                         ))}
-//                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-//                             <button
-//                                 onClick={(e) => {
-//                                     e.stopPropagation();
-//                                     handleLabelClick(sample);
-//                                 }}
-//                                 className="text-orange-500 hover:text-blue-700 p-2 rounded-full hover:bg-gray-100"
-//                                 title="Создать этикетку"
-//                             >
-//                                 <i className="fas fa-tag"></i>
-
 
 export default SampleTable;

@@ -41,6 +41,18 @@ const OrderService = {
             throw new Error('Не удалось обновить заказ');
         }
         return await response.json();
+    },
+
+    // Метод для удаления заказа
+    async deleteOrder(id) {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Не удалось удалить заказ');
+        }
+        return await response.json();
     }
 };
 

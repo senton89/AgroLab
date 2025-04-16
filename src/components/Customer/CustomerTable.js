@@ -1,10 +1,15 @@
 // CustomerTable.jsx
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
+import DeleteButton from "../DeleteButton";
 
-const CustomerTable = ({ customerList }) => {
+const CustomerTable = ({ customerList, onDeleteCustomer }) => {
     const navigate = useNavigate(); // Initialize navigate
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const isAdmin = user && user.role === 'admin';
+
 
     const sortedCustomers = [...customerList].sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -34,14 +39,15 @@ const CustomerTable = ({ customerList }) => {
 
     return (
         <div className="w-full p-6">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden text-center">
                 <table className="w-full">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
-                        <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Имя</th>
-                        <th onClick={() => requestSort('email')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-                        <th onClick={() => requestSort('address')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Адрес</th>
-                        <th onClick={() => requestSort('inn')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ИНН</th>
+                        <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Имя</th>
+                        <th onClick={() => requestSort('email')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Email</th>
+                        <th onClick={() => requestSort('address')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Адрес</th>
+                        <th onClick={() => requestSort('inn')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">ИНН</th>
+                        <th className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"></th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -55,6 +61,13 @@ const CustomerTable = ({ customerList }) => {
                             <td className="px-6 py-4 whitespace-nowrap">{customer.email}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{customer.address}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{customer.inn}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <DeleteButton
+                                    onDelete={() => onDeleteCustomer(customer.id)}
+                                    itemName="заказчика"
+                                    isAdmin={isAdmin}
+                                />
+                            </td>
                         </tr>
                     ))}
                     </tbody>

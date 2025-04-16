@@ -17,7 +17,6 @@ const mockEquipmentData = [
         depth: '2.0',
         dateOfDecommissioning: ''
     },
-    // Add more mock data as needed
 ];
 
 const MockEquipmentService = {
@@ -42,6 +41,19 @@ const MockEquipmentService = {
                 if (index !== -1) {
                     mockEquipmentData[index] = { ...mockEquipmentData[index], ...updatedEquipment };
                     resolve(mockEquipmentData[index]);
+                } else {
+                    reject(new Error('Equipment not found'));
+                }
+            }, 500); // Simulate network delay
+        });
+    },
+    async deleteEquipment(id) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const index = mockEquipmentData.findIndex(equipment => equipment.id === id);
+                if (index !== -1) {
+                    mockEquipmentData.splice(index, 1);
+                    resolve({ success: true });
                 } else {
                     reject(new Error('Equipment not found'));
                 }

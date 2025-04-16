@@ -5,11 +5,20 @@ import CustomerTable from './CustomerTable';
 import useCustomerRepository from '../../Repository/CustomerRepository';
 
 const CustomerManagement = () => {
-    const { customerList, loading, error } = useCustomerRepository();
+    const { customerList, loading, error, deleteCustomer } = useCustomerRepository();
     const navigate = useNavigate();
 
     const handleAddCustomer = () => {
         navigate('/customers/add');
+    };
+
+    const handleDeleteCustomer = async (id) => {
+        try {
+            await deleteCustomer(id);
+        } catch (error) {
+            console.error('Error deleting customer:', error);
+            alert('Ошибка при удалении заказчика');
+        }
     };
 
     if (loading) return <div>Loading...</div>;
@@ -25,7 +34,7 @@ const CustomerManagement = () => {
             </button>
 
             <div className="rounded-lg overflow-hidden w-full">
-                <CustomerTable customerList={customerList} />
+                <CustomerTable customerList={customerList} onDeleteCustomer={handleDeleteCustomer} />
             </div>
         </div>
     );

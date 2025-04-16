@@ -2,8 +2,10 @@
 import React, {useState} from 'react';
 import AuthRepository from "../../Repository/AuthRepository";
 import useReagentRepository from "../../Repository/ReagentRepository";
+import {useNavigate} from "react-router-dom";
 
 const LoginForm = () => {
+    var navigate = useNavigate();
     const [credentials, setCredentials] = useState({
         login: '',
         password: '',
@@ -21,9 +23,9 @@ const LoginForm = () => {
         e.preventDefault();
         try {
             const authRepository = new AuthRepository();
-            const success = await authRepository.loginUser (credentials);
+            const success = await authRepository.loginUser(credentials);
             if (success) {
-                console.log('User  logged in successfully');
+                navigate("/");
 
                 // Проверка срока годности
                 const today = new Date();
@@ -50,8 +52,10 @@ const LoginForm = () => {
             <div className="flex items-center justify-center h-full">
                 <div className="bg-gray-500 bg-opacity-10 p-8 rounded-lg shadow-lg w-full max-w-md">
                     <h2 className="text-center text-white text-xl font-light mb-4">
-                        <span>Добро пожаловать</span> в приложение
-                        <span className="font-semibold">«Учет Агродоктор»</span>
+                        <span>Добро пожаловать в приложение</span>
+                        <div>
+                            <span className="font-semibold">«Учет Агродоктор»</span>
+                        </div>
                     </h2>
                     <p className="text-center text-gray-400 mb-6">Введите логин и пароль</p>
                     <form onSubmit={handleSubmit}>

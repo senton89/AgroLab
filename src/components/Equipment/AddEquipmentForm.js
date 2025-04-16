@@ -54,7 +54,6 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
         if (!formData.length || isNaN(formData.length) || Number(formData.length) < 0) newErrors.length = 'Длина должна быть положительным числом';
         if (!formData.height || isNaN(formData.height) || Number(formData.height) < 0) newErrors.height = 'Высота должна быть положительным числом';
         if (!formData.depth || isNaN(formData.depth) || Number(formData.depth) < 0) newErrors.depth = 'Глубина должна быть положительным числом';
-        if (!formData.dateOfDecommissioning) newErrors.dateOfDecommissioning = 'Дата вывода из использования обязательна';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };

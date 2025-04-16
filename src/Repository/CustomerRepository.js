@@ -59,7 +59,20 @@ const useCustomerRepository = () => {
         }
     };
 
-    return { customerList, loading, error, addCustomer, updateCustomer }; // Возвращаем данные и методы
+    const deleteCustomer = async (id) => {
+        try {
+            // In a real app, this would call the API
+            await MockCustomerService.deleteCustomer(id);
+            const updatedCustomers = customerList.filter(customer => customer.id !== id);
+            setCustomerList(updatedCustomers);
+            return { success: true };
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        }
+    };
+
+    return { customerList, loading, error, addCustomer, updateCustomer, deleteCustomer }; // Возвращаем данные и методы
 };
 
 export default useCustomerRepository;

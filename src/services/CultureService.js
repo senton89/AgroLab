@@ -43,6 +43,18 @@ const CultureService = {
             throw new Error('Не удалось обновить культуру');
         }
         return await response.json();
+    },
+    async deleteCulture(culture) {
+        const cultureName = typeof culture === 'object' ? culture.name : culture;
+        const response = await fetch(`${API_URL}/${encodeURIComponent(cultureName)}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Не удалось удалить культуру');
+        }
+
+        return await response.json();
     }
 };
 

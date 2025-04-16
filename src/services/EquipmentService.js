@@ -43,6 +43,17 @@ const EquipmentService = {
             throw new Error('Не удалось обновить оборудование');
         }
         return await response.json();
+    },
+
+    async deleteEquipment(id) {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Не удалось удалить оборудование');
+        }
+        return await response.json();
     }
 };
 
