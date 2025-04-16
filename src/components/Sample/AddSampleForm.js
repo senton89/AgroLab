@@ -367,16 +367,21 @@ const AddSampleForm = () => {
 
                         <div>
                             <label className="block mb-1 text-gray-700">Репродукция*</label>
-                            <input
-                                type="text"
-                                name="seed_category"
-                                value={formData.seed_category}
+                            <select
+                                name="reproduction_id"
+                                value={formData.reproduction_id}
                                 onChange={handleChange}
-                                className={`w-full p-3 border ${errors.seed_category ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                className={`w-full p-3 border ${errors.reproduction_id ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                 required
-                            />
-                            {errors.seed_category &&
-                                <p className="text-red-500 text-sm mt-1">{errors.seed_category}</p>}
+                            >
+                                <option value="">Выберите репродукцию</option>
+                                <option value="original">ОС - оригинальная</option>
+                                <option value="elite">ЭС - элитная</option>
+                                <option value="first">РС - 1 репродукция</option>
+                                <option value="second">РСт - 2 репродукция</option>
+                            </select>
+                            {errors.reproduction_id &&
+                                <p className="text-red-500 text-sm mt-1">{errors.reproduction_id}</p>}
                         </div>
 
                         <div>

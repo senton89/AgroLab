@@ -17,6 +17,29 @@ const AddCultureForm = ({ onAdd, onClose }) => {
 
     // Нормы для семян по репродукциям
     const [seedNorms, setSeedNorms] = useState({
+        original: {
+            germinationEnergy: '',
+            germination: '',
+            seedPurity: '',
+            waste: '',
+            otherCropSeeds: '',
+            oatSeeds: '',
+            weedSeeds: '',
+            quarantineSeeds: '',
+            ergotSclerotia: '',
+            wheatNematodeGalls: '',
+            smutFormations: '',
+            thousandSeedWeight: '',
+            alternaria: '',
+            fusarium: '',
+            helminthosporium: '',
+            septoria: '',
+            yellowSpot: '',
+            nigrosporiosis: '',
+            blackEar: '',
+            mold: '',
+            totalDiseaseInfection: ''
+        },
         elite: {
             germinationEnergy: '',
             germination: '',
@@ -90,6 +113,32 @@ const AddCultureForm = ({ onAdd, onClose }) => {
 
     // Нормы для картофеля по репродукциям
     const [potatoNorms, setPotatoNorms] = useState({
+        original: {
+            dryRotTotal: '',
+            dryRotPhoma: '',
+            dryRotFusarium: '',
+            dryRotAlternaria: '',
+            dryRotPhytophthora: '',
+            wetRot: '',
+            scabTotal: '',
+            commonScab: '',
+            netScab: '',
+            powderyScab: '',
+            wrinkledTubers: '',
+            rhizoctonia: '',
+            ringRot: '',
+            stemNematode: '',
+            rustySpots: '',
+            mechanicalDamage: '',
+            pestDamage: '',
+            suffocationSigns: '',
+            frozenTubers: '',
+            burnedTubers: '',
+            deformedTubers: '',
+            tuberOutgrowths: '',
+            cutCrushedTubers: '',
+            peeledSkinTubers: ''
+        },
         elite: {
             dryRotTotal: '',
             dryRotPhoma: '',
@@ -299,16 +348,25 @@ const AddCultureForm = ({ onAdd, onClose }) => {
             <div className="mt-6">
                 <h3 className="text-lg font-semibold mb-4">Нормы для семян</h3>
 
-                <div className="grid grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-5 gap-4 mb-4">
                     <div className="font-semibold">Параметр</div>
-                    <div className="font-semibold">Элитная</div>
-                    <div className="font-semibold">1 репродукция</div>
-                    <div className="font-semibold">2 репродукция</div>
+                    <div className="font-semibold">ОС - оригинальная</div>
+                    <div className="font-semibold">ЭС - элитная</div>
+                    <div className="font-semibold">РС - 1 репродукция</div>
+                    <div className="font-semibold">РСт - 2 репродукция</div>
                 </div>
 
                 {Object.keys(seedFieldLabels).map(field => (
-                    <div key={field} className="grid grid-cols-4 gap-4 mb-2">
+                    <div key={field} className="grid grid-cols-5 gap-4 mb-2">
                         <div className="py-2">{seedFieldLabels[field]}</div>
+                        <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            className="p-2 border border-gray-300 rounded-lg"
+                            value={seedNorms.original[field]}
+                            onChange={(e) => handleSeedNormChange('original', field, e.target.value)}
+                        />
                         <input
                             type="number"
                             step="0.1"
@@ -346,9 +404,10 @@ const AddCultureForm = ({ onAdd, onClose }) => {
 
                 <div className="grid grid-cols-4 gap-4 mb-4">
                     <div className="font-semibold">Параметр</div>
-                    <div className="font-semibold">Элитная</div>
-                    <div className="font-semibold">1 репродукция</div>
-                    <div className="font-semibold">2 репродукция</div>
+                    <div className="font-semibold">ОС - оригинальная</div>
+                    <div className="font-semibold">ЭС - элитная</div>
+                    <div className="font-semibold">РС - 1 репродукция</div>
+                    <div className="font-semibold">РСт - 2 репродукция</div>
                 </div>
 
                 {Object.keys(potatoFieldLabels).map(field => (
@@ -359,7 +418,7 @@ const AddCultureForm = ({ onAdd, onClose }) => {
                             step="0.1"
                             min="0"
                             className="p-2 border border-gray-300 rounded-lg"
-                            value={potatoNorms.elite[field]}
+                            value={potatoNorms.original[field]}
                             onChange={(e) => handlePotatoNormChange('elite', field, e.target.value)}
                         />
                         <input
@@ -367,8 +426,16 @@ const AddCultureForm = ({ onAdd, onClose }) => {
                             step="0.1"
                             min="0"
                             className="p-2 border border-gray-300 rounded-lg"
-                            value={potatoNorms.first[field]}
+                            value={potatoNorms.elite[field]}
                             onChange={(e) => handlePotatoNormChange('first', field, e.target.value)}
+                        />
+                        <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            className="p-2 border border-gray-300 rounded-lg"
+                            value={potatoNorms.first[field]}
+                            onChange={(e) => handlePotatoNormChange('second', field, e.target.value)}
                         />
                         <input
                             type="number"

@@ -43,11 +43,21 @@ const CultureRepository = {
             return null;
         }
 
-        // Вернуть нормы в зависимости от категории и размножения
+        // Map UI reproduction values to backend values if needed
+        const reproductionMap = {
+            'ОС - оригинальная': 'original',
+            'ЭС - элитная': 'elite',
+            'РС - 1 репродукция': 'first',
+            'РСт - 2 репродукция': 'second'
+        };
+
+        const reproductionKey = reproductionMap[reproduction] || reproduction;
+
+        // Return norms based on category and reproduction
         if (category === 'seeds' && culture.seedNorms) {
-            return culture.seedNorms[reproduction] || null;
+            return culture.seedNorms[reproductionKey] || null;
         } else if (category === 'potatoes' && culture.potatoNorms) {
-            return culture.potatoNorms[reproduction] || null;
+            return culture.potatoNorms[reproductionKey] || null;
         }
 
         return null;

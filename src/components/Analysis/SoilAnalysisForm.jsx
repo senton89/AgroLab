@@ -10,6 +10,20 @@ const SoilAnalysisForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
+    const [soilTypes, setSoilTypes] = useState([
+        'Чернозем',
+        'Подзолистая',
+        'Дерново-подзолистая',
+        'Серая лесная',
+        'Каштановая',
+        'Солонцы',
+        'Солончаки',
+        'Торфяная'
+    ]);
+
+    const [newSoilType, setNewSoilType] = useState('');
+    const [showNewSoilTypeInput, setShowNewSoilTypeInput] = useState(false);
+
     const [formData, setFormData] = useState({
         // Basic sample info
         sampleId: '',
@@ -86,6 +100,11 @@ const SoilAnalysisForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
+        if (name === 'soilType' && value === 'add_new') {
+            setShowNewSoilTypeInput(true);
+            return;
+        }
+
         // Convert to number for numeric fields
         const numericFields = [
             'nitrateNitrogen020', 'nitrateNitrogen2040', 'mobilePotassium',
@@ -109,6 +128,15 @@ const SoilAnalysisForm = () => {
         // Clear error for this field if it exists
         if (errors[name]) {
             setErrors({ ...errors, [name]: '' });
+        }
+    };
+
+    const handleAddSoilType = () => {
+        if (newSoilType.trim()) {
+            setSoilTypes([...soilTypes, newSoilType.trim()]);
+            setFormData({...formData, soilType: newSoilType.trim()});
+            setNewSoilType('');
+            setShowNewSoilTypeInput(false);
         }
     };
 
@@ -283,22 +311,44 @@ const SoilAnalysisForm = () => {
 
                                 <div>
                                     <label className="block mb-1 text-gray-700">Тип почвы</label>
-                                    <select
-                                        name="soilType"
-                                        value={formData.soilType}
-                                        onChange={handleChange}
-                                        className="w-full p-3 border border-gray-300 rounded-lg"
-                                    >
-                                        <option value="">Выберите тип почвы</option>
-                                        <option value="Чернозем">Чернозем</option>
-                                        <option value="Подзолистая">Подзолистая</option>
-                                        <option value="Дерново-подзолистая">Дерново-подзолистая</option>
-                                        <option value="Серая лесная">Серая лесная</option>
-                                        <option value="Каштановая">Каштановая</option>
-                                        <option value="Солонцы">Солонцы</option>
-                                        <option value="Солончаки">Солончаки</option>
-                                        <option value="Торфяная">Торфяная</option>
-                                    </select>
+                                    {!showNewSoilTypeInput ? (
+                                        <select
+                                            name="soilType"
+                                            value={formData.soilType}
+                                            onChange={handleChange}
+                                            className="w-full p-3 border border-gray-300 rounded-lg"
+                                        >
+                                            <option value="">Выберите тип почвы</option>
+                                            {soilTypes.map((type, index) => (
+                                                <option key={index} value={type}>{type}</option>
+                                            ))}
+                                            <option value="add_new">+ Добавить новый тип почвы</option>
+                                        </select>
+                                    ) : (
+                                        <div className="flex items-center space-x-2">
+                                            <input
+                                                type="text"
+                                                value={newSoilType}
+                                                onChange={(e) => setNewSoilType(e.target.value)}
+                                                className="w-full p-3 border border-gray-300 rounded-lg"
+                                                placeholder="Введите тип"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={handleAddSoilType}
+                                                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:bg-orange-800 text-white px-4 p-3 rounded-lg"
+                                            >
+                                                +
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowNewSoilTypeInput(false)}
+                                                className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-2 p-3 rounded-lg"
+                                            >
+                                                Отмена
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -307,7 +357,8 @@ const SoilAnalysisForm = () => {
                             <h3 className="text-lg font-medium text-gray-700 mb-4">Агрохимические показатели (ГОСТ)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Нитратный азот (N-NO3) в слое 0-20 см, мг/кг</label>
+                                    <label className="block mb-1 text-gray-700">Нитратный азот (N-NO3) в слое 0-20 см,
+                                        мг/кг</label>
                                     <input
                                         type="number"
                                         name="nitrateNitrogen020"
@@ -317,7 +368,8 @@ const SoilAnalysisForm = () => {
                                         min="0"
                                         step="0.1"
                                     />
-                                    {errors.nitrateNitrogen020 && <p className="text-red-500 text-sm mt-1">{errors.nitrateNitrogen020}</p>}
+                                    {errors.nitrateNitrogen020 &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.nitrateNitrogen020}</p>}
                                     <p className="text-sm text-gray-500 mt-1">ГОСТ 26951-86 (ионометрический метод)</p>
                                 </div>
 

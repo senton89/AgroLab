@@ -105,15 +105,25 @@ const PotatoAnalysisForm = () => {
 
     const fetchCultureNorms = async (cultureName, reproduction) => {
         try {
-            const norms = await CultureRepository.getNormsByCulture(cultureName, 'potatoes', reproduction);
+            // Map UI reproduction values to backend values if needed
+            const reproductionMap = {
+                'ОС - оригинальная': 'original',
+                'ЭС - элитная': 'elite',
+                'РС - 1 репродукция': 'first',
+                'РСт - 2 репродукция': 'second'
+            };
+
+            const reproductionKey = reproductionMap[reproduction] || reproduction;
+            const norms = await CultureRepository.getNormsByCulture(cultureName, 'potatoes', reproductionKey);
+
             if (norms) {
-                // Update validation criteria based on norms
                 setValidationCriteria(norms);
             }
         } catch (error) {
             console.error('Error fetching culture norms:', error);
         }
     };
+
     const [validationCriteria, setValidationCriteria] = useState({
         dryRotTotal: 1,
         dryRotPhoma: 1,

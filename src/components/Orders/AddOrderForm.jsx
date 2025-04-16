@@ -59,6 +59,7 @@ const AddOrderForm = ({ onAdd, onCancel }) => {
                 testingPeriod: parseDateRange(order.testingPeriod),
             };
 
+
             setFormData(parsedOrder);
         }
     }, [order]);
@@ -452,7 +453,25 @@ const AddOrderForm = ({ onAdd, onCancel }) => {
                                             <option value="Сотрудник ИЛ">Сотрудник ИЛ</option>
                                             <option value="Заказчик">Заказчик</option>
                                         </select>
-                                    ) : (
+                                    ) : key === 'reproduction' ? (
+                                            <div>
+                                                <select
+                                                    name="reproduction"
+                                                    value={formData.reproduction}
+                                                    onChange={handleChange}
+                                                    className={`w-full p-3 border ${errors.reproduction ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                                    required
+                                                >
+                                                    <option value="">Выберите репродукцию</option>
+                                                    <option value="ОС - оригинальная">ОС - оригинальная</option>
+                                                    <option value="ЭС - элитная">ЭС - элитная</option>
+                                                    <option value="РС - 1 репродукция">РС - 1 репродукция</option>
+                                                    <option value="РСт - 2 репродукция">РСт - 2 репродукция</option>
+                                                </select>
+                                                {errors.reproduction && <p className="text-red-500 text-sm mt-1">{errors.reproduction}</p>}
+                                            </div>
+                                        )
+                                    : (
                                         <input
                                             className="w-full border border-gray-300 p-2 rounded mt-1"
                                             type="text"
