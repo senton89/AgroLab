@@ -62,7 +62,8 @@ const SoilAnalysisForm = () => {
                     sampleId: sample.id || '',
                     sampleCode: sample.sampleCode || '',
                     batchNumber: sample.batchNumber || '',
-                    storageLocation: sample.storageLocation || ''
+                    storageLocation: sample.storageLocation || '',
+                    culture: sample.culture_id || sample.culture || ''
                 }));
             } else if (id) {
                 const fetchSample = async () => {

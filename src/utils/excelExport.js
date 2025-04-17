@@ -59,6 +59,32 @@ export const exportToExcel = (data, fileName = 'export', includeRelated = false)
         sort: 'Сорт',
         sampleCode: 'Код образца',
         sampleCollector: 'Отбор образцов провел',
+
+        // Analysis fields - Seeds
+        germinationEnergy: 'Энергия прорастания, %',
+        germination: 'Всхожесть, %',
+        seedPurity: 'Чистота семян, %',
+        waste: 'Отход, %',
+        otherCropSeeds: 'Семена других культурных растений, шт/кг',
+        weedSeeds: 'Семена сорных растений, шт/кг',
+        quarantineSeeds: 'Семена карантинных растений, шт/кг',
+
+        // Analysis fields - Potatoes
+        dryRotTotal: 'Сухая гниль (всего), %',
+        wetRot: 'Мокрая гниль, %',
+        scabTotal: 'Парша (всего), %',
+        rhizoctonia: 'Ризоктониоз, %',
+
+        // Analysis fields - Soil
+        pHLevel: 'pH почвы',
+        organicMatter: 'Органическое вещество, %',
+        mobilePhosphorus: 'Подвижный фосфор, мг/кг',
+        mobilePotassium: 'Подвижный калий, мг/кг',
+
+        // Analysis results
+        passesStandard: 'Соответствует стандарту',
+        notes: 'Примечания',
+
         harvestYear: 'Год урожая',
         reproduction: 'Репродукция',
         seedCategory: 'Категория семян',
@@ -107,6 +133,10 @@ export const exportToExcel = (data, fileName = 'export', includeRelated = false)
             delete newItem.id;
         }
 
+        if ('passesStandard' in newItem) {
+            newItem.passesStandard = newItem.passesStandard ? 'Да' : 'Нет';
+        }
+
         return newItem;
     });
 
@@ -151,7 +181,7 @@ export const exportToExcel = (data, fileName = 'export', includeRelated = false)
         const relatedWorksheet = XLSX.utils.json_to_sheet(relatedData);
 
         // Translate column headers for related data
-        if (relatedWorksheet['!cols']) {
+        if (relatedWorksheet['!ref']) {
             const range = XLSX.utils.decode_range(relatedWorksheet['!ref']);
             for (let C = range.s.c; C <= range.e.c; ++C) {
                 const address = XLSX.utils.encode_col(C) + "1";

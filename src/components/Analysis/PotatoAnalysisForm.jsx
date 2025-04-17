@@ -57,12 +57,14 @@ const PotatoAnalysisForm = () => {
                     sampleCode: sample.sampleCode || '',
                     variety: sample.variety || '',
                     batchNumber: sample.batchNumber || '',
-                    culture: sample.culture || sample.culture_id || ''
+                    culture: sample.culture || sample.culture_id || '',
+                    reproduction: sample.reproduction_id || sample.reproduction || ''
                 }));
 
                 // Fetch norms for this culture if available
-                if (sample.culture || sample.culture_id) {
-                    fetchCultureNorms(sample.culture || sample.culture_id, sample.reproduction || sample.reproduction_id || 'elite');
+                if (sample.culture_id || sample.culture) {
+                    fetchCultureNorms(sample.culture_id || sample.culture,
+                        sample.reproduction_id || sample.reproduction || 'elite');
                 }
             } else if (id) {
                 const fetchSample = async () => {
@@ -450,7 +452,8 @@ const PotatoAnalysisForm = () => {
 
                 {isLoading ? (
                     <div className="flex justify-center my-8">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+                        <div
+                            className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit}>
@@ -496,7 +499,8 @@ const PotatoAnalysisForm = () => {
                         </div>
 
                         <div className="mb-6">
-                            <h3 className="text-lg font-medium text-gray-700 mb-4">Наличие клубней, пораженных сухой гнилью (% по счету)</h3>
+                            <h3 className="text-lg font-medium text-gray-700 mb-4">Наличие клубней, пораженных сухой
+                                гнилью (% по счету)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                                 <div>
                                     <label className="block mb-1 text-gray-700 mt-6">Всего</label>
@@ -510,8 +514,9 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.dryRotTotal && <p className="text-red-500 text-sm mt-1">{errors.dryRotTotal}</p>}
-                                    
+                                    {errors.dryRotTotal &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.dryRotTotal}</p>}
+
                                 </div>
 
                                 <div>
@@ -526,7 +531,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.dryRotPhoma && <p className="text-red-500 text-sm mt-1">{errors.dryRotPhoma}</p>}
+                                    {errors.dryRotPhoma &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.dryRotPhoma}</p>}
                                 </div>
 
                                 <div>
@@ -541,7 +547,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.dryRotFusarium && <p className="text-red-500 text-sm mt-1">{errors.dryRotFusarium}</p>}
+                                    {errors.dryRotFusarium &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.dryRotFusarium}</p>}
                                 </div>
 
                                 <div>
@@ -556,11 +563,13 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.dryRotAlternaria && <p className="text-red-500 text-sm mt-1">{errors.dryRotAlternaria}</p>}
+                                    {errors.dryRotAlternaria &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.dryRotAlternaria}</p>}
                                 </div>
 
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Фитофтороз (Phytophthora infestans)</label>
+                                    <label className="block mb-1 text-gray-700">Фитофтороз (Phytophthora
+                                        infestans)</label>
                                     <input
                                         type="number"
                                         name="dryRotPhytophthora"
@@ -571,13 +580,15 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.dryRotPhytophthora && <p className="text-red-500 text-sm mt-1">{errors.dryRotPhytophthora}</p>}
+                                    {errors.dryRotPhytophthora &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.dryRotPhytophthora}</p>}
                                 </div>
                             </div>
                         </div>
 
                         <div className="mb-6">
-                            <h3 className="text-lg font-medium text-gray-700 mb-4">Наличие клубней, пораженных мокрой гнилью (% по счету)</h3>
+                            <h3 className="text-lg font-medium text-gray-700 mb-4">Наличие клубней, пораженных мокрой
+                                гнилью (% по счету)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 <div>
                                     <label className="block mb-1 text-gray-700">Всего</label>
@@ -592,13 +603,14 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.wetRot && <p className="text-red-500 text-sm mt-1">{errors.wetRot}</p>}
-                                    
+
                                 </div>
                             </div>
                         </div>
 
                         <div className="mb-6">
-                            <h3 className="text-lg font-medium text-gray-700 mb-4">Наличие клубней, пораженных паршой (% по счету)</h3>
+                            <h3 className="text-lg font-medium text-gray-700 mb-4">Наличие клубней, пораженных паршой (%
+                                по счету)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                                 <div>
                                     <label className="block mb-1 text-gray-700 mt-6">Всего</label>
@@ -612,11 +624,13 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.scabTotal && <p className="text-red-500 text-sm mt-1">{errors.scabTotal}</p>}
+                                    {errors.scabTotal &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.scabTotal}</p>}
                                 </div>
 
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Обыкновенная (>33.3% поверхности)</label>
+                                    <label className="block mb-1 text-gray-700">Обыкновенная (>33.3%
+                                        поверхности)</label>
                                     <input
                                         type="number"
                                         name="commonScab"
@@ -627,7 +641,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.commonScab && <p className="text-red-500 text-sm mt-1">{errors.commonScab}</p>}
+                                    {errors.commonScab &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.commonScab}</p>}
                                 </div>
 
                                 <div>
@@ -657,7 +672,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.powderyScab && <p className="text-red-500 text-sm mt-1">{errors.powderyScab}</p>}
+                                    {errors.powderyScab &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.powderyScab}</p>}
                                 </div>
 
                                 <div>
@@ -672,7 +688,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.wrinkledTubers && <p className="text-red-500 text-sm mt-1">{errors.wrinkledTubers}</p>}
+                                    {errors.wrinkledTubers &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.wrinkledTubers}</p>}
                                 </div>
                             </div>
                         </div>
@@ -692,7 +709,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.rhizoctonia && <p className="text-red-500 text-sm mt-1">{errors.rhizoctonia}</p>}
+                                    {errors.rhizoctonia &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.rhizoctonia}</p>}
                                 </div>
 
                                 <div>
@@ -708,7 +726,7 @@ const PotatoAnalysisForm = () => {
                                         step="0.1"
                                     />
                                     {errors.ringRot && <p className="text-red-500 text-sm mt-1">{errors.ringRot}</p>}
-                                    
+
                                 </div>
 
                                 <div>
@@ -723,12 +741,14 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.stemNematode && <p className="text-red-500 text-sm mt-1">{errors.stemNematode}</p>}
-                                    
+                                    {errors.stemNematode &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.stemNematode}</p>}
+
                                 </div>
 
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Железистая пятнистость (>1/4 разреза)</label>
+                                    <label className="block mb-1 text-gray-700">Железистая пятнистость (>1/4
+                                        разреза)</label>
                                     <input
                                         type="number"
                                         name="rustySpots"
@@ -739,7 +759,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.rustySpots && <p className="text-red-500 text-sm mt-1">{errors.rustySpots}</p>}
+                                    {errors.rustySpots &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.rustySpots}</p>}
                                 </div>
 
                                 <div>
@@ -754,7 +775,8 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.mechanicalDamage && <p className="text-red-500 text-sm mt-1">{errors.mechanicalDamage}</p>}
+                                    {errors.mechanicalDamage &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.mechanicalDamage}</p>}
                                 </div>
 
                                 <div>
@@ -769,13 +791,15 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.pestDamage && <p className="text-red-500 text-sm mt-1">{errors.pestDamage}</p>}
+                                    {errors.pestDamage &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.pestDamage}</p>}
                                 </div>
                             </div>
                         </div>
                         {/* Add this after the existing "Другие показатели" section */}
                         <div className="mb-6">
-                            <h3 className="text-lg font-medium text-gray-700 mb-4">Дополнительные показатели (% по счету)</h3>
+                            <h3 className="text-lg font-medium text-gray-700 mb-4">Дополнительные показатели (% по
+                                счету)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <div>
                                     <label className="block mb-1 text-gray-700">Клубни с признаками удушья</label>
@@ -789,8 +813,9 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.suffocationSigns && <p className="text-red-500 text-sm mt-1">{errors.suffocationSigns}</p>}
-                                    
+                                    {errors.suffocationSigns &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.suffocationSigns}</p>}
+
                                 </div>
 
                                 <div>
@@ -805,8 +830,9 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.frozenTubers && <p className="text-red-500 text-sm mt-1">{errors.frozenTubers}</p>}
-                                    
+                                    {errors.frozenTubers &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.frozenTubers}</p>}
+
                                 </div>
 
                                 <div>
@@ -821,8 +847,9 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.burnedTubers && <p className="text-red-500 text-sm mt-1">{errors.burnedTubers}</p>}
-                                    
+                                    {errors.burnedTubers &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.burnedTubers}</p>}
+
                                 </div>
 
                                 <div>
@@ -837,8 +864,9 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.deformedTubers && <p className="text-red-500 text-sm mt-1">{errors.deformedTubers}</p>}
-                                    
+                                    {errors.deformedTubers &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.deformedTubers}</p>}
+
                                 </div>
 
                                 <div>
@@ -853,12 +881,14 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.tuberOutgrowths && <p className="text-red-500 text-sm mt-1">{errors.tuberOutgrowths}</p>}
-                                    
+                                    {errors.tuberOutgrowths &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.tuberOutgrowths}</p>}
+
                                 </div>
 
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Разрезанные и раздавленные клубни</label>
+                                    <label className="block mb-1 text-gray-700">Разрезанные и раздавленные
+                                        клубни</label>
                                     <input
                                         type="number"
                                         name="cutCrushedTubers"
@@ -869,12 +899,14 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.cutCrushedTubers && <p className="text-red-500 text-sm mt-1">{errors.cutCrushedTubers}</p>}
-                                    
+                                    {errors.cutCrushedTubers &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.cutCrushedTubers}</p>}
+
                                 </div>
 
                                 <div>
-                                    <label className="block mb-1 text-gray-700">Клубни с ободранной кожурой (>1/4 поверхности)</label>
+                                    <label className="block mb-1 text-gray-700">Клубни с ободранной кожурой (>1/4
+                                        поверхности)</label>
                                     <input
                                         type="number"
                                         name="peeledSkinTubers"
@@ -885,8 +917,9 @@ const PotatoAnalysisForm = () => {
                                         max="100"
                                         step="0.1"
                                     />
-                                    {errors.peeledSkinTubers && <p className="text-red-500 text-sm mt-1">{errors.peeledSkinTubers}</p>}
-                                    
+                                    {errors.peeledSkinTubers &&
+                                        <p className="text-red-500 text-sm mt-1">{errors.peeledSkinTubers}</p>}
+
                                 </div>
                             </div>
                         </div>
@@ -916,7 +949,8 @@ const PotatoAnalysisForm = () => {
                         </div>
 
                         {formData.notes && (
-                            <div className={`mt-6 p-4 rounded-lg ${formData.passesStandard ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            <div
+                                className={`mt-6 p-4 rounded-lg ${formData.passesStandard ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                                 <h3 className="font-semibold mb-2">
                                     {formData.passesStandard ? 'Образец соответствует стандарту ГОСТ 33996-2016' : 'Образец не соответствует стандарту ГОСТ 33996-2016'}
                                 </h3>

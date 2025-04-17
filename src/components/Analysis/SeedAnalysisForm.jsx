@@ -102,7 +102,8 @@ const SeedAnalysisForm = () => {
                     sampleCode: sample.sampleCode || '',
                     variety: sample.variety || '',
                     batchNumber: sample.batchNumber || '',
-                    culture: sample.culture || sample.culture_id || ''
+                    culture: sample.culture || sample.culture_id || '',
+                    reproduction: sample.reproduction_id || sample.reproduction || ''
                 }));
 
                 // Fetch norms for this culture if available
@@ -128,8 +129,9 @@ const SeedAnalysisForm = () => {
                             }));
 
                             // Fetch norms for this culture if available
-                            if (foundSample.culture || foundSample.culture_id) {
-                                fetchCultureNorms(foundSample.culture || foundSample.culture_id, foundSample.reproduction || foundSample.reproduction_id || 'elite');
+                            if (sample.culture_id || sample.culture) {
+                                fetchCultureNorms(sample.culture_id || sample.culture,
+                                    sample.reproduction_id || sample.reproduction || 'elite');
                             }
                         } else {
                             setErrors({ general: 'Образец не найден' });

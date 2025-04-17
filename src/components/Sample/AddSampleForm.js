@@ -267,10 +267,18 @@ const AddSampleForm = () => {
         navigate('/samples');
     };
 
+    // In AddSampleForm.jsx
     const handleCreateAnalysis = () => {
-        if (!formData.category) setErrors({category: 'Категория обязательна'});
-        else if (formData.category === 'plants') alert('Растения не имеют четкого анализа');
-        else navigate(`/analysis/${formData.category}`);
+        if (!formData.category) {
+            setErrors({category: 'Категория обязательна'});
+        } else if (formData.category === 'plants') {
+            alert('Растения не имеют четкого анализа');
+        } else {
+            // Pass the entire formData to the analysis page
+            navigate(`/analysis/${formData.category}`, {
+                state: { sample: formData }
+            });
+        }
     };
 
     const renderCategoryFields = () => {
@@ -1029,7 +1037,7 @@ const AddSampleForm = () => {
                         </div>
                     </>
                 );
-        };
+        }
     };
 
     return (
