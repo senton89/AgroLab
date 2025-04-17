@@ -1,7 +1,8 @@
 // EquipmentTable.jsx
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
-import DeleteButton from "../DeleteButton";
+import DeleteButton from "../common/DeleteButton";
+import ExportButton from "../common/ExportButton";
 
 const getValidUntilColor = (validUntilDate) => {
     if (!validUntilDate) return 'bg-gray-300'; // Default color if no date is set
@@ -44,9 +45,15 @@ const EquipmentTable = ({ equipmentList, onDelete }) => {
     };
 
     return (
-        <div className="overflow-x-auto ">
+        <div className="overflow-x-auto flex flex-col">
+            <div className="py-2 rounded mb-4 w-1/6 self-end mr-4">
+                <ExportButton
+                    data={sortedEquipment}
+                    fileName="Оборудование"
+                />
+            </div>
             <div className="bg-white rounded-lg shadow-md overflow-hidden text-center">
-                <table className="w-full">
+                <table className="w-full table-scroll">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
                         <th onClick={() => requestSort('name')}
@@ -105,24 +112,25 @@ const EquipmentTable = ({ equipmentList, onDelete }) => {
                             className="hover:bg-gray-50 cursor-pointer"
                             onDoubleClick={() => handleRowDoubleClick(equipment)}
                         >
-                            <td className="p-2 border">{equipment.name}</td>
-                            <td className="p-2 border">{equipment.inventoryNumber}</td>
-                            <td className="p-2 border">{equipment.factoryNumber}</td>
-                            <td className="p-2 border">{equipment.dateOfCommissioning}</td>
-                            <td className="p-2 border">{equipment.inspectionDate}</td>
-                            <td className="px-6 py-2 border">
-                                <div className={`${getValidUntilColor(equipment.validUntilDate)} text-white px-2 py-1 rounded-full text-center w-full`}>
+                            <td className="p-2">{equipment.name}</td>
+                            <td className="p-2">{equipment.inventoryNumber}</td>
+                            <td className="p-2">{equipment.factoryNumber}</td>
+                            <td className="p-2">{equipment.dateOfCommissioning}</td>
+                            <td className="p-2">{equipment.inspectionDate}</td>
+                            <td className="px-6 py-2">
+                                <div
+                                    className={`${getValidUntilColor(equipment.validUntilDate)} text-white px-2 py-1 rounded-full text-center w-full`}>
                                     {equipment.validUntilDate}
                                 </div>
                             </td>
-                            <td className="p-2 border">{equipment.category}</td>
-                            <td className="p-2 border">{equipment.model}</td>
-                            <td className="p-2 border">{equipment.width}</td>
-                            <td className="p-2 border">{equipment.length}</td>
-                            <td className="p-2 border">{equipment.height}</td>
-                            <td className="p-2 border">{equipment.depth}</td>
-                            <td className="p-2 border">{equipment.dateOfDecommissioning}</td>
-                            <td className="p-2 border text-center">
+                            <td className="p-2">{equipment.category}</td>
+                            <td className="p-2">{equipment.model}</td>
+                            <td className="p-2">{equipment.width}</td>
+                            <td className="p-2">{equipment.length}</td>
+                            <td className="p-2">{equipment.height}</td>
+                            <td className="p-2">{equipment.depth}</td>
+                            <td className="p-2">{equipment.dateOfDecommissioning}</td>
+                            <td className="p-2 text-center">
                                 <div className="flex justify-center">
                                     <DeleteButton
                                         onDelete={() => onDelete(equipment.id)}

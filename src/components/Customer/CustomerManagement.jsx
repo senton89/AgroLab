@@ -25,10 +25,10 @@ const CustomerManagement = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="flex flex-col w-full pb-0 p-10 mx-4">
+        <div className="flex flex-col w-full pb-0 p-2 mt-8 mr-4">
             <button
                 onClick={handleAddCustomer}
-                className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded self-end mb-10 w-1/6"
+                className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded self-end w-1/6 mr-10"
             >
                 Добавить заказчика
             </button>

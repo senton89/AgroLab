@@ -25,7 +25,7 @@ const EquipmentManagement = () => {
         <div className="flex flex-col w-full pt-6 p-8">
             <button
                     onClick={() => navigate('/add-equipment')}
-                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mt-4 self-end mb-10 w-1/6"
+                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded my-4 self-end w-1/6 mr-4"
                 >
                     Добавить оборудование
                 </button>

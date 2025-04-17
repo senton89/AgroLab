@@ -30,14 +30,15 @@ const ReagentManagement = () => {
     return (
         <div className="container mx-4 p-4">
             <div className="flex flex-col w-full">
-            <button 
-                className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end m-6"
-                onClick={() => navigate('/reagents/add')}
-            >
-                Добавить реактив
-            </button>
+                <button
+                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end m-6"
+                    onClick={() => navigate('/reagents/add')}
+                >
+                    Добавить реактив
+                </button>
+
                 <ReagentTable reagents={reagentList} onDelete={handleDeleteReagent}/>
-            
+
             </div>
         </div>
     );

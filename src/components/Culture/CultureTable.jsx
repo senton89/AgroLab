@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
-import DeleteButton from "../DeleteButton";
+import DeleteButton from "../common/DeleteButton";
+import ExportButton from "../common/ExportButton";
 
 const CultureTable = ({ cultures, setCultures, onDelete }) => {
     const [sortOrder, setSortOrder] = useState('asc');
@@ -35,12 +36,19 @@ const CultureTable = ({ cultures, setCultures, onDelete }) => {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-md w-full">
-            <table className="w-full">
+        <div className="flex flex-col shadow-md w-full">
+            <div className="py-2 rounded mb-4 w-1/6 self-end mr-6">
+                <ExportButton
+                    data={cultures.map(c => typeof c === 'object' ? c : {name: c})}
+                    fileName="Культуры"
+                />
+            </div>
+            <table className="w-full rounded-lg table-scroll">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
                     <th onClick={handleSort}
-                        className="cursor-pointer text-left pl-6 p-2">Наименование</th>
+                        className="cursor-pointer text-left pl-6 p-2">Наименование
+                    </th>
                     <th className="cursor-pointer text-right p-2"></th>
                 </tr>
                 </thead>

@@ -1,7 +1,7 @@
 // SampleManagement.jsx
 import React, { useState } from 'react';
 import SampleTable from './SampleTable';
-import SearchBar from '../SearchBar'; // Import the SearchBar component
+import SearchBar from '../common/SearchBar'; // Import the SearchBar component
 import { useNavigate } from "react-router-dom";
 import SampleRepository from '../../Repository/SampleRepository';
 
@@ -73,7 +73,7 @@ const SampleManagement = () => {
                 {/* Add Sample Button */}
                 <button
                     onClick={handleAddSample}
-                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded w-1/4"
+                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded w-1/6 mr-6"
                 >
                     Добавить образец
                 </button>

@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import LabelPage from './components/Label/LabelPage';
 import LabelPreview from "./components/Label/LabelPreview";
-import Sidebar from "./components/Sidebar";
-import MainContent from "./components/MainContent";
+import Sidebar from "./components/common/Sidebar";
+import MainContent from "./components/common/MainContent";
 import ReagentManagement from "./components/Reagent/ReagentManagement";
 import CultureManagement from "./components/Culture/CultureManagement";
 import AddCultureForm from "./components/Culture/AddCultureForm";
@@ -11,7 +11,7 @@ import EquipmentManagement from "./components/Equipment/EquipmentManagement";
 import CustomerManagement from "./components/Customer/CustomerManagement";
 import SampleManagement from "./components/Sample/SampleManagement";
 import OrderManagement from "./components/Orders/OrderManagement";
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/common/ProtectedRoute';
 import LoginForm from "./components/Auth/LoginForm";
 import RegistrationForm from "./components/Auth/RegistrationForm"; // Import the ProtectedRoute component
 import AddEquipmentForm from "./components/Equipment/AddEquipmentForm"; // Import the AddEquipmentForm component
@@ -24,10 +24,7 @@ import SeedAnalysisForm from "./components/Analysis/SeedAnalysisForm";
 import SoilAnalysisForm from "./components/Analysis/SoilAnalysisForm";
 
 //Todo: давай проанализируем эти требования и напишем их более конкретно на основе проекта: Выявлено в результате тестирования, недоделы:
-// 1. ПаГиНаЦия везде
 // x. Мотивационная речь на первом экране?🤡
-// x. Выгрузки - нужны кнопки, по нажатию на кнопку все данные из таблицы на странице выгружаются в эксель (любой формат), если есть привязка (типо анализ к образцу) ее тоже выгрузить (по возможности)
-
 const App = () => {
     return (
         <BrowserRouter>

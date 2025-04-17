@@ -1,7 +1,8 @@
 // CustomerTable.jsx
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
-import DeleteButton from "../DeleteButton";
+import DeleteButton from "../common/DeleteButton";
+import ExportButton from "../common/ExportButton";
 
 const CustomerTable = ({ customerList, onDeleteCustomer }) => {
     const navigate = useNavigate(); // Initialize navigate
@@ -38,17 +39,31 @@ const CustomerTable = ({ customerList, onDeleteCustomer }) => {
     }
 
     return (
-        <div className="w-full p-6">
+        <div className="w-full p-6 flex flex-col">
+            <div className="py-2 rounded mb-4 w-1/6 self-end mr-6">
+                <ExportButton
+                    data={sortedCustomers}
+                    fileName="Заказчики"
+                />
+            </div>
             <div className="bg-white rounded-lg shadow-md overflow-hidden text-center">
-                <table className="w-full">
+                <table className="w-full table-scroll">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
-                        <th onClick={() => requestSort('name')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Имя</th>
-                        <th onClick={() => requestSort('email')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Email</th>
-                        <th onClick={() => requestSort('address')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Адрес</th>
-                        <th onClick={() => requestSort('inn')} className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">ИНН</th>
+                        <th onClick={() => requestSort('name')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Имя
+                        </th>
+                        <th onClick={() => requestSort('email')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Email
+                        </th>
+                        <th onClick={() => requestSort('address')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Адрес
+                        </th>
+                        <th onClick={() => requestSort('inn')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">ИНН
+                        </th>
                         <th className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"></th>
-                        </tr>
+                    </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                     {sortedCustomers.map((customer, index) => (

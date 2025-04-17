@@ -1,7 +1,7 @@
 // src/components/Sidebar.js
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import AuthRepository from '../Repository/AuthRepository';
+import AuthRepository from '../../Repository/AuthRepository';
 
 const Sidebar = () => {
     const navigate = useNavigate();

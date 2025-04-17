@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import SampleRepository from '../../Repository/SampleRepository';
-import DeleteButton from "../DeleteButton";
+import DeleteButton from "../common/DeleteButton";
+import ExportButton from "../common/ExportButton";
 
 const SampleTable = ({ sampleList }) => {
     const navigate = useNavigate();
@@ -149,8 +150,15 @@ const SampleTable = ({ sampleList }) => {
     const columns = getColumnsByCategory();
 
     return (
-        <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 text-center">
+        <div className="overflow-x-auto flex flex-col">
+            <div className="py-2 rounded mb-4 w-1/6 self-end mr-6">
+                <ExportButton
+                    data={sortedSamples}
+                    fileName={`Образцы-${category}`}
+                    includeRelated={true}
+                />
+            </div>
+            <table className="min-w-full divide-y divide-gray-200 text-center table-scroll">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
                     {columns.map((column) => (
@@ -199,11 +207,11 @@ const SampleTable = ({ sampleList }) => {
                                 <i className="fas fa-file-alt"></i>
                             </button>
                             <div className="pl-2">
-                            <DeleteButton
-                                onDelete={() => handleDeleteSample(sample.id)}
-                                itemName="образец"
-                                isAdmin={isAdmin}
-                            />
+                                <DeleteButton
+                                    onDelete={() => handleDeleteSample(sample.id)}
+                                    itemName="образец"
+                                    isAdmin={isAdmin}
+                                />
                             </div>
                         </td>
                     </tr>
@@ -213,7 +221,8 @@ const SampleTable = ({ sampleList }) => {
             {isLoading && (
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                     <div className="bg-white p-4 rounded-lg shadow-lg flex items-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500 mr-3"></div>
+                        <div
+                            className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500 mr-3"></div>
                         <span>Формирование протокола...</span>
                     </div>
                 </div>

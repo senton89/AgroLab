@@ -32,16 +32,14 @@ const CultureManagement = () => {
     };
 
     return (
-        <div className="flex flex-col p-8 w-2/3 mx-6 mt-2">
-            <div className="mb-4 self-end">
+        <div className="container mx-4 p-4 flex flex-col mt-6">
                 <button
-                    className="bg-gradient-to-r from-orange-400 to-orange-600 text-white py-2 px-4 rounded hover:bg-orange-600 mb-6 self-end"
+                    className="mr-6 w-1/6 bg-gradient-to-r from-orange-400 to-orange-600 text-white font-bold py-2 px-4 rounded hover:bg-orange-600 self-end"
                     onClick={() => navigate('/add-culture')}
                 >
                     Добавить культуру
                 </button>
-            </div>
-            <div className="rounded-lg overflow-hidden">
+            <div className="overflow-hidden mt-4">
                 <CultureTable cultures={cultures} setCultures={setCultures} onDelete={handleDeleteCulture} />
             </div>
             
