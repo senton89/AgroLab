@@ -122,6 +122,8 @@ export const exportToExcel = (data, fileName = 'export', includeRelated = false)
         test_conditions: 'Условия испытания',
         upload_date: 'Дата загрузки',
         acceptance_file: 'Файл приемки',
+
+        contract_date: 'Дата договора',
     };
 
     // Process data to remove ID field and translate column headers

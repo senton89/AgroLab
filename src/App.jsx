@@ -23,8 +23,7 @@ import PotatoAnalysisForm from "./components/Analysis/PotatoAnalysisForm";
 import SeedAnalysisForm from "./components/Analysis/SeedAnalysisForm";
 import SoilAnalysisForm from "./components/Analysis/SoilAnalysisForm";
 
-//Todo: давай проанализируем эти требования и напишем их более конкретно на основе проекта: Выявлено в результате тестирования, недоделы:
-// x. Мотивационная речь на первом экране?🤡
+//Todo: Мотивационная речь на первом экране?🤡
 const App = () => {
     return (
         <BrowserRouter>

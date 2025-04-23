@@ -3,6 +3,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import SampleService from '../../services/SampleService';
 import SampleRepository from '../../Repository/SampleRepository';
+import useCustomerRepository from "../../Repository/CustomerRepository";
 
 const AddSampleForm = () => {
     const navigate = useNavigate();
@@ -11,11 +12,17 @@ const AddSampleForm = () => {
     const {sample} = location.state || {};
     const initialCategory = location.state?.category || 'seeds';
 
+    const { customerList } = useCustomerRepository();
+
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [uploadedFile, setUploadedFile] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
     const [category, setCategory] = useState(initialCategory);
+
+    const [customerSearchQuery, setCustomerSearchQuery] = useState('');
+    const [filteredCustomers, setFilteredCustomers] = useState([]);
+    const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
 
     // Define form fields for each category
     const initialFormData = {
@@ -43,10 +50,8 @@ const AddSampleForm = () => {
 
         // Soil fields
         culture_id: '',
-        customer: '',
         inn_kpp: '',
         test_basis: '',
-        contract_number: '',
         sample_receipt_date: '',
         test_conditions: '',
 
@@ -56,7 +61,10 @@ const AddSampleForm = () => {
         acceptance_file: '',
 
         // Plants fields
-        inn: ''
+        inn: '',
+        customer: '',
+        contract_date: '',
+        contract_number: '',
     };
 
     const [formData, setFormData] = useState(initialFormData);
@@ -103,6 +111,17 @@ const AddSampleForm = () => {
             }
         }
     }, [id, sample, navigate, initialCategory]);
+
+    useEffect(() => {
+        if (customerSearchQuery) {
+            const filtered = customerList.filter(customer =>
+                customer.name.toLowerCase().includes(customerSearchQuery.toLowerCase())
+            );
+            setFilteredCustomers(filtered);
+        } else {
+            setFilteredCustomers([]);
+        }
+    }, [customerSearchQuery, customerList]);
 
     const onDrop = useCallback(async (acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -154,11 +173,26 @@ const AddSampleForm = () => {
             setCategory(value);
         }
 
+        if (name === 'customer') {
+            setCustomerSearchQuery(value);
+            setShowCustomerDropdown(true);
+        }
+
         setFormData({...formData, [name]: value});
 
         if (errors[name]) {
             setErrors({...errors, [name]: ''});
         }
+    };
+
+    const handleSelectCustomer = (customer) => {
+        setFormData({
+            ...formData,
+            customer: customer.name,
+            inn_kpp: customer.inn || ''
+        });
+        setCustomerSearchQuery('');
+        setShowCustomerDropdown(false);
     };
 
     const validateForm = () => {
@@ -213,6 +247,10 @@ const AddSampleForm = () => {
                 newErrors.harvest_year = 'Год урожая должен быть числом между 1900 и текущим годом';
             }
         }
+
+        if (!formData.customer) newErrors.customer = 'Заказчик обязателен';
+        if (!formData.contract_number) newErrors.contract_number = 'Номер договора обязателен';
+        if (!formData.contract_date) newErrors.contract_date = 'Дата договора обязательна';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -282,10 +320,79 @@ const AddSampleForm = () => {
     };
 
     const renderCategoryFields = () => {
+
+        const commonFields = (
+            <>
+                {/* Поле выбора заказчика с поиском */}
+                <div>
+                    <label className="block mb-1 text-gray-700">Заказчик*</label>
+                    <div className="relative">
+                        <input
+                            type="text"
+                            name="customer"
+                            value={formData.customer}
+                            onChange={handleChange}
+                            onFocus={() => setShowCustomerDropdown(true)}
+                            className={`w-full p-3 border ${errors.customer ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                            placeholder="Начните вводить имя заказчика..."
+                            required
+                        />
+                        {showCustomerDropdown && customerSearchQuery && (
+                            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                {filteredCustomers.length > 0 ? (
+                                    filteredCustomers.map((customer) => (
+                                        <div
+                                            key={customer.id}
+                                            className="p-3 hover:bg-gray-100 cursor-pointer"
+                                            onClick={() => handleSelectCustomer(customer)}
+                                        >
+                                            {customer.name}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="p-3 text-gray-500">Заказчик не найден</div>
+                                )}
+                            </div>
+                        )}
+                        {errors.customer && <p className="text-red-500 text-sm mt-1">{errors.customer}</p>}
+                    </div>
+                </div>
+
+                {/* Поле для номера договора */}
+                <div>
+                    <label className="block mb-1 text-gray-700">Номер договора*</label>
+                    <input
+                        type="text"
+                        name="contract_number"
+                        value={formData.contract_number}
+                        onChange={handleChange}
+                        className={`w-full p-3 border ${errors.contract_number ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                        required
+                    />
+                    {errors.contract_number && <p className="text-red-500 text-sm mt-1">{errors.contract_number}</p>}
+                </div>
+
+                {/* Поле для даты договора */}
+                <div>
+                    <label className="block mb-1 text-gray-700">Дата договора*</label>
+                    <input
+                        type="date"
+                        name="contract_date"
+                        value={formData.contract_date}
+                        onChange={handleChange}
+                        className={`w-full p-3 border ${errors.contract_date ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                        required
+                    />
+                    {errors.contract_date && <p className="text-red-500 text-sm mt-1">{errors.contract_date}</p>}
+                </div>
+            </>
+        );
+
         switch (formData.category) {
             case 'seeds':
                 return (
                     <>
+                        {commonFields}
                         <div>
                             <label className="block mb-1 text-gray-700">Срок испытания*</label>
                             <input
@@ -503,6 +610,7 @@ const AddSampleForm = () => {
             case 'soil':
                 return (
                     <>
+                        {commonFields}
                         <div>
                             <label className="block mb-1 text-gray-700">Культура*</label>
                             <input
@@ -514,19 +622,6 @@ const AddSampleForm = () => {
                                 required
                             />
                             {errors.culture_id && <p className="text-red-500 text-sm mt-1">{errors.culture_id}</p>}
-                        </div>
-
-                        <div>
-                            <label className="block mb-1 text-gray-700">Заказчик*</label>
-                            <input
-                                type="text"
-                                name="customer"
-                                value={formData.customer}
-                                onChange={handleChange}
-                                className={`w-full p-3 border ${errors.customer ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                required
-                            />
-                            {errors.customer && <p className="text-red-500 text-sm mt-1">{errors.customer}</p>}
                         </div>
 
                         <div>
@@ -553,20 +648,6 @@ const AddSampleForm = () => {
                                 required
                             />
                             {errors.test_basis && <p className="text-red-500 text-sm mt-1">{errors.test_basis}</p>}
-                        </div>
-
-                        <div>
-                            <label className="block mb-1 text-gray-700">Номер договора*</label>
-                            <input
-                                type="text"
-                                name="contract_number"
-                                value={formData.contract_number}
-                                onChange={handleChange}
-                                className={`w-full p-3 border ${errors.contract_number ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                required
-                            />
-                            {errors.contract_number &&
-                                <p className="text-red-500 text-sm mt-1">{errors.contract_number}</p>}
                         </div>
 
                         <div>
@@ -654,6 +735,7 @@ const AddSampleForm = () => {
             case 'potatoes':
                 return (
                     <>
+                        {commonFields}
                         <div>
                             <label className="block mb-1 text-gray-700">Культура*</label>
                             <input
@@ -704,19 +786,6 @@ const AddSampleForm = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-1 text-gray-700">Заказчик*</label>
-                            <input
-                                type="text"
-                                name="customer"
-                                value={formData.customer}
-                                onChange={handleChange}
-                                className={`w-full p-3 border ${errors.customer ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                required
-                            />
-                            {errors.customer && <p className="text-red-500 text-sm mt-1">{errors.customer}</p>}
-                        </div>
-
-                        <div>
                             <label className="block mb-1 text-gray-700">ИНН/КПП</label>
                             <input
                                 type="text"
@@ -733,17 +802,6 @@ const AddSampleForm = () => {
                                 type="text"
                                 name="test_basis"
                                 value={formData.test_basis}
-                                onChange={handleChange}
-                                className="w-full p-3 border border-gray-300 rounded-lg"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block mb-1 text-gray-700">Номер договора</label>
-                            <input
-                                type="text"
-                                name="contract_number"
-                                value={formData.contract_number}
                                 onChange={handleChange}
                                 className="w-full p-3 border border-gray-300 rounded-lg"
                             />
@@ -848,6 +906,7 @@ const AddSampleForm = () => {
             case 'plants':
                 return (
                     <>
+                        {commonFields}
                         <div>
                             <label className="block mb-1 text-gray-700">Культура*</label>
                             <input
@@ -881,19 +940,6 @@ const AddSampleForm = () => {
                                 onChange={handleChange}
                                 className="w-full p-3 border border-gray-300 rounded-lg"
                             />
-                        </div>
-
-                        <div>
-                            <label className="block mb-1 text-gray-700">Заказчик*</label>
-                            <input
-                                type="text"
-                                name="customer"
-                                value={formData.customer}
-                                onChange={handleChange}
-                                className={`w-full p-3 border ${errors.customer ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                required
-                            />
-                            {errors.customer && <p className="text-red-500 text-sm mt-1">{errors.customer}</p>}
                         </div>
 
                         <div>
