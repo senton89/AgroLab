@@ -2,16 +2,15 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useReagentRepository from '../../Repository/ReagentRepository';
-import ReagentCalculator from "./ReagentCalculator";
 
 const AddReagentForm = ({ onAdd }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { reagent } = location.state || {};
     const reagentRepository = useReagentRepository();
+
     const [errors, setErrors] = useState({});
     const [isEditMode, setIsEditMode] = useState(false);
-    const [showCalculator, setShowCalculator] = useState(false);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -19,7 +18,8 @@ const AddReagentForm = ({ onAdd }) => {
         batch: '',
         supplier: '',
         expiryDate: '',
-        stock: ''
+        stock: '',
+        consumption: '',
     });
 
     useEffect(() => {
@@ -32,6 +32,10 @@ const AddReagentForm = ({ onAdd }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+
+        if (errors[name]) {
+            setErrors({ ...errors, [name]: '' });
+        }
     };
 
     const validateForm = () => {
@@ -44,10 +48,11 @@ const AddReagentForm = ({ onAdd }) => {
         if (!formData.supplier) newErrors.supplier = 'Поставщик обязателен';
         if (!formData.expiryDate) newErrors.expiryDate = 'Срок годности обязателен';
         if (!formData.stock) newErrors.stock = 'Остатки обязательны';
-        
-        // Проверка числовых полей
         if (formData.stock && (isNaN(formData.stock) || Number(formData.stock) < 0)) {
             newErrors.stock = 'Остатки должны быть положительным числом';
+        }
+        if (formData.consumption && (isNaN(formData.consumption) || Number(formData.consumption) < 0)) {
+            newErrors.consumption = 'Расход должен быть положительным числом';
         }
         
         // Проверка дат
@@ -68,17 +73,27 @@ const AddReagentForm = ({ onAdd }) => {
 
         if (validateForm()) {
             try {
-                if (isEditMode) {
-                    // Update existing reagent
-                    await reagentRepository.updateReagent(formData.id, formData);
-                } else {
-                    // Add new reagent
-                    await reagentRepository.addReagent(formData);
+                let updatedData = { ...formData };
+
+                if (formData.consumption) {
+                    const newStock = Number(formData.stock) - Number(formData.consumption);
+                    if (newStock < 0) {
+                        setErrors({ consumption: 'Расход превышает текущий остаток' });
+                        return;
+                    }
+                    updatedData.stock = newStock.toString();
                 }
+
+                if (isEditMode) {
+                    await reagentRepository.updateReagent(formData.id, updatedData);
+                } else {
+                    await reagentRepository.addReagent(updatedData);
+                }
+
                 navigate('/reagent-table');
             } catch (error) {
-                console.error('Error saving reagent:', error);
-                setErrors({ submit: 'Error saving reagent. Please try again.' });
+                console.error('Ошибка при сохранении реактива:', error);
+                setErrors({ submit: 'Ошибка при сохранении реактива. Пожалуйста, попробуйте снова.' });
             }
         }
     };
@@ -86,7 +101,9 @@ const AddReagentForm = ({ onAdd }) => {
     return (
         <div className="flex-1 flex items-center justify-center mt-16 pt-4 p-8">
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mr-4">
-                <h2 className="text-xl font-semibold mb-6">Добавление нового реактива</h2>
+                <h2 className="text-xl font-semibold mb-6">
+                    {isEditMode ? 'Редактирование реактива' : 'Добавление нового реактива'}
+                </h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block mb-1 text-gray-700">Имя</label>
@@ -161,6 +178,18 @@ const AddReagentForm = ({ onAdd }) => {
                         />
                         {errors.stock && <p className="text-red-500 text-sm mt-1">{errors.stock}</p>}
                     </div>
+                    <div className="mb-4">
+                        <label className="block mb-1 text-gray-700">Расход</label>
+                        <input
+                            className={`w-full p-3 border ${errors.consumption ? 'border-red-500' : 'border-gray-300'} rounded`}
+                            type="number"
+                            name="consumption"
+                            value={formData.consumption}
+                            onChange={handleChange}
+                            min="0"
+                        />
+                        {errors.consumption && <p className="text-red-500 text-sm mt-1">{errors.consumption}</p>}
+                    </div>
                     <div className="flex justify-between mt-6">
                         <button
                             type="button"
@@ -168,13 +197,6 @@ const AddReagentForm = ({ onAdd }) => {
                             className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded shadow"
                         >
                             Отмена
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setShowCalculator(!showCalculator)}
-                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow mx-4"
-                        >
-                            Показать калькулятор
                         </button>
                         <button
                             type="submit"
@@ -185,7 +207,6 @@ const AddReagentForm = ({ onAdd }) => {
                     </div>
                 </form>
             </div>
-            {showCalculator && <ReagentCalculator />}
         </div>
     );
 };

@@ -44,14 +44,9 @@ const EquipmentTable = ({ equipmentList, onDelete }) => {
         navigate('/edit-equipment', {state: {equipment}}); // Navigate to edit form with equipment data
     };
 
+
     return (
         <div className="overflow-x-auto flex flex-col">
-            <div className="py-2 rounded mb-4 w-1/6 self-end mr-4">
-                <ExportButton
-                    data={sortedEquipment}
-                    fileName="Оборудование"
-                />
-            </div>
             <div className="bg-white rounded-lg shadow-md overflow-hidden text-center">
                 <table className="w-full table-scroll">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
@@ -74,10 +69,6 @@ const EquipmentTable = ({ equipmentList, onDelete }) => {
                         <th onClick={() => requestSort('inspectionDate')}
                             className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Дата
                             проверки
-                        </th>
-                        <th onClick={() => requestSort('validUntilDate')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider min-w-40">Годен
-                            до
                         </th>
                         <th onClick={() => requestSort('category')}
                             className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Категория
@@ -117,12 +108,6 @@ const EquipmentTable = ({ equipmentList, onDelete }) => {
                             <td className="p-2">{equipment.factoryNumber}</td>
                             <td className="p-2">{equipment.dateOfCommissioning}</td>
                             <td className="p-2">{equipment.inspectionDate}</td>
-                            <td className="px-6 py-2">
-                                <div
-                                    className={`${getValidUntilColor(equipment.validUntilDate)} text-white px-2 py-1 rounded-full text-center w-full`}>
-                                    {equipment.validUntilDate}
-                                </div>
-                            </td>
                             <td className="p-2">{equipment.category}</td>
                             <td className="p-2">{equipment.model}</td>
                             <td className="p-2">{equipment.width}</td>

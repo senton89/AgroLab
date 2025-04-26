@@ -4,11 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import useOrderRepository from '../../Repository/OrderRepository';
 import MockOrderService from "../Mockups/MockOrderService";
 import OrderTable from "./OrderTable";
+import ExportButton from "../common/ExportButton";
+import SearchBar from "../common/SearchBar";
 
 const OrderManagement = () => {
     const { orderList, error, deleteOrder } = useOrderRepository(MockOrderService);
     const [orderListState, setOrderList] = useState(orderList);
     const [errorState, setError] = useState(error);
+    const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,6 +31,12 @@ const OrderManagement = () => {
 
     if (errorState) return <div>Error: {errorState}</div>;
 
+    const filteredOrders = orderList.filter(order =>
+        Object.values(order).some(value =>
+            value && value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
     return (
         <div className="container mt-6 mx-10 p-4">
             <div className="flex flex-col w-full">
@@ -37,7 +46,20 @@ const OrderManagement = () => {
                 >
                     Добавить новый заказ
                 </button>
-                <OrderTable orderList={orderListState} onDelete={handleDeleteOrder} />
+
+                <div className="flex mb-4 w-full">
+                    <div className="w-2/3">
+                        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+                    </div>
+                    <div className="ml-auto py-2 rounded w-1/6 mr-4">
+                        <ExportButton
+                            data={orderListState}
+                            fileName="Заказы"
+                        />
+                    </div>
+                </div>
+
+                <OrderTable orderList={filteredOrders} onDelete={handleDeleteOrder}/>
             </div>
         </div>
     );

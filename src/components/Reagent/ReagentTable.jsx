@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import DeleteButton from "../common/DeleteButton";
 import styles from "../../styles.css"
 import ExportButton from "../common/ExportButton";
+import SearchBar from "../common/SearchBar";
 
 const getExpiryColor = (expiryDate) => {
     if (!expiryDate) return 'bg-gray-300'; // Default color if no date is set
@@ -23,14 +24,6 @@ const ReagentTable = ({ reagents, onDelete  }) => {
     const user = JSON.parse(localStorage.getItem('user'));
     const isAdmin = user && user.role === 'admin';
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [reagents]);
-
-
     const sortedReagents = [...reagents].sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
             return sortConfig.direction === 'ascending' ? -1 : 1;
@@ -40,11 +33,6 @@ const ReagentTable = ({ reagents, onDelete  }) => {
         }
         return 0;
     });
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = sortedReagents.slice(indexOfFirstItem, indexOfLastItem);
-
 
     const requestSort = (key) => {
         let direction = 'ascending';
@@ -58,14 +46,10 @@ const ReagentTable = ({ reagents, onDelete  }) => {
         navigate('/reagents/edit', {state: {reagent}});
     };
 
+
+
     return (
         <div className="w-full flex flex-col">
-            <div className="py-2 rounded mb-4 w-1/6 self-end mr-6">
-                <ExportButton
-                    data={sortedReagents}
-                    fileName="Реагенты"
-                />
-            </div>
             <div className="bg-white rounded-lg shadow-md overflow-hidden text-center">
 
                 <table className="w-full table-scroll">

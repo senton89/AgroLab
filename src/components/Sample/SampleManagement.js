@@ -4,6 +4,7 @@ import SampleTable from './SampleTable';
 import SearchBar from '../common/SearchBar'; // Import the SearchBar component
 import { useNavigate } from "react-router-dom";
 import SampleRepository from '../../Repository/SampleRepository';
+import ExportButton from "../common/ExportButton";
 
 const tabNames = {
     seeds: 'Семена',
@@ -11,7 +12,6 @@ const tabNames = {
     potatoes: 'Картофель',
     soil: 'Почва',
 };
-
 const SampleManagement = () => {
     const { sampleList, loading, error } = SampleRepository();
     const navigate = useNavigate();
@@ -64,23 +64,29 @@ const SampleManagement = () => {
                 ))}
             </div>
 
-            <div className="flex justify-between items-center mb-6">
-                {/* Search Bar */}
-                <div className="w-2/3">
-                    <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-                </div>
-
-                {/* Add Sample Button */}
                 <button
                     onClick={handleAddSample}
-                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded w-1/6 mr-6"
+                    className="bg-gradient-to-r from-orange-400 to-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-4 w-1/6 self-end mt-2 m-6"
                 >
                     Добавить образец
                 </button>
-            </div>
+
+                <div className="flex mb-4 w-full">
+                <div className="w-2/3 ">
+                    <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+                </div>
+
+                <div className="ml-auto py-2 rounded w-1/6 mr-6">
+                    <ExportButton
+                        data={sampleList}
+                        fileName={`Образцы-${sampleList[0]?.category || 'seeds'}`}
+                        includeRelated={true}
+                    />
+                </div>
+                </div>
 
             <div className="rounded-lg overflow-hidden w-full">
-                <SampleTable sampleList={filteredSamples} />
+                <SampleTable sampleList={filteredSamples}/>
             </div>
         </div>
     );

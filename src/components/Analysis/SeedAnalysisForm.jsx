@@ -317,8 +317,13 @@ const SeedAnalysisForm = () => {
         e.preventDefault();
 
         if (validateForm()) {
+
             setIsLoading(true);
+
             try {
+
+                navigate("/samples");
+
                 // Analyze the results
                 const analysisResults = analyzeResults();
 
@@ -331,8 +336,6 @@ const SeedAnalysisForm = () => {
 
                 setFormData(updatedFormData);
 
-                // Here you would typically save the analysis results
-                // For example:
                 const sampleRepo = SampleRepository();
                 await sampleRepo.saveAnalysisResults(updatedFormData);
 
@@ -343,7 +346,6 @@ const SeedAnalysisForm = () => {
                 //         : `Образец не соответствует стандарту. Причины: ${analysisResults.notes}`
                 // );
 
-                navigate(-1);
             } catch (error) {
                 console.error('Error analyzing sample:', error);
                 setErrors({
@@ -757,11 +759,11 @@ const SeedAnalysisForm = () => {
                                             {errors.totalDiseaseInfection && <p className="text-red-500 text-sm mt-1">{errors.totalDiseaseInfection}</p>}
                                     </div>
 
-                                    {errors.submit && (
-                                        <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg">
-                                            {errors.submit}
-                                        </div>
-                                    )}
+                                    {/*{errors.submit && (*/}
+                                    {/*    <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg">*/}
+                                    {/*        {errors.submit}*/}
+                                    {/*    </div>*/}
+                                    {/*)}*/}
 
                                     <div className="flex justify-end mt-8 space-x-4">
                                         <button

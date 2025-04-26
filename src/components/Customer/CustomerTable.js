@@ -39,13 +39,7 @@ const CustomerTable = ({ customerList, onDeleteCustomer }) => {
     }
 
     return (
-        <div className="w-full p-6 flex flex-col">
-            <div className="py-2 rounded mb-4 w-1/6 self-end mr-6">
-                <ExportButton
-                    data={sortedCustomers}
-                    fileName="Заказчики"
-                />
-            </div>
+        <div className="w-full flex flex-col">
             <div className="bg-white rounded-lg shadow-md overflow-hidden text-center">
                 <table className="w-full table-scroll">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">

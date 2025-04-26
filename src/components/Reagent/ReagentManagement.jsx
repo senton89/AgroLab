@@ -4,18 +4,16 @@ import ReagentTable from './ReagentTable';
 import AddReagentForm from './AddReagentForm';
 import useReagentRepository from '../../Repository/ReagentRepository'
 import { useNavigate } from 'react-router-dom';
+import SearchBar from "../common/SearchBar";
+import ExportButton from "../common/ExportButton";
 
 const ReagentManagement = () => {
     const { reagentList, loading, error, addReagent, fetchReagents,deleteReagent } = useReagentRepository(); // Используйте хук
-    const [isFormVisible, setIsFormVisible] = useState(false); // Состояние для управления видимостью формы
+    const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const loadReagents = async () => {
-            await fetchReagents();
-        };
-
-        loadReagents();
+        fetchReagents();
     }, [fetchReagents]);
 
     const handleDeleteReagent = async (id) => {
@@ -27,6 +25,12 @@ const ReagentManagement = () => {
         }
     };
 
+    const filteredReagents = reagentList.filter(reagent =>
+        Object.values(reagent).some(value =>
+            value && value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
     return (
         <div className="container mx-4 p-4">
             <div className="flex flex-col w-full">
@@ -36,9 +40,18 @@ const ReagentManagement = () => {
                 >
                     Добавить реактив
                 </button>
-
-                <ReagentTable reagents={reagentList} onDelete={handleDeleteReagent}/>
-
+                <div className="flex mb-4 w-full">
+                    <div className="w-2/3">
+                        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+                    </div>
+                    <div className="ml-auto py-2 rounded w-1/6 mr-6">
+                        <ExportButton
+                            data={reagentList}
+                            fileName="Реагенты"
+                        />
+                    </div>
+                </div>
+                <ReagentTable reagents={filteredReagents} onDelete={handleDeleteReagent}/>
             </div>
         </div>
     );

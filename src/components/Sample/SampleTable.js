@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SampleRepository from '../../Repository/SampleRepository';
 import DeleteButton from "../common/DeleteButton";
 import ExportButton from "../common/ExportButton";
+import SearchBar from "../common/SearchBar";
 
 const SampleTable = ({ sampleList }) => {
     const navigate = useNavigate();
@@ -151,13 +152,6 @@ const SampleTable = ({ sampleList }) => {
 
     return (
         <div className="overflow-x-auto flex flex-col">
-            <div className="py-2 rounded mb-4 w-1/6 self-end mr-6">
-                <ExportButton
-                    data={sortedSamples}
-                    fileName={`Образцы-${category}`}
-                    includeRelated={true}
-                />
-            </div>
             <table className="min-w-full divide-y divide-gray-200 text-center table-scroll">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>

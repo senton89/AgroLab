@@ -36,13 +36,7 @@ const CultureTable = ({ cultures, setCultures, onDelete }) => {
     }
 
     return (
-        <div className="flex flex-col shadow-md w-full">
-            <div className="py-2 rounded mb-4 w-1/6 self-end mr-6">
-                <ExportButton
-                    data={cultures.map(c => typeof c === 'object' ? c : {name: c})}
-                    fileName="Культуры"
-                />
-            </div>
+        <div className="flex flex-col shadow-md w-full bg-white">
             <table className="w-full rounded-lg table-scroll">
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>

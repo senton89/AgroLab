@@ -35,12 +35,6 @@ const OrderTable = ({ orderList, onDelete }) => {
 
     return (
         <div className="flex w-full flex-col">
-            <div className="py-2 rounded mb-4 w-1/6 self-end mr-4">
-                <ExportButton
-                    data={sortedOrders}
-                    fileName="Заказы"
-                />
-            </div>
             <div className="overflow-x-auto w-full text-center">
                 <table className="min-w-full bg-white rounded-lg shadow-md overflow-hidden table-scroll">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
