@@ -10,13 +10,11 @@ import AddCultureForm from "./components/Culture/AddCultureForm";
 import EquipmentManagement from "./components/Equipment/EquipmentManagement";
 import CustomerManagement from "./components/Customer/CustomerManagement";
 import SampleManagement from "./components/Sample/SampleManagement";
-import OrderManagement from "./components/Orders/OrderManagement";
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LoginForm from "./components/Auth/LoginForm";
 import RegistrationForm from "./components/Auth/RegistrationForm"; // Import the ProtectedRoute component
 import AddEquipmentForm from "./components/Equipment/AddEquipmentForm"; // Import the AddEquipmentForm component
 import AddReagentForm from './components/Reagent/AddReagentForm';
-import AddOrderForm from './components/Orders/AddOrderForm';
 import AddSampleForm from "./components/Sample/AddSampleForm";
 import AddCustomerForm from "./components/Customer/AddCustomerForm";
 import PotatoAnalysisForm from "./components/Analysis/PotatoAnalysisForm";
@@ -196,26 +194,6 @@ const App = () => {
                             <Sidebar />
                             <div className="flex-1">
                                 <AddSampleForm />
-                            </div>
-                        </div>
-                    </ProtectedRoute>
-                } />
-                <Route path="/orders" element={
-                    <ProtectedRoute>
-                        <div className="flex">
-                            <Sidebar />
-                            <div className="flex-1 p-4">
-                                <OrderManagement />
-                            </div>
-                        </div>
-                    </ProtectedRoute>
-                } />
-                <Route path="/orders/add" element={
-                    <ProtectedRoute>
-                        <div className="flex">
-                            <Sidebar />
-                            <div className="flex-1 p-4 container mx-auto">
-                                <AddOrderForm />
                             </div>
                         </div>
                     </ProtectedRoute>
