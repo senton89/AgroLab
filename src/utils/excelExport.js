@@ -124,6 +124,7 @@ export const exportToExcel = (data, fileName = 'export', includeRelated = false)
         acceptance_file: 'Файл приемки',
 
         contract_date: 'Дата договора',
+        org_and_legal_form: 'Организационно-правовая форма',
     };
 
     // Process data to remove ID field and translate column headers

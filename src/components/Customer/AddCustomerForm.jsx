@@ -13,9 +13,9 @@ const AddCustomerForm = () => {
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         name: '',
-        email: '',
+        inn_kpp: '',
+        org_and_legal_form: '',
         address: '',
-        inn: ''
     });
 
     // If customer data is provided, set it to form data (edit mode)
@@ -39,16 +39,10 @@ const AddCustomerForm = () => {
     const validateForm = () => {
         const newErrors = {};
 
-        if (!formData.name) newErrors.name = 'Имя заказчика обязательно';
-        if (!formData.email) newErrors.email = 'Email обязателен';
-        if (!formData.address) newErrors.address = 'Адрес обязателен';
-        if (!formData.inn) newErrors.inn = 'ИНН обязателен';
-
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (formData.email && !emailRegex.test(formData.email)) {
-            newErrors.email = 'Введите корректный email';
-        }
+        if (!formData.name) newErrors.name = 'Название организации обязательно';
+        if (!formData.inn_kpp) newErrors.inn_kpp = 'ИНН/КПП обязателен';
+        if (!formData.org_and_legal_form) newErrors.org_and_legal_form = 'Организационно-правовая форма обязательна';
+        if (!formData.address) newErrors.adress = 'Адрес обязателен';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -101,16 +95,30 @@ const AddCustomerForm = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-1 text-gray-700">Email*</label>
+                            <label className="block mb-1 text-gray-700">ИНН/КПП*</label>
                             <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
+                                type="text"
+                                name="inn_kpp"
+                                value={formData.inn_kpp}
                                 onChange={handleChange}
-                                className={`w-full p-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                className={`w-full p-3 border ${errors.inn_kpp ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                 required
                             />
-                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                            {errors.inn_kpp && <p className="text-red-500 text-sm mt-1">{errors.inn_kpp}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-gray-700">Организационно-правовая форма*</label>
+                            <input
+                                type="text"
+                                name="org_and_legal_form"
+                                value={formData.org_and_legal_form}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.org_and_legal_form ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.org_and_legal_form &&
+                                <p className="text-red-500 text-sm mt-1">{errors.org_and_legal_form}</p>}
                         </div>
 
                         <div>
@@ -118,25 +126,12 @@ const AddCustomerForm = () => {
                             <input
                                 type="text"
                                 name="address"
-                                value={formData.address}
+                                value={formData.adress}
                                 onChange={handleChange}
-                                className={`w-full p-3 border ${errors.address ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                className={`w-full p-3 border ${errors.adress ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                 required
                             />
-                            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-                        </div>
-
-                        <div>
-                            <label className="block mb-1 text-gray-700">ИНН*</label>
-                            <input
-                                type="text"
-                                name="inn"
-                                value={formData.inn}
-                                onChange={handleChange}
-                                className={`w-full p-3 border ${errors.inn ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                required
-                            />
-                            {errors.inn && <p className="text-red-500 text-sm mt-1">{errors.inn}</p>}
+                            {errors.adress && <p className="text-red-500 text-sm mt-1">{errors.adress}</p>}
                         </div>
                     </div>
 

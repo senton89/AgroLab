@@ -1,18 +1,17 @@
-// MockCustomerService.js
 const mockCustomerData = [
     {
         id: 1,
-        name: 'Иван Иванов',
-        email: 'ivan@example.com',
-        address: 'Улица Ленина, 1',
-        inn: '1234567890'
+        name: 'ООО "Агрофирма Заря"',
+        inn_kpp: '1234567890/123456789',
+        org_and_legal_form: 'Общество с ограниченной ответственностью',
+        address: 'г. Москва, ул. Ленина, 1'
     },
     {
         id: 2,
-        name: 'Петр Петров',
-        email: 'petr@example.com',
-        address: 'Улица Пушкина, 2',
-        inn: '0987654321'
+        name: 'АО "Сельхозпредприятие Восток"',
+        inn_kpp: '0987654321/987654321',
+        org_and_legal_form: 'Акционерное общество',
+        address: 'г. Санкт-Петербург, ул. Пушкина, 2'
     },
 ];
 
@@ -26,7 +25,6 @@ const MockCustomerService = {
                 return customer;
             }
         }
-
         // Otherwise it's a new customer
         const newCustomer = { ...customer, id: mockCustomerData.length + 1 };
         mockCustomerData.push(newCustomer);

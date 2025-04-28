@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
 import DeleteButton from "../common/DeleteButton";
-import ExportButton from "../common/ExportButton";
 
 const CustomerTable = ({ customerList, onDeleteCustomer }) => {
     const navigate = useNavigate(); // Initialize navigate
@@ -35,7 +34,7 @@ const CustomerTable = ({ customerList, onDeleteCustomer }) => {
     };
 
     if (!customerList || customerList.length === 0) {
-        return <div>Нет доступных заказчиков.</div>; // Сообщение, если список пуст
+        return <div className="text-center p-4">Нет доступных заказчиков.</div>;
     }
 
     return (
@@ -45,16 +44,16 @@ const CustomerTable = ({ customerList, onDeleteCustomer }) => {
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
                         <th onClick={() => requestSort('name')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Имя
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Название
                         </th>
-                        <th onClick={() => requestSort('email')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Email
+                        <th onClick={() => requestSort('inn_kpp')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">ИНН/КПП
+                        </th>
+                        <th onClick={() => requestSort('org_and_legal_form')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Организационно-правовая форма
                         </th>
                         <th onClick={() => requestSort('address')}
                             className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Адрес
-                        </th>
-                        <th onClick={() => requestSort('inn')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">ИНН
                         </th>
                         <th className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"></th>
                     </tr>
@@ -67,9 +66,9 @@ const CustomerTable = ({ customerList, onDeleteCustomer }) => {
                             onDoubleClick={() => handleRowDoubleClick(customer)} // Add double-click handler
                         >
                             <td className="px-6 py-4 whitespace-nowrap">{customer.name}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{customer.email}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{customer.address}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{customer.inn}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.inn_kpp}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.org_and_legal_form}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.adress}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <DeleteButton
                                     onDelete={() => onDeleteCustomer(customer.id)}
