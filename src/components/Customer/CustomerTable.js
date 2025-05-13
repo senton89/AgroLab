@@ -46,8 +46,13 @@ const CustomerTable = ({ customerList, onDeleteCustomer }) => {
                         <th onClick={() => requestSort('name')}
                             className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Название
                         </th>
-                        <th onClick={() => requestSort('inn_kpp')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">ИНН/КПП
+                        <th onClick={() => requestSort('inn')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">
+                            ИНН
+                        </th>
+                        <th onClick={() => requestSort('kpp')}
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">
+                            КПП
                         </th>
                         <th onClick={() => requestSort('org_and_legal_form')}
                             className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Организационно-правовая форма
@@ -66,7 +71,8 @@ const CustomerTable = ({ customerList, onDeleteCustomer }) => {
                             onDoubleClick={() => handleRowDoubleClick(customer)} // Add double-click handler
                         >
                             <td className="px-6 py-4 whitespace-nowrap">{customer.name}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{customer.inn_kpp}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.inn}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{customer.kpp}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{customer.org_and_legal_form}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{customer.adress}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

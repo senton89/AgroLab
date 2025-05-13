@@ -52,32 +52,32 @@ const EquipmentTable = ({ equipmentList, onDelete }) => {
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
                         <th onClick={() => requestSort('name')}
-                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Название
+                            className="w-10 md:w-14 lg:w-28 cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Название
                         </th>
                         <th onClick={() => requestSort('inventoryNumber')}
-                            className="cursor-pointer px-4 py-3  text-xs font-medium uppercase tracking-wider">Номер
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Номер
                             инвентаря
                         </th>
                         <th onClick={() => requestSort('factoryNumber')}
-                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Номер
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Номер
                             завода
                         </th>
                         <th onClick={() => requestSort('dateOfCommissioning')}
-                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Дата
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Дата
                             ввода
                         </th>
                         <th onClick={() => requestSort('inspectionDate')}
-                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Дата
+                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Дата
                             проверки
                         </th>
                         <th onClick={() => requestSort('category')}
-                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Категория
+                            className="w-20 md:w-20 lg:w-40 cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Категория
                         </th>
                         <th onClick={() => requestSort('model')}
-                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-widerr">Модель
+                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Модель
                         </th>
                         <th onClick={() => requestSort('width')}
-                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-widerr">Ширина
+                            className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Ширина
                         </th>
                         <th onClick={() => requestSort('length')}
                             className="cursor-pointer px-6 py-3  text-xs font-medium uppercase tracking-wider">Длина
@@ -103,12 +103,12 @@ const EquipmentTable = ({ equipmentList, onDelete }) => {
                             className="hover:bg-gray-50 cursor-pointer"
                             onDoubleClick={() => handleRowDoubleClick(equipment)}
                         >
-                            <td className="p-2">{equipment.name}</td>
+                            <td className="p-2 w-10 md:w-14 lg:w-28">{equipment.name}</td>
                             <td className="p-2">{equipment.inventoryNumber}</td>
                             <td className="p-2">{equipment.factoryNumber}</td>
                             <td className="p-2">{equipment.dateOfCommissioning}</td>
                             <td className="p-2">{equipment.inspectionDate}</td>
-                            <td className="p-2">{equipment.category}</td>
+                            <td className="p-2 w-12 md:w-20 lg:w-40">{equipment.category}</td>
                             <td className="p-2">{equipment.model}</td>
                             <td className="p-2">{equipment.width}</td>
                             <td className="p-2">{equipment.length}</td>

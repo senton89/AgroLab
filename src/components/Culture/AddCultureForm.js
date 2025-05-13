@@ -357,7 +357,7 @@ const AddCultureForm = ({ onAdd, onClose }) => {
                 </div>
 
                 {Object.keys(seedFieldLabels).map(field => (
-                    <div key={field} className="grid grid-cols-5 gap-4 mb-2">
+                    <div key={field} className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-5 gap-4 mb-2">
                         <div className="py-2">{seedFieldLabels[field]}</div>
                         <input
                             type="number"

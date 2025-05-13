@@ -13,7 +13,8 @@ const AddCustomerForm = () => {
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         name: '',
-        inn_kpp: '',
+        inn: '',
+        kpp: '',
         org_and_legal_form: '',
         address: '',
     });
@@ -40,7 +41,8 @@ const AddCustomerForm = () => {
         const newErrors = {};
 
         if (!formData.name) newErrors.name = 'Название организации обязательно';
-        if (!formData.inn_kpp) newErrors.inn_kpp = 'ИНН/КПП обязателен';
+        if (!formData.inn) newErrors.inn = 'ИНН обязателен';
+        if (!formData.kpp) newErrors.kpp = 'КПП обязателен';
         if (!formData.org_and_legal_form) newErrors.org_and_legal_form = 'Организационно-правовая форма обязательна';
         if (!formData.address) newErrors.adress = 'Адрес обязателен';
 
@@ -73,14 +75,14 @@ const AddCustomerForm = () => {
     };
 
     return (
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-16 md:p-12 lg:p-8">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
                 <h2 className="text-2xl font-semibold text-gray-700 mb-6">
                     {isEditMode ? 'Редактирование заказчика' : 'Добавление нового заказчика'}
                 </h2>
 
                 <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
                         <div>
                             <label className="block mb-1 text-gray-700">Имя*</label>
                             <input
@@ -95,16 +97,28 @@ const AddCustomerForm = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-1 text-gray-700">ИНН/КПП*</label>
+                            <label className="block mb-1 text-gray-700">ИНН</label>
                             <input
                                 type="text"
                                 name="inn_kpp"
-                                value={formData.inn_kpp}
+                                value={formData.inn}
                                 onChange={handleChange}
-                                className={`w-full p-3 border ${errors.inn_kpp ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                className={`w-full p-3 border ${errors.inn ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                 required
                             />
-                            {errors.inn_kpp && <p className="text-red-500 text-sm mt-1">{errors.inn_kpp}</p>}
+                            {errors.inn && <p className="text-red-500 text-sm mt-1">{errors.inn_kpp}</p>}
+                        </div>
+                        <div>
+                            <label className="block mb-1 text-gray-700">КПП</label>
+                            <input
+                                type="text"
+                                name="inn_kpp"
+                                value={formData.kpp}
+                                onChange={handleChange}
+                                className={`w-full p-3 border ${errors.kpp ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                required
+                            />
+                            {errors.kpp && <p className="text-red-500 text-sm mt-1">{errors.inn_kpp}</p>}
                         </div>
 
                         <div>

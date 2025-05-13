@@ -85,7 +85,7 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
                     <i className="fas fa-times"></i>
                 </button>
             </div>
-            <form className="grid grid-cols-3 gap-4" onSubmit={handleSubmit}>
+            <form className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4" onSubmit={handleSubmit}>
                 {Object.keys(formData).filter(key => key !== 'id').map((key, index) => (
                     <div key={index}>
                         <label className="block text-gray-700">{{
@@ -110,7 +110,7 @@ const AddEquipmentForm = ({ initialData, onSave, mode, onAdd }) => {
                             value={formData[key]}
                             onChange={handleChange}
                             className="w-full p-2 border border-gray-300 rounded"
-                            required
+                            required = {key !== 'dateOfDecommissioning'}
                         />
                         {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]}</p>}
                     </div>

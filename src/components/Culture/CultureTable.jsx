@@ -41,7 +41,7 @@ const CultureTable = ({ cultures, setCultures, onDelete }) => {
                 <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                 <tr>
                     <th onClick={handleSort}
-                        className="cursor-pointer text-left pl-6 p-2">Наименование
+                        className="cursor-pointer text-left pl-6 p-2 text-xs font-bold uppercase tracking-wider">Наименование
                     </th>
                     <th className="cursor-pointer text-right p-2"></th>
                 </tr>

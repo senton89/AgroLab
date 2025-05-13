@@ -50,25 +50,25 @@ const ReagentTable = ({ reagents, onDelete  }) => {
 
     return (
         <div className="w-full flex flex-col">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden text-center">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden text-center text-xs">
 
                 <table className="w-full table-scroll">
                     <thead className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
                     <tr>
                         <th onClick={() => requestSort('name')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Имя
+                            className="cursor-pointer px-6 py-3 font-medium uppercase tracking-wider">Имя
                         </th>
                         <th onClick={() => requestSort('date')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Дата
+                            className="cursor-pointer px-6 py-3 font-medium uppercase tracking-wider">Дата
                         </th>
                         <th onClick={() => requestSort('batch')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Партия
+                            className="cursor-pointer px-6 py-3 font-medium uppercase tracking-wider">Партия
                         </th>
                         <th onClick={() => requestSort('supplier')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Поставщик
+                            className="cursor-pointer px-6 py-3 font-medium uppercase tracking-wider">Поставщик
                         </th>
                         <th onClick={() => requestSort('expiryDate')}
-                            className="cursor-pointer px-6 py-3 text-xs font-medium uppercase tracking-wider">Срок
+                            className="cursor-pointer px-6 py-3 font-medium uppercase tracking-wider">Срок
                             годности
                         </th>
                         <th onClick={() => requestSort('stock')}
@@ -96,7 +96,7 @@ const ReagentTable = ({ reagents, onDelete  }) => {
                                 </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">{reagent.stock}</td>
-                            <td className="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
+                            <td className="px-4 py-2 whitespace-nowrap text-right font-medium">
                                 <DeleteButton
                                     onDelete={() => onDelete(reagent.id)}
                                     itemName="реактив"

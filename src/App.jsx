@@ -20,8 +20,8 @@ import AddCustomerForm from "./components/Customer/AddCustomerForm";
 import PotatoAnalysisForm from "./components/Analysis/PotatoAnalysisForm";
 import SeedAnalysisForm from "./components/Analysis/SeedAnalysisForm";
 import SoilAnalysisForm from "./components/Analysis/SoilAnalysisForm";
+import './styles.css';
 
-//Todo: Мотивационная речь на первом экране?🤡
 const App = () => {
     return (
         <BrowserRouter>
